@@ -16,9 +16,11 @@ namespace BugTracker.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
         // GET: Members
         [Authorize]
-        public ActionResult EditProfile(int? id)
+        public ActionResult EditProfile(string userId)
         {
-            var userId = User.Identity.GetUserId();
+            //var userId = User.Identity.GetUserId();
+
+
             var member = db.Users.Select(user => new UserProfileViewModel
             {
                 Id = user.Id,

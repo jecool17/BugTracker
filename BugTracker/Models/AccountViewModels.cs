@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Web;
 
 namespace BugTracker.Models
 {
@@ -81,6 +82,10 @@ namespace BugTracker.Models
         [Display(Name = "Display Name")]
         public string DisplayName { get; set; }
 
+        public string AvatarURL { get; set; }
+
+        public HttpPostedFileBase Avatar { get; set; }
+
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]
@@ -125,5 +130,7 @@ namespace BugTracker.Models
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; }
+
+        
     }
 }

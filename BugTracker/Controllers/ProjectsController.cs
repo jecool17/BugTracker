@@ -37,9 +37,9 @@ namespace BugTracker.Controllers
             }
 
 
-            var allProjectManagers = roleHelper.UsersInRole("ProjectManager");
-            var currentProjectManagers = projectHelper.UsersInRoleOnProject(project.Id, "ProjectManager");
-            ViewBag.ProjectMangers = new MultiSelectList(allProjectManagers, "Id", "FullNameWithEmail", currentProjectManagers);
+            var allProjectManagers = roleHelper.UsersInRole("Project Manager");
+            var currentProjectManagers = projectHelper.UsersInRoleOnProject(project.Id, "Project Manager");
+            ViewBag.ProjectManagers = new MultiSelectList(allProjectManagers, "Id", "FullNameWithEmail", currentProjectManagers);
 
             var allSubmitters = roleHelper.UsersInRole("Submitter");
             var currentSubmitters = projectHelper.UsersInRoleOnProject(project.Id, "Submitter");

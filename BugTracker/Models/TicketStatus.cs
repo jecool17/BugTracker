@@ -11,6 +11,8 @@ namespace BugTracker.Models
         public string Name { get; set; }
         public string Description { get; set; }
 
+        public int Value { get; set; }
+
         public ICollection<Ticket> Tickets { get; set; }
 
         public TicketStatus()

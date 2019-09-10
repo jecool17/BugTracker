@@ -141,35 +141,37 @@
                                         @Html.PasswordFor(t => t.Item2.ConfirmPassword, new { @Name = "ConfirmPassword", placeholder = "Confirm Pasword", @class = "form-control" })
                                         @*<input class="form-control" id="reg_mail" name="reg_mail" placeholder="Mailing Address" type="email" required>*@
                                     </div>
+                                    
+
                                 </div>
 
 
 
 
-                                <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
-                                    <div class="col-md-6 col-sm-6">
-                                        @Html.TextBoxFor(t => t.Item2.FirstName, new { @Name = "FirstName", placeholder = "First Name", @class = "form-control" })
+                                    <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
+                                        <div class="col-md-6 col-sm-6">
+                                            @Html.TextBoxFor(t => t.Item2.FirstName, new { @Name = "FirstName", placeholder = "First Name", @class = "form-control" })
 
-                                        @*<input class="form-control" id="reg_first_Name" name="reg_first_Name" placeholder="First Name" type="text" required>*@
+                                            @*<input class="form-control" id="reg_first_Name" name="reg_first_Name" placeholder="First Name" type="text" required>*@
+                                        </div>
+                                        <div class="col-md-6 col-sm-6">
+                                            @Html.TextBoxFor(t => t.Item2.LastName, new { @Name = "LastName", placeholder = "Last Name", @class = "form-control" })
+                                            @*<input class="form-control" id="reg_first_Name" name="reg_first_Name" placeholder="Last Name" type="text" required>*@
+                                        </div>
                                     </div>
-                                    <div class="col-md-6 col-sm-6">
-                                        @Html.TextBoxFor(t => t.Item2.LastName, new { @Name = "LastName", placeholder = "Last Name", @class = "form-control" })
-                                        @*<input class="form-control" id="reg_first_Name" name="reg_first_Name" placeholder="Last Name" type="text" required>*@
+                                    <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
+                                        <div class="col-md-12">
+                                            @Html.TextBoxFor(t => t.Item2.Email, new { @Name = "Email", placeholder = "Email", @class = "form-control" })
+                                            @*<input class="form-control" id="reg_email" name="reg_email" placeholder="Email" type="email" required>*@
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
-                                    <div class="col-md-12">
-                                        @Html.TextBoxFor(t => t.Item2.Email, new { @Name = "Email", placeholder = "Email", @class = "form-control" })
-                                        @*<input class="form-control" id="reg_email" name="reg_email" placeholder="Email" type="email" required>*@
+                                    <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
+                                        <div class="col-md-12">
+                                            <input type="submit" class="btn btn-info btn-cons" value="Register" />
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
-                                    <div class="col-md-12">
-                                        <input type="submit" class="btn btn-info btn-cons" value="Register" />
-                                    </div>
-                                </div>
-                                
-                            </form>
+
+</form>
                         }
                         </div>
 

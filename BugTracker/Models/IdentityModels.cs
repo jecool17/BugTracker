@@ -26,7 +26,7 @@ namespace BugTracker.Models
         {
             get
             {
-                return $"{ LastName}, { FirstName} - {Email}";
+                return $"{ LastName}, { FirstName}";
             }
         }
         [NotMapped]

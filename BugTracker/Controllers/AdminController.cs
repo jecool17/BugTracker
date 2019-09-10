@@ -19,26 +19,67 @@ namespace BugTracker.Controllers
         // GET: Admin
         public ActionResult UserIndex()
         {
-
-            var users = db.Users.Select(u => new UserProfileViewModel
+            var projects = db.Projects.ToList();
+            var roles = db.Roles.ToList();
+            var users = db.Users.Select(u => new UserIndexViewModel
             {
                 Id = u.Id,
-                FirstName = u.FirstName,
-                LastName = u.LastName,
+                FullName = u.LastName + ", " + u.FirstName,               
                 DisplayName = u.DisplayName,
                 AvatarURL = u.AvatarURL,
                 Email = u.Email
 
             }).ToList();
 
+            foreach (var user in users)
+            {
+                
+                user.CurrentRole = new SelectList(roles, "Name", "Name", roleHelper.ListUserRoles(user.Id).FirstOrDefault());
+                user.CurrentProjects = new MultiSelectList(projects, "Id", "Name", projectHelper.ListUserProjects(user.Id).Select(u => u.Id));
+            }
+
             return View(users);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult UserIndex(string userId, string CurrentRole, List<int> CurrentProjects)
+        {
+
+            foreach (var role in roleHelper.ListUserRoles(userId))
+            {
+                roleHelper.RemoveUserFromRole(userId, role);
+            }
+
+            if (!string.IsNullOrEmpty(CurrentRole))
+            {
+                roleHelper.AddUserToRole(userId, CurrentRole);
+            }
+
+            foreach (var proj in projectHelper.ListUserProjects(userId))
+            {
+                projectHelper.RemoveUserFromProject(userId, proj.Id);
+            }
+
+            if (CurrentProjects != null)
+                
+            {
+                foreach (var projectId in CurrentProjects)
+                {
+                    projectHelper.AddUserToProject(userId, projectId);
+                }
+            }
+
+
+
+            return RedirectToAction("UserIndex");
         }
 
         public ActionResult ManageUserRole(string userId)
         {
             var currentRole = roleHelper.ListUserRoles(userId).FirstOrDefault();
             ViewBag.UserId = userId;
-            ViewBag.Roles = new SelectList(db.Roles.ToList(), "Name", "Name", currentRole);
+            ViewBag.UserRole = new SelectList(db.Roles.ToList(), "Name", "Name", currentRole);
 
             return View();
         }
@@ -103,48 +144,62 @@ namespace BugTracker.Controllers
 
         public ActionResult ManageUserProjects(string userId)
         {
+            
+            ViewBag.UserId = userId;
+            ViewBag.UserProjects = new MultiSelectList(db.Projects.ToList(), "Name", "Name");
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ManageUserProjects(List<int> projects, string userId)
+        public ActionResult ManageUserProjects(int projects, string userId)
         {
-            return View();
+
+            //{
+            //    foreach (var proj in projectHelper.ListUserProjects(userId))
+            //    {
+            //        projectHelper.RemoveUserFromProject(userId, projects);
+            //    }
+
+                
+
+                
+            //}
+            return RedirectToAction("UserIndex");
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult ManageProjects(int projectId, List<string> ProjectManagers, List<string> Devlopers, List<string> Submitters)
         {
-            foreach (var user in projectHelper.UsersOnProject(projectId).ToList())
-            {
-                projectHelper.RemoveUserFromProject(user.Id, projectId);
-            }
+            //foreach (var user in projectHelper.UsersOnProject(projectId).ToList())
+            //{
+            //    projectHelper.RemoveUserFromProject(user.Id, projectId);
+            //}
 
-            if (ProjectManagers != null)
-            {
-                foreach(var  projectManagerId in ProjectManagers)
-                {
-                    projectHelper.AddUserToProject(projectManagerId, projectId);
-                }
-            }
+            //if (ProjectManagers != null)
+            //{
+            //    foreach(var  projectManagerId in ProjectManagers)
+            //    {
+            //        projectHelper.AddUserToProject(projectManagerId, projectId);
+            //    }
+            //}
 
-            if (Devlopers != null)
-            {
-                foreach (var developerId in ProjectManagers)
-                {
-                    projectHelper.AddUserToProject(developerId, projectId);
-                }
-            }
+            //if (Devlopers != null)
+            //{
+            //    foreach (var developerId in ProjectManagers)
+            //    {
+            //        projectHelper.AddUserToProject(developerId, projectId);
+            //    }
+            //}
 
-            if (Submitters != null)
-            {
-                foreach (var submitterId in ProjectManagers)
-                {
-                    projectHelper.AddUserToProject(submitterId, projectId);
-                }
-            }
+            //if (Submitters != null)
+            //{
+            //    foreach (var submitterId in ProjectManagers)
+            //    {
+            //        projectHelper.AddUserToProject(submitterId, projectId);
+            //    }
+            //}
             return RedirectToAction("Details", "Projects", new { id = projectId});
         }
 

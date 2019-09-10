@@ -11,6 +11,8 @@ using Microsoft.Owin.Security;
 using BugTracker.Models;
 using System.Web.Configuration;
 using System.Net.Mail;
+using BugTracker.Helpers;
+using System.IO;
 
 namespace BugTracker.Controllers
 {
@@ -160,7 +162,18 @@ namespace BugTracker.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new Models.ApplicationUser { UserName = model.Email, Email = model.Email, FirstName = model.FirstName, LastName = model.LastName, DisplayName = model.DisplayName};
+                var user = new Models.ApplicationUser { UserName = model.Email, Email = model.Email, FirstName = model.FirstName, LastName = model.LastName, DisplayName = model.DisplayName, AvatarURL = WebConfigurationManager.AppSettings["DefaultAvi"]};
+                //if (ImageUploadValidator.IsWebFriendlyImage(model.Avatar))
+                //{
+
+
+                //    var fileName = Path.GetFileName(model.Avatar.FileName);
+                //    model.Avatar.SaveAs(Path.Combine(Server.MapPath("~/Uploads/"), fileName));
+                //    user.AvatarURL = "/Uploads/" + fileName;
+
+
+                //}
+
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
