@@ -58,5 +58,7 @@ namespace BugTracker.Controllers
             db.SaveChanges();
             return RedirectToAction("Dashboard", "Home");
         }
+
+        
     }
 }

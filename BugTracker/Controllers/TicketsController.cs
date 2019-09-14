@@ -24,7 +24,7 @@ namespace BugTracker.Controllers
             var tickets = db.Tickets.Include(t => t.AssignedToUser).Include(t => t.OwnerUser).Include(t => t.Project).Include(t => t.TicketPriority).Include(t => t.TicketStatus).Include(t => t.TicketType);
             return View(tickets.ToList());
 
-           
+
         }
 
         // GET: Tickets/Details/5
@@ -43,6 +43,7 @@ namespace BugTracker.Controllers
         }
         
         // GET: Tickets/Create
+        [Authorize(Roles = "Submitter, Admin")]
         public ActionResult Create()
         {
 
@@ -71,7 +72,7 @@ namespace BugTracker.Controllers
                     ticket.Created = DateTime.Now;
                     ticket.OwnerUserId = User.Identity.GetUserId();
 
-
+                    ticket.AssignedToUserId = User.Identity.GetUserId();
                     ticket.TicketStatusId = db.TicketStatuses.FirstOrDefault(t => t.Name == "New / Unassigned").Id;
                     db.Tickets.Add(ticket);
                     db.SaveChanges();
@@ -79,12 +80,12 @@ namespace BugTracker.Controllers
                 
                 return RedirectToAction("Index");
             }
+            //var myProjects = projectHelper.ListUserProjects(User.Identity.GetUserId());
 
+            //ViewBag.ProjectId = new SelectList(myProjects, "Id", "Name", ticket.ProjectId);
+            //ViewBag.TicketPriorityId = new SelectList(db.TicketPriorities, "Id", "Name", ticket.TicketPriorityId);
             
-            ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name", ticket.ProjectId);
-            ViewBag.TicketPriorityId = new SelectList(db.TicketPriorities, "Id", "Name", ticket.TicketPriorityId);
-            
-            ViewBag.TicketTypeId = new SelectList(db.TicketTypes, "Id", "Name", ticket.TicketTypeId);
+            //ViewBag.TicketTypeId = new SelectList(db.TicketTypes, "Id", "Name", ticket.TicketTypeId);
             return View(ticket);
         }
 
@@ -105,7 +106,7 @@ namespace BugTracker.Controllers
             if (linkHelper.UserCanEditTicket(ticket))
             {
                 if (linkHelper.UserCanAssignTicket(ticket))
-                    ViewBag.AssignedToUserId = new SelectList(projectHelper.UsersInRoleOnProject(ticket.ProjectId, "Developer"), "Id", "FirstName", ticket.AssignedToUserId);
+                    ViewBag.AssignedToUserId = new SelectList(projectHelper.UsersInRoleOnProject2(ticket.ProjectId, "Developer"), "Id", "FirstName", ticket.AssignedToUserId);
                     
                 
                 
@@ -121,7 +122,8 @@ namespace BugTracker.Controllers
             }
             else
             {
-                return View(ticket); /*sweet alert*/
+                TempData["Message"] = "You are not authorized to edit Ticket Id" + ticket.Id + "based on your assigned role.";
+                return RedirectToAction("Index","Tickets"); /*sweet alert*/
             }
             
         }
@@ -142,11 +144,15 @@ namespace BugTracker.Controllers
                 db.Entry(ticket).Property(x => x.TicketTypeId).IsModified = true;
                 db.Entry(ticket).Property(x => x.TicketPriorityId).IsModified = true;
                 db.Entry(ticket).Property(x => x.Title).IsModified = true;
-                db.Entry(ticket).Property(x => x.Description).IsModified = true;               
+                db.Entry(ticket).Property(x => x.Description).IsModified = true;
 
                 if (linkHelper.UserCanAssignTicket(ticket))
+                {
                     db.Entry(ticket).Property(x => x.AssignedToUserId).IsModified = true;
-
+                    ticket.TicketStatusId = db.TicketStatuses.FirstOrDefault(t => t.Name == "Assigned").Id;
+                }
+                    
+                
                 ticket.Updated = DateTime.Now;
                 db.SaveChanges();
 
@@ -161,6 +167,27 @@ namespace BugTracker.Controllers
             ViewBag.TicketStatusId = new SelectList(db.TicketStatuses, "Id", "Name", ticket.TicketStatusId);
             ViewBag.TicketTypeId = new SelectList(db.TicketTypes, "Id", "Name", ticket.TicketTypeId);
             return View(ticket);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult MarkAsRead([Bind(Include = "Id")]TicketNotification ticketNotification)
+        {
+            
+            var notification = db.TicketNotifications.Find(ticketNotification.Id);
+            notification.Read = true;
+
+            var ticket = db.Tickets.Find(notification.TicketId);
+            ticket.TicketStatusId = db.TicketStatuses.FirstOrDefault(t => t.Name == "Assigned / In Progress").Id;
+            
+            
+            
+            
+            db.SaveChanges();
+
+            return RedirectToAction("Index", "TicketNotifications");
+
         }
 
         // GET: Tickets/Delete/5

@@ -42,7 +42,7 @@ namespace BugTracker.Helpers
             if (!string.IsNullOrEmpty(messageBody.ToString()))
             {
                 var message = new StringBuilder();
-                message.AppendLine($"he following changes were made to one of your Tickets on {newTicket.Updated}");
+                message.AppendLine($"The following changes were made to one of your Tickets on {newTicket.Updated}");
                 message.AppendLine(messageBody.ToString());
                 var senderId = HttpContext.Current.User.Identity.GetUserId();
 

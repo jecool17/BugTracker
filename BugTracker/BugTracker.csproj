@@ -170,8 +170,10 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="ChartData\MorrisChartData.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\ChartsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MembersController.cs" />
@@ -225,6 +227,8 @@
     <Content Include="Content\jquery-scrollbar\jquery.scrollbar.css" />
     <Content Include="Content\jquery-scrollbar\jquery.scrollbar.min.js" />
     <Content Include="Content\jquery.dataTables.css" />
+    <Content Include="Content\morris.css" />
+    <Content Include="Content\morris.min.css" />
     <Content Include="Content\pace-theme-flash.css" />
     <Content Include="Content\select2.css" />
     <Content Include="Content\webarch.css" />
@@ -233,6 +237,8 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="img\cover_pic.png" />
+    <Content Include="img\doc.png" />
+    <Content Include="img\docx.png" />
     <Content Include="img\invoicelogo.png" />
     <Content Include="img\invoicelogo2x.png" />
     <Content Include="img\logo-b.png" />
@@ -242,6 +248,7 @@
     <Content Include="img\map.png" />
     <Content Include="img\map_svg.svg" />
     <Content Include="img\notification-alert.png" />
+    <Content Include="img\other.png" />
     <Content Include="img\others\1.jpg" />
     <Content Include="img\others\1.png" />
     <Content Include="img\others\10.png" />
@@ -266,6 +273,7 @@
     <Content Include="img\others\rob.jpg" />
     <Content Include="img\others\yellowstone.jpg" />
     <Content Include="img\others\zion.jpg" />
+    <Content Include="img\pdf.png" />
     <Content Include="img\profile-pic-big.png" />
     <Content Include="img\profile-pic.png" />
     <Content Include="img\profiles\1.png" />
@@ -310,10 +318,15 @@
     <Content Include="img\widget-arrow-green.png" />
     <Content Include="img\widget-arrow-orange.png" />
     <Content Include="img\work.jpg" />
+    <Content Include="img\xls.png" />
+    <Content Include="img\xlsx.png" />
+    <Content Include="img\zip.png" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Private.config" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
+    <Content Include="Scripts\Chart.js" />
+    <Content Include="Scripts\charts.js" />
     <Content Include="Scripts\chat.js" />
     <Content Include="Scripts\datatables.js" />
     <Content Include="Scripts\datatables.responsive.js" />
@@ -335,6 +348,7 @@
     <Content Include="Scripts\jqueryblockui.min.js" />
     <Content Include="Scripts\lodash.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\morris.min.js" />
     <Content Include="Scripts\pace.min.js" />
     <Content Include="Scripts\select2.min.js" />
     <Content Include="Scripts\webarch.js" />
@@ -426,6 +440,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Charts\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

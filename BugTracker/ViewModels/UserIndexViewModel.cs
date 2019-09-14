@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -15,9 +16,16 @@ namespace BugTracker.ViewModels
         [Display(Name = "Full Name")]
         public string FullName { get; set; }
 
-        
+        [NotMapped]
+        public string FullNameWithEmail
+        {
+            get
+            {
+                return $"{FullName} - {Email}";
+            }
+        }
 
-        
+
         [Display(Name = "Display Name")]
         public string DisplayName { get; set; }
 

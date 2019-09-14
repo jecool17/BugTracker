@@ -214,8 +214,8 @@ namespace BugTracker.Migrations
              
 
             context.TicketStatuses.AddOrUpdate(t => t.Name, new TicketStatus { Name = "New / Unassigned", Description = "New ticket that has not been assigned", Value = 0 },
-                                                         new TicketStatus { Name = "UnAssigned", Description = "Ticket that is not assigned", Value = 25 },                                                         
-                                                         new TicketStatus { Name = "Assigned/ In Progress", Description = "Ticket that has been assigned and in progress", Value = 50 },
+                                                         new TicketStatus { Name = "Assigned", Description = "The ticket has been assigned", Value = 15 },                                                         
+                                                         new TicketStatus { Name = "Assigned / In Progress", Description = "Ticket that has been assigned and in progress", Value = 40 },
                                                          new TicketStatus { Name = "Resolved", Description = "Completed Ticket by assigned developer", Value = 75},
                                                           new TicketStatus { Name = "Archived", Description = "Ticket has been completed and approved by Manager", Value = 100 });
 

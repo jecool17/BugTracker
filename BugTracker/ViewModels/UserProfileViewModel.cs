@@ -20,6 +20,8 @@ namespace BugTracker.ViewModels
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
+        
+
         [Required]
         [StringLength(50, ErrorMessage = "Invalid User Name")]
         [Display(Name = "Display Name")]
