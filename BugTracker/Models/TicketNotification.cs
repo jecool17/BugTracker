@@ -19,8 +19,8 @@ namespace BugTracker.Models
 
         //Navigation 
 
-        public ApplicationUser Recipient { get; set; }
-        public ApplicationUser Sender { get; set; }
+        public virtual ApplicationUser Recipient { get; set; }
+        public virtual ApplicationUser Sender { get; set; }
 
         public virtual Ticket Ticket { get; set; }
     }

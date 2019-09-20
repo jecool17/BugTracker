@@ -15,7 +15,7 @@ namespace BugTracker.Models
         public string NewValue { get; set; }
         public DateTime Changed { get; set; }
         //Navigation
-        public ApplicationUser User { get; set; }
+        public virtual ApplicationUser User { get; set; }
         public virtual Ticket Ticket { get; set; }
 
     }

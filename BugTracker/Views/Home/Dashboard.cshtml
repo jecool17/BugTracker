@@ -1,6 +1,6 @@
 ﻿
 
-    @*<div class="row">
+    <div class="row">
         <div class="col-md-4">
             <div class="grid simple">
                 <div class="grid-title no-border">
@@ -19,12 +19,9 @@
                 </div>
             </div>
         </div>
-    </div>*@
+    </div>
 
-<div class="row">
-    <div id="MorrisDonutChart" style="height:100%;width:100%;display:inline-block;"></div>
 
-</div>
 
 
 @section scripts{
@@ -36,10 +33,10 @@
                 new Morris.Donut({
                     element: 'MorrisDonutChart',
                     data: response,
-                    gridTextSize: 10,
-                    xkey: 'label',
-                    ykeys: ['value'],
-                    labels: ['Ticket Count'],
+                    gridTextSize: 8,
+                    //xkey: 'label',
+                    //ykeys: ['value'],
+                    //labels: ['Ticket Count'],
                     resize: true
 
                 });

@@ -4851,6 +4851,9 @@ form legend,
 .grid.box .form-horizontal.form-bordered .control-group:first-child {
   margin-top: -10px;
 }
+
+
+
 .grid.box .grid-title {
   padding: 8px 10px 2px 10px;
   border-bottom: 1px solid #eee;
@@ -4868,6 +4871,7 @@ form legend,
   width: 23px;
   height: 23px;
 }
+
 .grid.box .grid-body {
   background-color: #ffffff;
   padding: 10px;

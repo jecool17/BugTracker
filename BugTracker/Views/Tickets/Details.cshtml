@@ -1,106 +1,509 @@
-﻿@model BugTracker.Models.Ticket
+﻿
+@using BugTracker.Helpers
+@using Microsoft.AspNet.Identity
+@using BugTracker.Models
+@using System.IO
+
+
+
+@model BugTracker.Models.Ticket
+
 
 @{
-    Layout = null;
+    var userId = User.Identity.GetUserId();
+    ApplicationUser user = new ApplicationUser();
+    if (userId != null)
+    {
+        var db = new ApplicationDbContext();
+        user = db.Users.Find(userId);
+
+       
+
+    }
+
+
+
 }
 
-<!DOCTYPE html>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Details</title>
-</head>
-<body>
-    <div>
-        <h4>Ticket</h4>
-        <hr />
-        <dl class="dl-horizontal">
-            <dt>
-                @Html.DisplayNameFor(model => model.AssignedToUser.FirstName)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.AssignedToUser.FirstName)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.OwnerUser.FirstName)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.OwnerUser.FirstName)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.Project.Name)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.Project.Name)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.TicketPriority.Name)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.TicketPriority.Name)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.TicketStatus.Name)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.TicketStatus.Name)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.TicketType.Name)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.TicketType.Name)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.Title)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.Title)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.Description)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.Description)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.Created)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.Created)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.Updated)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.Updated)
-            </dd>
-    
-        </dl>
+<div class="page-title">
+    <h3>@Model.Title Dashboard </h3>
+</div>
+<div id="container">
+    <div class="row 2col container-fluid">
+        <div class="col-md-3 col-sm-6 spacing-bottom-sm spacing-bottom">
+            <div class="tiles blue added-margin">
+                <div class="tiles-body">
+                    <div class="controller">
+                        <a href="javascript:;" class="reload"></a>
+                        <a href="javascript:;" class="remove"></a>
+                    </div>
+                    <div class="tiles-title"> Ticket Progress </div>
+                    <div class="heading"> <span class="animate-number" data-value="@Model.TicketStatus.Value" data-animation-duration="1200">0</span>% </div>
+                    <div class="progress transparent progress-small no-radius">
+                        <div class="progress-bar progress-bar-white animate-progress-bar" data-percentage="@Model.TicketStatus.Value%"></div>
+                    </div>
+                    <div class="description">
+                        <i class="icon-custom-up"></i><span class="text-white mini-description ">&nbsp; @Model.TicketStatus.Name</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 spacing-bottom-sm spacing-bottom">
+            <div class="tiles green added-margin">
+                <div class="tiles-body">
+                    <div class="controller">
+                        <a href="javascript:;" class="reload"></a>
+                        <a href="javascript:;" class="remove"></a>
+                    </div>
+                    <div class="tiles-title"> Ticket Priority </div>
+                    <div class="heading"> @Model.TicketPriority.Name </div>
+                    <div class="progress transparent progress-small no-radius">
+                        <div class="progress-bar progress-bar-white animate-progress-bar" data-percentage="79%"></div>
+                    </div>
+                    <div class="description">
+                        <i class="icon-custom-up"></i><span class="text-white mini-description ">&nbsp; ?% of your tickets </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 spacing-bottom">
+            <div class="tiles red added-margin">
+                <div class="tiles-body">
+                    <div class="controller">
+                        <a href="javascript:;" class="reload"></a>
+                        <a href="javascript:;" class="remove"></a>
+                    </div>
+                    <div class="tiles-title"> Ticket Type </div>
+                    <div class="heading"> @Model.TicketType.Name </div>
+                    <div class="progress transparent progress-white progress-small no-radius">
+                        <div class="progress-bar progress-bar-white animate-progress-bar" data-percentage="45%"></div>
+                    </div>
+                    <div class="description">
+                        <i class="icon-custom-up"></i><span class="text-white mini-description ">&nbsp; 5% of your tickets</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="tiles purple added-margin">
+                <div class="tiles-body">
+                    <div class="controller">
+                        <a href="javascript:;" class="reload"></a>
+                        <a href="javascript:;" class="remove"></a>
+                    </div>
+                    <div class="tiles-title"> Manage Ticket</div>
+                    <div class="row-fluid">
+                        <div class="heading"><button type="button" class="btn btn-primary btn-cons"><i class="fa fa-check"></i>&nbsp;Advance Ticket</button></div>
+                        @*<div class="progress transparent progress-white progress-small no-radius">
+                                <div class="progress-bar progress-bar-white animate-progress-bar" data-percentage="@Model.TicketStatus.Value%"></div>
+                            </div>*@
+                    </div>
+                    <div class="description">
+
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <p>
-        @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-        @Html.ActionLink("Back to List", "Index")
-    </p>
-</body>
-</html>
+
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="grid simple black ">
+                <div class="grid-title no-border">
+                    <h4>@Model.Project.Name<span class="semi-bold"> Project</span></h4>
+                    <div class="tools">
+                        <a href="javascript:;" class="collapse"></a>
+                        <a href="#grid-config" data-toggle="modal" class="config"></a>
+                        <a href="javascript:;" class="reload"></a>
+                        <a href="javascript:;" class="remove"></a>
+                    </div>
+                </div>
+                <div class="grid-body no-border">
+                    <h4><span class="semi-bold">Other Active Tickets on Project</span></h4>
+
+                    <div id="DonutTypesChart" style="height:200px;"> </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8 col-sm-8">
+            <div class="tiles gradient-grey">
+                <div class="tiles-body">
+                    <div class="controller">
+                        <a href="javascript:;" class="reload"></a>
+                        <a href="javascript:;" class="remove"></a>
+                    </div>
+                    <div class="tiles-title text-black">TICKET #@Model.Id NOTIFICATIONS </div>
+                    <br>
+                    @foreach (var notification in Model.TicketNotifications.Where(c => c.RecipientId == user.Id).OrderByDescending(b => b.Created))
+                    {
+
+                        <div class="notification-messages info">
+                            <div class="user-profile"> <img src="@notification.Sender.AvatarURL" @*alt="" data-src="~/img/profiles/c.jpg" data-src-retina="~/img/profiles/c2x.jpg"*@ width="35" height="35"> </div>
+                            <div class="message-wrapper">
+                                <div class="heading"> @notification.Subject </div>
+                                <div class="description"> @notification.NotificationBody </div>
+                            </div>
+                            <div class="date pull-right"> @notification.Created </div>
+                            <div class="clearfix"></div>
+                        </div>
+
+                    }
+
+
+
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        @*<div class="col-md-8 spacing-bottom">
+            <div class="row tiles-container  spacing-bottom">
+                <div class="tile-more-content col-md-4 col-sm-4 no-padding">
+                    <div class="tiles green">
+                        <div class="tiles-body">
+                            <div class="heading"> Your Ticket </div>
+                            <p>Status : live</p>
+                        </div>
+                        <div class="tile-footer">
+                            <div class="iconplaceholder"><i class="fa fa-map-marker"></i></div>
+                            @Model.TicketStatus.Name
+                        </div>
+                    </div>
+                    <div class="tiles-body">
+                        <ul class="progress-list">
+                            <li>
+                                <div class="details-wrapper">
+                                    <div class="name">Ticket Progress</div>
+                                    <div class="description"></div>
+                                </div>
+                                <div class="details-status pull-right"> <span class="animate-number" data-value="@Model.TicketStatus.Value" data-animation-duration="800">0</span>% </div>
+                                <div class="clearfix"></div>
+                                <div class="progress progress-small no-radius">
+                                    <div class="progress-bar progress-bar-success animate-progress-bar" data-percentage="@Model.TicketStatus.Value%"></div>
+                                </div>
+                            </li>
+                            @*<li>
+                                <div class="details-wrapper">
+                                    <div class="name">Local Visits</div>
+                                    <div class="description">Our Overseas visits</div>
+                                </div>
+                                <div class="details-status pull-right"> <span class="animate-number" data-value="45" data-animation-duration="600">0</span>% </div>
+                                <div class="clearfix"></div>
+                                <div class="progress progress-small no-radius ">
+                                    <div class="progress-bar progress-bar-warning animate-progress-bar" data-percentage="45%"></div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="details-wrapper">
+                                    <div class="name">Other Visits</div>
+                                    <div class="description">Our Overseas visits</div>
+                                </div>
+                                <div class="details-status pull-right"> <span class="animate-number" data-value="12" data-animation-duration="200">0</span>% </div>
+                                <div class="clearfix"></div>
+                                <div class="progress progress-small no-radius">
+                                    <div class="progress-bar progress-bar-danger animate-progress-bar" data-percentage="12%"></div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+
+
+            </div>
+
+
+
+        </div>*@
+
+        <div class="col-md-5 col-vlg-4 col-sm-4 no-padding">
+            <div class="tiles black">
+                <div class="tiles-body">
+                    <h5 class="text-white"><span class="semi-bold">QUICK</span> VIEW</h5>
+                    <input type="text" placeholder="Search..." class="form-control input-sm m-t-20">
+                    <div class="m-t-40">
+                        <div class="widget-stats">
+                            <div class="wrapper"> <span class="item-title">Overall Visits</span> <span class="item-count animate-number semi-bold" data-value="2415" data-animation-duration="700">0</span> </div>
+                        </div>
+                        <div class="widget-stats">
+                            <div class="wrapper"> <span class="item-title">Today's</span> <span class="item-count animate-number semi-bold" data-value="751" data-animation-duration="700">0</span> </div>
+                        </div>
+                        <div class="widget-stats hidden-sm">
+                            <div class="wrapper last"> <span class="item-title">Monthly</span> <span class="item-count animate-number semi-bold" data-value="1547" data-animation-duration="700">0</span> </div>
+                        </div>
+                        <div class="progress transparent progress-small no-radius m-t-20" style="width:90%">
+                            <div class="progress-bar progress-bar-success animate-progress-bar" data-percentage="64.8%"></div>
+                        </div>
+                        <div class="description">
+                            <span class="text-white mini-description ">4% higher <span class="blend">than last month</span></span>
+                        </div>
+                    </div>
+                </div>
+                <br />
+
+                <div class="grid-title no-border">
+                    <h4>Attachments<span class="semi-bold"> </span></h4>
+                    <div class="tools">
+                        <a href="javascript:;" class="collapse"></a>
+                        <a href="#grid-config" data-toggle="modal" class="config"></a>
+                        <a href="javascript:;" class="reload"></a>
+                        <a href="javascript:;" class="remove"></a>
+                    </div>
+                </div>
+                <div class="grid-body no-border">
+                    <h4><span class="semi-bold">Click to View </span></h4>
+
+                    <div class="tiles">
+
+                        @foreach (var attachment in Model.TicketAttachments)
+                        {
+                            <div class="row ">
+                                <div class="col-md-4">
+                                    <div class="row">
+                                        <div class="col-md-12">
+
+                                            <img src="@BugTracker.Helpers.ImageUploadValidator.GetIconPath(attachment.FileUrl)" />
+                                        </div>
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <a target="_blank" href="@attachment.FileUrl">@Path.GetFileNameWithoutExtension(attachment.FileUrl) </a>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+
+                            </div>
+
+
+
+
+
+                        }
+
+                    </div>
+                        
+
+
+
+
+                    
+                </div>
+
+
+
+                <br />
+
+                <div class="tiles gradient-grey">
+                    <div class="tiles-body">
+                        <div class="controller">
+                            <a href="javascript:;" class="reload"></a>
+                            <a href="javascript:;" class="remove"></a>
+                        </div>
+                        <div class="tiles-title text-black">TICKET #@Model.Id Comments </div>
+                        <br>
+                        @foreach (var comment in Model.TicketComments.OrderByDescending(c => c.Created))
+                        {
+
+                            <div class="notification-messages info">
+                                <div class="user-profile"> <img src="@comment.User.AvatarURL" @*alt="" data-src="~/img/profiles/c.jpg" data-src-retina="~/img/profiles/c2x.jpg"*@ width="35" height="35"> </div>
+                                <div class="message-wrapper">
+                                    <div class="heading"> @comment.Comment </div>
+                                    <div class="description"> @comment.Created </div>
+                                </div>
+                                <div class="date pull-right"> @comment.Created </div>
+                                <div class="clearfix"></div>
+                            </div>
+
+                        }
+
+
+
+
+                    </div>
+
+
+                </div>
+
+
+                <br />
+                <div id="chart" style="height:123px">
+                    @using (Html.BeginForm("Create", "Comments", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.Hidden("TicketId", Model.Id);
+                        <div class="comment-form-wrap container-fluid pt-5">
+                            <h3 class="mb-5">Leave a comment</h3>
+                            <form action="#" class="p-5 bg-light">
+                                <div class="form-group">
+                                    @Html.TextArea("Comment", new { @class = "Form-control" })
+                                    <button class="btn btn-primary" type="submit" value="Post">Post Comment</button>
+                                </div>
+
+
+                            </form>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+
+        @using (Html.BeginForm("Create", "TicketAttachments", FormMethod.Post, new { enctype = "Multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.Hidden("TicketId", Model.Id);
+            <div class="col-md-6">
+                <div class="grid simple">
+                    <div class="grid-title no-border">
+                        <h4> <span class="bold">Drag/Click To Add File</span></h4>
+                        <div class="tools">
+                            <a href="javascript:;" class="collapse"></a>
+                            <a href="#grid-config" data-toggle="modal" class="config"></a>
+                            <a href="javascript:;" class="reload"></a>
+                            <a href="javascript:;" class="remove"></a>
+                        </div>
+                        <br />
+
+                        <div class="row">
+
+                            <div class="grid-body no-border">
+                                <div class="row-fluid">
+                                    <form action="/file-upload" class="dropzone no-margin">
+                                        <div class="fallback">
+                                            <input name="attachment" type="file" multiple />
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="grid simple form-grid">
+                                    @*<div class="grid-title no-border">
+                                        <h4>Icon <span class="semi-bold">Validation</span></h4>
+                                        <div class="tools">
+                                            <a href="javascript:;" class="collapse"></a>
+                                            <a href="#grid-config" data-toggle="modal" class="config"></a>
+                                            <a href="javascript:;" class="reload"></a>
+                                            <a href="javascript:;" class="remove"></a>
+                                        </div>
+                                    </div>*@
+
+
+
+                                    <div class="grid-body no-border">
+                                        <br>
+                                        
+
+                                            
+                                                <label class="form-label bold">Add Title to file</label>
+                                                <span class="help">e.g. "Client gave me a word.doc"</span>
+                                                <div class="input-with-icon  right">
+                                                    <i class=""></i>
+
+                                                    @Html.TextBox("attachmentTitle", null, new { @class = "form-control cell-fill-input", placeHolder = "Title" })
+
+                                                    @*<input type="text" name="form1Name" id="form1Name" class="form-control">*@
+                                                </div>
+                                            
+                                            
+                                                <label class="form-label bold">Add Note to file</label>
+                                                <span class="help">e.g. "Description"</span>
+                                                <div class="input-with-icon  right">
+                                                    <i class=""></i>
+
+
+
+                                                    @Html.TextBox("attachmentDescription", null, new { @class = "form-control cell-fill-textarea", rows = 5, cols = 150, placeHolder = "Description" })
+
+                                                    @*<input type="text" name="form1Name" id="form1Name" class="form-control">*@
+                                                </div>
+                                            
+
+                                           
+                                                <div class="row">
+                                                    <button type="submit" class="btn btn-danger btn-cons"><i class="icon-ok"></i> Save</button>
+                                                    
+                                                </div>
+                                            
+                                        
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+        }
+        </div>
+    
+
+
+
+</div>
+
+
+
+@section scripts{
+
+    <script type="text/javascript">
+        $(function () {
+            var url = '@Url.Action("GetMorrisDataTypesOnProject", "Charts", new { id = Model.Id })';
+            $.post(url).then(function (response) {
+                new Morris.Donut({
+                    element: 'DonutTypesChart',
+                    data: response,
+                    gridTextSize: 8,
+
+                    //xkey: 'label',
+                    //ykeys: ['value'],
+                    //labels: ['Ticket Count'],
+                    resize: true
+
+                });
+
+            });
+
+        });
+
+
+    </script>
+
+<script type="text/javascript">
+
+
+    $(function () {
+            tinymce.init({
+                selector: '#Comment'
+            });
+        });
+
+    </script>
+  
+
+
+   
+}

@@ -50,7 +50,7 @@ namespace BugTracker.Helpers
                 {
                     TicketId = newTicket.Id,
                     Created = DateTime.Now,
-                    Subject = $"A change has occured on Ticket {newTicket.Id}",
+                    Subject = $"A change has occured on Ticket  #{newTicket.Id}",
                     RecipientId = newTicket.AssignedToUserId,
                     SenderId = senderId,
                     NotificationBody = message.ToString(),
@@ -88,7 +88,7 @@ namespace BugTracker.Helpers
             var notification = new TicketNotification
             {
                 Created = DateTime.Now,
-                Subject = $"You have been assigned to Ticket ID {newTicket.Id} on {DateTime.Now}",
+                Subject = $"You have been assigned to Ticket  #{newTicket.Id} on {DateTime.Now}",
                 Read = false,
                 RecipientId = newTicket.AssignedToUserId,
                 SenderId = HttpContext.Current.User.Identity.GetUserId(),
@@ -106,7 +106,7 @@ namespace BugTracker.Helpers
             var notification = new TicketNotification
             {
                 Created = DateTime.Now,
-                Subject = $"You have been unassigned from Ticket Id {newTicket.Id} on {DateTime.Now}",
+                Subject = $"You have been unassigned from Ticket  #{newTicket.Id} on {DateTime.Now}",
                 Read = false,
                 RecipientId = oldTicket.AssignedToUserId,
                 SenderId = HttpContext.Current.User.Identity.GetUserId(),

@@ -210,6 +210,8 @@ namespace BugTracker.Controllers
                     
                 }
                 AddErrors(result);
+                var tuple = new Tuple<LoginViewModel, RegisterViewModel, ForgotPasswordViewModel>(new LoginViewModel(), new RegisterViewModel(), new ForgotPasswordViewModel());
+                return View(tuple);
             }
 
             // If we got this far, something failed, redisplay form
@@ -452,14 +454,17 @@ namespace BugTracker.Controllers
             return View(model);
         }
 
-        //
+        public ActionResult Logoff()
+        {
+            return RedirectToAction("Register", "Account");
+        }
         // POST: /Account/LogOff
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Register", "Account");
         }
 
         //

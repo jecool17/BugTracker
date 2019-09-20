@@ -13,7 +13,7 @@ namespace BugTracker.Models
         public string Comment { get; set; }
         public DateTime Created { get; set; }
         //Navigation 
-        public ApplicationUser User { get; set; }
+        public virtual ApplicationUser User { get; set; }
         public virtual Ticket Ticket { get; set; }
 
 

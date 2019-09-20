@@ -14,6 +14,8 @@ namespace BugTracker.Controllers
     public class MembersController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
+        private UserRolesHelper roleHelper = new UserRolesHelper();
+        private ProjectsHelper projectHelper = new ProjectsHelper();
         // GET: Members
         [Authorize]
         public ActionResult EditProfile(string userId)
@@ -57,6 +59,15 @@ namespace BugTracker.Controllers
             }
             db.SaveChanges();
             return RedirectToAction("Dashboard", "Home");
+        }
+
+        
+
+        public ActionResult UserProjects(string userId)
+        {
+            var user = db.Users.Find(userId);
+            var projects = user.Projects.ToList();
+            return View(projects);
         }
 
         

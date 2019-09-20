@@ -18,9 +18,25 @@ namespace BugTracker.Controllers
         private ProjectsHelper projectHelper = new ProjectsHelper();
 
         // GET: Projects
+
         public ActionResult Index()
         {
+
             return View(db.Projects.ToList());
+        }
+        public ActionResult UserProjects(string userId)
+        {
+            
+                var user = db.Users.Find(userId);
+           
+            
+                var projects = user.Projects.ToList();
+                return View(projects);
+            
+                
+            
+
+            
         }
 
         // GET: Projects/Details/5
@@ -36,7 +52,7 @@ namespace BugTracker.Controllers
                 return HttpNotFound();
             }
 
-
+            ViewBag.color = "green";
             var allProjectManagers = roleHelper.UsersInRole("Project Manager");
             var currentProjectManagers = projectHelper.UsersInRoleOnProject(project.Id, "Project Manager");
             ViewBag.ProjectManagers = new MultiSelectList(allProjectManagers, "Id", "FullNameWithEmail", currentProjectManagers);

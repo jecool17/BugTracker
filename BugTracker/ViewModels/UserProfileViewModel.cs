@@ -11,7 +11,7 @@ namespace BugTracker.ViewModels
     {
         public string Id { get; set; }
         [Required]
-        [StringLength(50, ErrorMessage = "Invalid First Name")]
+        [StringLength(10, ErrorMessage = "Invalid First Name")]
         [Display(Name = "First Name")]
         public string FirstName { get; set; }
 

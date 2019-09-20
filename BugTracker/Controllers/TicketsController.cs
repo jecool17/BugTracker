@@ -27,6 +27,16 @@ namespace BugTracker.Controllers
 
         }
 
+        public ActionResult UserTickets(string userId)
+        {
+            var user = db.Users.Find(userId);
+            //check for null/ add sweet alert.
+            var tickets = user.Tickets.ToList();
+
+            return View(tickets);
+
+        }
+
         // GET: Tickets/Details/5
         public ActionResult Details(int? id)
         {
