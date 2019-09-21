@@ -10,6 +10,7 @@ using System.Web.Mvc;
 using BugTracker.Helpers;
 using BugTracker.Models;
 using Microsoft.AspNet.Identity;
+using ImageResizer;
 
 namespace BugTracker.Controllers
 {
@@ -70,7 +71,6 @@ namespace BugTracker.Controllers
                     attachment.SaveAs(Path.Combine(Server.MapPath("~/Uploads/"), fileName));
                     ticketAttachment.FileUrl = "/Uploads/" + fileName;
                 }
-
 
 
                 db.TicketAttachments.Add(ticketAttachment);

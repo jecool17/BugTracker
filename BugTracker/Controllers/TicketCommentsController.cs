@@ -62,7 +62,7 @@ namespace BugTracker.Controllers
                 db.SaveChanges();
                 
             }
-            return RedirectToAction("Index"); /*Redirect to detail ticket page*/
+            return RedirectToAction("Details","Tickets", new { id = ticketComment.TicketId}); /*Redirect to detail ticket page*/
 
             //ViewBag.TicketId = new SelectList(db.Tickets, "Id", "OwnerUserId", ticketComment.TicketId);
             //ViewBag.UserId = new SelectList(db.Users, "Id", "FirstName", ticketComment.UserId);

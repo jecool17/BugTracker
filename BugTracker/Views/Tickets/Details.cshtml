@@ -225,30 +225,37 @@
         <div class="col-md-5 col-vlg-4 col-sm-4 no-padding">
             <div class="tiles black">
                 <div class="tiles-body">
-                    <h5 class="text-white"><span class="semi-bold">QUICK</span> VIEW</h5>
-                    <input type="text" placeholder="Search..." class="form-control input-sm m-t-20">
+                    <h5 class="text-white"><span class="semi-bold">Ticket</span> Summary</h5>
+                   
+                    <div class="row">
+                        @Model.Title
+                    </div>
+                    <br />
+                    <div class="row">
+                        @Model.Description
+                    </div>
                     <div class="m-t-40">
                         <div class="widget-stats">
-                            <div class="wrapper"> <span class="item-title">Overall Visits</span> <span class="item-count animate-number semi-bold" data-value="2415" data-animation-duration="700">0</span> </div>
+                            <div class="wrapper"> <span class="item-title">@Model.TicketType.Name</span> <span class="item-count animate-number semi-bold" data-value="2415" data-animation-duration="700">0</span> </div>
                         </div>
                         <div class="widget-stats">
-                            <div class="wrapper"> <span class="item-title">Today's</span> <span class="item-count animate-number semi-bold" data-value="751" data-animation-duration="700">0</span> </div>
+                            <div class="wrapper"> <span class="item-title">@Model.TicketPriority.Name</span> <span class="item-count animate-number semi-bold" data-value="751" data-animation-duration="700">0</span> </div>
                         </div>
                         <div class="widget-stats hidden-sm">
-                            <div class="wrapper last"> <span class="item-title">Monthly</span> <span class="item-count animate-number semi-bold" data-value="1547" data-animation-duration="700">0</span> </div>
+                            <div class="wrapper last"> <span class="item-title">@Model.TicketStatus.Name</span> <span class="item-count animate-number semi-bold" data-value="1547" data-animation-duration="700">0</span> </div>
                         </div>
                         <div class="progress transparent progress-small no-radius m-t-20" style="width:90%">
-                            <div class="progress-bar progress-bar-success animate-progress-bar" data-percentage="64.8%"></div>
+                            <div class="progress-bar progress-bar-success animate-progress-bar" data-percentage="@Model.TicketStatus.Value%"></div>
                         </div>
                         <div class="description">
-                            <span class="text-white mini-description ">4% higher <span class="blend">than last month</span></span>
+                            <span class="text-white mini-description ">This Ticket Has Been assigned to you by @Model.OwnerUser.FullName <span class="blend"></span></span>
                         </div>
                     </div>
                 </div>
                 <br />
 
-                <div class="grid-title no-border">
-                    <h4>Attachments<span class="semi-bold"> </span></h4>
+                <div class="grid-title no-border text-white">
+                    <h4><span class="semi-bold"> </span></h4>
                     <div class="tools">
                         <a href="javascript:;" class="collapse"></a>
                         <a href="#grid-config" data-toggle="modal" class="config"></a>
@@ -257,7 +264,7 @@
                     </div>
                 </div>
                 <div class="grid-body no-border">
-                    <h4><span class="semi-bold">Click to View </span></h4>
+                    <h4><span class="semi-bold text-white">Attachments  </span></h4>
 
                     <div class="tiles">
 
@@ -268,7 +275,7 @@
                                     <div class="row">
                                         <div class="col-md-12">
 
-                                            <img src="@BugTracker.Helpers.ImageUploadValidator.GetIconPath(attachment.FileUrl)" />
+                                            <img src="@BugTracker.Helpers.ImageUploadValidator.GetIconPath(attachment.FileUrl)" class="img-responsive" width="30" />
                                         </div>
 
                                     </div>
@@ -311,7 +318,7 @@
                             <a href="javascript:;" class="reload"></a>
                             <a href="javascript:;" class="remove"></a>
                         </div>
-                        <div class="tiles-title text-black">TICKET #@Model.Id Comments </div>
+                        <div class="tiles-title text-white">TICKET #@Model.Id Comments </div>
                         <br>
                         @foreach (var comment in Model.TicketComments.OrderByDescending(c => c.Created))
                         {
@@ -322,7 +329,7 @@
                                     <div class="heading"> @comment.Comment </div>
                                     <div class="description"> @comment.Created </div>
                                 </div>
-                                <div class="date pull-right"> @comment.Created </div>
+                                <div class="date pull-right" > @comment.User.FirstName </div>
                                 <div class="clearfix"></div>
                             </div>
 
@@ -339,7 +346,7 @@
 
                 <br />
                 <div id="chart" style="height:123px">
-                    @using (Html.BeginForm("Create", "Comments", FormMethod.Post))
+                    @using (Html.BeginForm("Create", "TicketComments", FormMethod.Post))
                     {
                         @Html.AntiForgeryToken()
                         @Html.Hidden("TicketId", Model.Id);
@@ -441,6 +448,15 @@
                                                 </div>
                                             
                                         
+                                                
+
+                                                 
+
+                                                
+
+
+
+
                                     </div>
                                 </div>
                             </div>
