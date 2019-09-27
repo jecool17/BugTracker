@@ -271,23 +271,20 @@
                         @foreach (var attachment in Model.TicketAttachments)
                         {
                             <div class="row ">
-                                <div class="col-md-4">
-                                    <div class="row">
-                                        <div class="col-md-12">
+                               
+                                    
+                                        <div class="col-md-3" style="width: 60px;">
 
-                                            <img src="@BugTracker.Helpers.ImageUploadValidator.GetIconPath(attachment.FileUrl)" class="img-responsive" width="30" />
+                                            <img src="@BugTracker.Helpers.ImageUploadValidator.GetIconPath(attachment.FileUrl)" class="img-responsive" />
                                         </div>
-
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="col-md-9">
                                             <a target="_blank" href="@attachment.FileUrl">@Path.GetFileNameWithoutExtension(attachment.FileUrl) </a>
-
                                         </div>
 
-                                    </div>
+                                    
+                                    
 
-                                </div>
+                                
 
 
 
@@ -387,11 +384,11 @@
 
                             <div class="grid-body no-border">
                                 <div class="row-fluid">
-                                    <form action="/file-upload" class="dropzone no-margin">
+                                    @*<form action="/file-upload" class="dropzone no-margin">*@
                                         <div class="fallback">
                                             <input name="attachment" type="file" multiple />
                                         </div>
-                                    </form>
+                                    @*</form>*@
                                 </div>
                             </div>
 

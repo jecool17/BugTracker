@@ -26,6 +26,29 @@ namespace BugTracker.Controllers
             return Json(dataSet);
         }
 
+        public JsonResult GetMorrisDataTicketTypes()
+        {
+            var dataSet = new List<MorrisChartData>();
+            foreach (var tickettypes in db.TicketTypes.ToList())
+            {
+                var value = db.Tickets.Where(t => t.TicketTypeId == tickettypes.Id).Count();
+                dataSet.Add(new MorrisChartData { label = tickettypes.Name, value = value });
+            }
+            return Json(dataSet);
+        }
+
+        public JsonResult GetMorrisDataTicketPriorities()
+        {
+
+            var dataSet = new List<MorrisChartData>();
+            foreach (var ticketpriority in db.TicketPriorities.ToList())
+            {
+                var value = db.Tickets.Where(t => t.TicketPriorityId == ticketpriority.Id).Count();
+                dataSet.Add(new MorrisChartData { label = ticketpriority.Name, value = value });
+            }
+            return Json(dataSet);
+        }
+
         public JsonResult GetMorrisDataTypesOnProject([Bind(Include = "Id")] Ticket ticket)
         {
             

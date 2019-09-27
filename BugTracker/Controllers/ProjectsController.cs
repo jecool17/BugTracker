@@ -52,6 +52,12 @@ namespace BugTracker.Controllers
                 return HttpNotFound();
             }
 
+            ViewBag.TicketPriorityId = new SelectList(db.TicketPriorities, "Id", "Name");
+
+            ViewBag.TicketTypeId = new SelectList(db.TicketTypes, "Id", "Name");
+
+
+
             ViewBag.color = "green";
             var allProjectManagers = roleHelper.UsersInRole("Project Manager");
             var currentProjectManagers = projectHelper.UsersInRoleOnProject(project.Id, "Project Manager");

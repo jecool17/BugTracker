@@ -74,10 +74,14 @@ namespace BugTracker.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ProjectId,TicketTypeId,TicketPriorityId,Title,Description")] Ticket ticket)
         {
+
+            var ctick = db.Tickets.Find(ticket.Id);
+            var project = db.Projects.Find(ctick.ProjectId);
+
             if (ModelState.IsValid)
             {
 
-                if (linkHelper.UserCanCreateTicket(ticket))
+                if (linkHelper.UserCanCreateTicket(project))
                 {
                     ticket.Created = DateTime.Now;
                     ticket.OwnerUserId = User.Identity.GetUserId();

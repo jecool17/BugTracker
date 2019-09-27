@@ -1,4 +1,5 @@
 ﻿using BugTracker.Models;
+using BugTracker.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -12,6 +13,19 @@ namespace BugTracker.Helpers
         ApplicationDbContext db = new ApplicationDbContext();
         private UserRolesHelper roleHelper = new UserRolesHelper();
 
+
+        public List<Project> GetProjectCount()
+        {
+
+            return db.Projects.ToList();
+        }
+
+        public int GetTicketCount(int projectId)
+        {
+            var project = db.Projects.Find(projectId);
+            return project.Tickets.Count();
+
+        }
         public List<string> UsersInRoleOnProject(int projectId, string roleName)
         {
             var people = new List<string>();
@@ -26,6 +40,7 @@ namespace BugTracker.Helpers
             return people;
         }
 
+        
 
         public List<ApplicationUser> UsersInRoleOnProject2(int projectId, string roleName)
         {

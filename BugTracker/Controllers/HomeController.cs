@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BugTracker.Helpers;
+using BugTracker.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,9 +10,17 @@ namespace BugTracker.Controllers
 {
     public class HomeController : Controller
     {
+
+        private ApplicationDbContext db = new ApplicationDbContext();
+        private UserRolesHelper roleHelper = new UserRolesHelper();
+        private ProjectsHelper projectHelper = new ProjectsHelper();
+
         public ActionResult Dashboard()
         {
-            return View();
+
+            var tickets = db.Tickets;
+            return View(tickets.ToList());
+
         }
 
         public ActionResult About()

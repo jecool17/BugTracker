@@ -1,10 +1,292 @@
-﻿
+﻿@using BugTracker.Helpers
+@using Microsoft.AspNet.Identity
+@using BugTracker.Models
+@using System.IO
+
+
+
+@model IEnumerable<BugTracker.Models.Ticket>
+
+@{  var db = new ApplicationDbContext();
+    var userId = User.Identity.GetUserId();
+    ApplicationUser user = new ApplicationUser();
+    if (userId != null)
+    {
+        
+        user = db.Users.Find(userId);
+
+       
+
+    }
+
+    var projects = db.Projects.ToList();
+
+        var projectHelper = new ProjectsHelper();
+    
+
+
+}
+
+
+
+
+
+
+<div class="row">
+    <div class="col-md-4 col-vlg-3 col-sm-6">
+        <div class="tiles green m-b-10">
+            <div class="tiles-body">
+                <div class="controller">
+                    <a href="javascript:;" class="reload"></a>
+                    <a href="javascript:;" class="remove"></a>
+                </div>
+                <div class="tiles-title text-black">Tickets </div>
+                <div class="widget-stats">
+                    <div class="wrapper transparent">
+                        <span class="item-title">Overall Tickets</span> <span class="item-count animate-number semi-bold" data-value="@Model.Count()" data-animation-duration="700">0</span>
+                    </div>
+                </div>
+                <div class="widget-stats">
+                    <div class="wrapper transparent">
+                        <span class="item-title">In Progress</span> <span class="item-count animate-number semi-bold" data-value="@Model.Where(t=>t.TicketStatus.Name.Contains("Assigned")).Count()" data-animation-duration="700">0</span>
+                    </div>
+                </div>
+                <div class="widget-stats ">
+                    <div class="wrapper last">
+                        <span class="item-title">Archived</span> <span class="item-count animate-number semi-bold" data-value="@Model.Where(t=>t.TicketStatus.Name.Contains("Archived")).Count()" data-animation-duration="700">0</span>
+                    </div>
+                </div>
+                <div class="progress transparent progress-small no-radius m-t-20" style="width:90%">
+                    <div class="progress-bar progress-bar-white animate-progress-bar" data-percentage="64.8%"></div>
+                </div>
+                <div class="description">
+                    <span class="text-white mini-description ">4% higher <span class="blend">than last month</span></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-vlg-3 col-sm-6">
+        <div class="tiles blue m-b-10">
+            <div class="tiles-body">
+                <div class="controller">
+                    <a href="javascript:;" class="reload"></a>
+                    <a href="javascript:;" class="remove"></a>
+                </div>
+                <div class="tiles-title text-black">Projects</div>
+                <div class="widget-stats">
+                    <div class="wrapper transparent">
+                        <span class="item-title">Overall Projects</span> <span class="item-count animate-number semi-bold" data-value="@projectHelper.GetProjectCount().Count()" data- animation-duration="700">0</span>
+                    </div>
+                </div>
+                <div class="widget-stats">
+                    <div class="wrapper transparent">
+                        <span class="item-title">Active Tickets</span> <span class="item-count animate-number semi-bold" data-value="@Model.Where(t=>t.Project != null).Count()" data-animation-duration="700">0</span>
+                    </div>
+                </div>
+                <div class="widget-stats ">
+                    <div class="wrapper last">
+                        <span class="item-title">Completed Tickets</span> <span class="item-count animate-number semi-bold" data-value="@Model.Where(t=>t.TicketStatus.Name.Contains("Resolved")).Count()" data-animation-duration="700">0</span>
+                    </div>
+                </div>
+                <div class="progress transparent progress-small no-radius m-t-20" style="width:90%">
+                    <div class="progress-bar progress-bar-white animate-progress-bar" data-percentage="54%"></div>
+                </div>
+                <div class="description">
+                    <span class="text-white mini-description ">4% higher <span class="blend">than last month</span></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-vlg-3 col-sm-6">
+        <div class="tiles purple m-b-10">
+            <div class="tiles-body">
+                <div class="controller">
+                    <a href="javascript:;" class="reload"></a>
+                    <a href="javascript:;" class="remove"></a>
+                </div>
+                <div class="tiles-title text-black">Ticket Priorities </div>
+                <div class="widget-stats">
+                    <div class="wrapper transparent">
+                        <span class="item-title">Low</span> <span class="item-count animate-number semi-bold" data-value="@Model.Where(t=> t.TicketPriority.Name == "Low").Count()" data-animation-duration="700">0</span>
+                    </div>
+                </div>
+                <div class="widget-stats">
+                    <div class="wrapper transparent">
+                        <span class="item-title">Medium</span> <span class="item-count animate-number semi-bold" data-value="@Model.Where(t=> t.TicketPriority.Name == "Medium").Count()" data-animation-duration="700">0</span>
+                    </div>
+                </div>
+                <div class="widget-stats ">
+                    <div class="wrapper last">
+                        <span class="item-title">High</span> <span class="item-count animate-number semi-bold" data-value="@Model.Where(t=> t.TicketPriority.Name == "High").Count()" data-animation-duration="700">0</span>
+                    </div>
+                </div>
+                <div class="widget-stats ">
+                    <div class="wrapper last">
+                        <span class="item-title">URGENT!!!!!!!!!</span> <span class="item-count animate-number semi-bold" data-value="@Model.Where(t=> t.TicketPriority.Name == "URGENT").Count()" data-animation-duration="700">0</span>
+                    </div>
+                </div>
+                <div class="progress transparent progress-small no-radius m-t-20" style="width:90%">
+                    <div class="progress-bar progress-bar-white animate-progress-bar" data-percentage="90%"></div>
+                </div>
+                <div class="description">
+                    <span class="text-white mini-description ">4% higher <span class="blend">than last month</span></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-vlg-3 visible-xlg visible-sm col-sm-6">
+        <div class="tiles red m-b-10">
+            <div class="tiles-body">
+                <div class="controller">
+                    <a href="javascript:;" class="reload"></a>
+                    <a href="javascript:;" class="remove"></a>
+                </div>
+                <div class="tiles-title text-black">NOTIFICATIONS </div>
+                <div class="widget-stats">
+                    <div class="wrapper transparent">
+                        <span class="item-title">New Notifications</span> <span class="item-count animate-number semi-bold" data-value="@NotificationHelper.GetUserNewNotificationCount()" data-animation-duration="700">0</span>
+                    </div>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+
+    <div class="col-md-6 col-sm-6">
+        <div class="tiles gradient-grey">
+            <div class="tiles-body">
+                <div class="controller">
+                    <a href="javascript:;" class="reload"></a>
+                    <a href="javascript:;" class="remove"></a>
+                </div>
+                <div class="tiles-title text-black">Recent NOTIFICATIONS </div>
+                <br>
+                @foreach (var notification in NotificationHelper.GetAllNotifications().OrderByDescending(b => b.Created).Take(3))
+                {
+
+                    <div class="notification-messages info">
+                        <div class="user-profile"> <img src="@notification.Recipient.AvatarURL" @*alt="" data-src="~/img/profiles/c.jpg" data-src-retina="~/img/profiles/c2x.jpg"*@ width="35" height="35"> </div>
+                        <div class="message-wrapper">
+                            <div class="heading"> @notification.Subject </div>
+                            <div class="description"> @notification.NotificationBody </div>
+                        </div>
+                        <div class="date pull-right"> @notification.Created </div>
+                        <div class="clearfix"></div>
+                    </div>
+
+                }
+
+
+
+
+            </div>
+
+
+        </div>
+    </div>
+
+    <div class="col-md-6 col-sm-6">
+        <div class="tiles gradient-grey">
+            <div class="tiles-body">
+                <div class="controller">
+                    <a href="javascript:;" class="reload"></a>
+                    <a href="javascript:;" class="remove"></a>
+                </div>
+                <div class="tiles-title text-black">Recent Comments </div>
+                <br>
+                @foreach (var comment in CommentHelper.GetAllTicketComments().OrderByDescending(b => b.Created).Take(3))
+                {
+
+                    <div class="notification-messages info">
+                        <div class="user-profile"> <img src="@comment.User.AvatarURL" @*alt="" data-src="~/img/profiles/c.jpg" data-src-retina="~/img/profiles/c2x.jpg"*@ width="35" height="35"> </div>
+                        <div class="message-wrapper">
+                            <div class="heading"> @comment.Comment </div>
+                            <div class="description">Ticket #@comment.Ticket.Id </div>
+                        </div>
+                        <div class="date pull-right"> @comment.Created </div>
+                        <div class="clearfix"></div>
+                    </div>
+
+                }
+
+
+
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div class="row">
+
+
+
+
+</div>
+
+
+
+
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="grid simple ">
+            <div class="grid-title no-border  ">
+                <h4>Status <span class="semi-bold">Chart</span></h4>
+                <div class="tools">
+                    <a href="javascript:;" class="collapse"></a>
+                    <a href="#grid-config" data-toggle="modal" class="config"></a>
+                    <a href="javascript:;" class="reload"></a>
+                    <a href="javascript:;" class="remove"></a>
+                </div>
+            </div>
+            <div class="grid-body no-border ">
+                <h4>Ticket <span class="semi-bold">Statuses</span></h4>
+                <p>NUMBER OF TICKETS AND THEIR RESPECTIVE STATUS  </p>
+                <div id="MorrisDonutChart" style="height:200px;"> </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="grid simple">
+            <div class="grid-title no-border">
+                <h4>Priority <span class="semi-bold">Chart</span></h4>
+                <div class="tools">
+                    <a href="javascript:;" class="collapse"></a>
+                    <a href="#grid-config" data-toggle="modal" class="config"></a>
+                    <a href="javascript:;" class="reload"></a>
+                    <a href="javascript:;" class="remove"></a>
+                </div>
+            </div>
+            <div class="grid-body no-border">
+                <h4>Ticket <span class="semi-bold">Priorities</span></h4>
+                <p>NUMBER OF TICKETS AND THEIR RESPECTIVE PRIORITY LEVEL </p>
+                <div id="MorrisDonutChart1" style="height:200px;"> </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+
+
 
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-12">
             <div class="grid simple">
                 <div class="grid-title no-border">
-                    <h4>Morris <span class="semi-bold">Charts</span></h4>
+                    <h4>Type<span class="semi-bold">Chart</span></h4>
                     <div class="tools">
                         <a href="javascript:;" class="collapse"></a>
                         <a href="#grid-config" data-toggle="modal" class="config"></a>
@@ -13,20 +295,33 @@
                     </div>
                 </div>
                 <div class="grid-body no-border">
-                    <h4>Morris <span class="semi-bold">Donut Charts</span></h4>
-                    <p>Similar to pie charts, doughnut charts are great for showing proportional data.Chart.js offers the same customisation options as for pie charts, but with a custom sized inner cutout to turn your pies into doughnuts. </p>
-                    <div id="MorrisDonutChart" style="height:200px;"> </div>
+                    <h4>Ticket  <span class="semi-bold"> Types</span></h4>
+                    <p>NUMBER OF TICKETS AND THIER RESPECTIVE TYPE</p>
+                    <br>
+                    <div id="MorrisBarChart" style="height:250px"></div>
                 </div>
             </div>
+
+
+
+
+
+
         </div>
+
+
     </div>
 
 
 
 
-@section scripts{
-    
-    <script type="text/javascript">
+
+
+
+
+        @section scripts{
+
+            <script type="text/javascript">
         $(function () {
             var url = '@Url.Action("GetMorrisData", "Charts")';
             $.post(url).then(function (response) {
@@ -46,8 +341,48 @@
         });
 
 
-    </script>
-    }
+                $(function () {
+            var url = '@Url.Action("GetMorrisDataTicketTypes", "Charts")';
+            $.post(url).then(function (response) {
+                new Morris.Bar({
+                    element: 'MorrisBarChart',
+                    data: response,
+                    gridTextSize: 8,
+                    xLabelAngle: 65,
+                    xkey: 'label',
+                    ykeys: ['value'],
+                    labels: ['Ticket Count'],
+                    resize: true
+
+                });
+
+            });
+
+                });
+
+
+                $(function () {
+            var url = '@Url.Action("GetMorrisDataTicketPriorities", "Charts")';
+            $.post(url).then(function (response) {
+                new Morris.Donut({
+                    element: 'MorrisDonutChart1',
+                    data: response,
+                    gridTextSize: 8,
+                    xLabelAngle: 65,
+                    //xkey: 'label',
+                    //ykeys: ['value'],
+                    //labels: ['Ticket Count'],
+                    resize: true
+
+                });
+
+            });
+
+        });
+
+
+            </script>
+        }
 
 
 

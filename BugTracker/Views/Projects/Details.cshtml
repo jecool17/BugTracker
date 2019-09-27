@@ -1,43 +1,332 @@
-﻿@model BugTracker.Models.Project
+﻿@using BugTracker.Helpers
+
+@model BugTracker.Models.Project
 
 
-<!DOCTYPE html>
+@{
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Details</title>
-</head>
-<body>
+    var linkHelper = new LinkHelper();
+    var projectHelper = new ProjectsHelper();
+    var currentProjectManagers = projectHelper.UsersInRoleOnProject2(Model.Id, "Project Manager");
+    var currentSubmitters = projectHelper.UsersInRoleOnProject2(Model.Id, "Submitter");
+    var currentDevelopers = projectHelper.UsersInRoleOnProject2(Model.Id, "Submitter");
+
+}
+
+
+<div class="row">
+    <div class="col-md-11">
+        <div class="grid simple">
+            <div class="grid-body no-border invoice-body">
+                <br>
+                <div class="pull-left">
+                    <img src="/img/cooleybrand.png" data-src="/img/cooleybrand.png" data-src-retina="/img/cooleybrand.png" @*width="222" height="31"*@>
+                    <address>
+                        <strong>Cooley Code</strong><br>
+                        104 Swan Haven Lane<br>
+                        Greensboro, NC 27405<br>
+                        <abbr title="Phone">P:</abbr> (336) 255-0789
+                    </address>
+                </div>
+                <div class="pull-right">
+                    <h2>@Model.Name</h2>
+                </div>
+                <div class="clearfix"></div>
+                <br>
+                <br>
+                <br>
+                <div class="row">
+                    <div class="col-md-9">
+                        <h4 class="semi-bold">Project Manager(s)</h4>
+                        <address>
+                            @foreach (var user in currentProjectManagers)
+                            {
+                                <strong>@user.FullName.</strong><br>
+                                @user.Email<br>
+                            }
+
+
+                        </address>
+
+                    </div>
+
+                    <div class="col-md-3">
+                        <br>
+                        <div>
+                            <div class="pull-left"> PROJECT ID # </div>
+                            <div class="pull-right"> @Model.Id </div>
+                            <div class="clearfix"></div>
+                        </div>
+
+                        <br>
+                        <div class="well well-small green">
+                            <div class="pull-left"> Total Tickets : </div>
+                            <div class="pull-right"> @projectHelper.GetTicketCount(Model.Id)</div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+
+                            <th class="text-left">DESCRIPTION</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+
+                            <td>@Model.Description</td>
+
+
+                        </tr>
+
+                        <tr>
+                            <td colspan="2" rowspan="4">
+                                <h4 class="semi-bold">Developer(s)</h4>
+                                <address>
+                                    @foreach (var user in currentDevelopers)
+                                    {
+                                        <strong>@user.FullName.</strong><br>
+                                        @user.Email<br>
+                                    }
+
+
+                                </address>
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+                </table>
+                <br>
+                <br>
+                <h5 class="text-right text-black">Submitter(s)</h5>
+                @foreach (var user in currentSubmitters)
+                {
+                    <h5 class="text-right semi-bold text-black">@user.FullName</h5>
+                }
+
+                <br>
+                <br>
+
+
+
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+@if (linkHelper.UserCanCreateTicket(Model))
+{
+    <div class="pull-right actions">
+        <button class="btn btn-primary btn-cons" type="button" id="btn-new-ticket">New Ticket</button>
+    </div>
+}
+
+
+<div class="clearfix"></div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="grid simple transparent" id="new-ticket-wrapper" style="display:none">
+            <div class="grid-title no-border">
+                <h4 class="semi-bold">How can we help?</h4>
+            </div>
+            <div class="grid-body">
+                @using (Html.BeginForm("Create", "Tickets", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.Hidden("ProjectId", Model.Id)
+                    <div class="row form-row">
+                        <div class="col-md-4">
+                            <input type="text" placeholder="Ticket Name" class="form-control" id="Title" name="Title">
+                        </div>
+                        <div class="col-md-4">
+                            @Html.DropDownList("TicketTypeId", null, "Type", htmlAttributes: new { @class = "form-control" })
+
+                        </div>
+                        <div class="col-md-4">
+                            @Html.DropDownList("TicketPriorityId", null, "Priority", htmlAttributes: new { @class = "form-control" })
+                            @*<input type="text" placeholder="Department" class="form-control" id="txtDept" name="txtDept">*@
+                        </div>
+                    </div>
+                    <div class="row form-row">
+                        <div class="col-md-12">
+                            <textarea rows="8" class="form-control" name="Description" id="Description" placeholder="Please detail client's issue or question"></textarea>
+                        </div>
+                    </div>
+                    <div class="row form-row">
+                        <div class="col-md-12 margin-top-10">
+                            <div class="pull-left">
+
+                            </div>
+                            <div class="pull-right">
+                                <button class="btn btn-cons" type="button" id="btn-close-ticket">Close</button>
+                                <button class="btn btn-primary btn-cons" type="submit">Submit</button>
+                            </div>
+                        </div>
+                    </div>
+
+                }
+                @*<form class="" id="new-ticket-form">*@
+
+                @*</form>*@
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div>
+    <div class="clearfix"></div>
+
+    <h4>Open <span class="semi-bold">Tickets</span></h4>
+    <br>
+    @foreach (var tickets in Model.Tickets.Where(t => t.TicketStatus.Name != "Archived"))
+    {
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="grid simple no-border">
+                    <div class="grid-title no-border descriptive clickable">
+                        <h4 class="semi-bold">@tickets.Title</h4>
+                        <p><span class="text-success bold">Ticket #@tickets.Id</span> - Created on @tickets.Created - @tickets.OwnerUser.FullName @*Last reply About 1 Month ago by alex&nbsp;&nbsp;*@<span class="label label-important">@tickets.TicketPriority.Name</span></p>
+                        <div class="actions"> <a class="view" href="javascript:;"><i class="fa fa-search"></i></a> <a class="remove" href="javascript:;"><i class="fa fa-times"></i></a> </div>
+                    </div>
+                    <div class="grid-body  no-border" style="display:none">
+                        <div class="post">
+                            <div class="user-profile-pic-wrapper">
+                                <div class="user-profile-pic-normal"> <img width="35" height="35" data-src-retina="@tickets.OwnerUser.AvatarURL" data-src="@tickets.OwnerUser.AvatarURL" src="@tickets.OwnerUser.AvatarURL" alt=""> </div>
+                            </div>
+                            <div class="info-wrapper">
+                                <div class="info">
+
+                                   <a href="@Url.Action("Details","Tickets", new { id = tickets.Id })"> @tickets.Description</a>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <br>
+                        @foreach (var comment in tickets.TicketComments.OrderByDescending(c => c.Created))
+                        {
+                            <div class="form-actions">
+                                <div class="post col-md-12">
+                                    <div class="user-profile-pic-wrapper">
+                                        <div class="user-profile-pic-normal"> <img width="35" height="35" data-src-retina="@comment.User.AvatarURL" data-src="@comment.User.AvatarURL" src="@comment.User.AvatarURL" alt=""> </div>
+                                    </div>
+                                    <div class="info-wrapper">
+                                        <div class="info">
+                                            @comment.Comment
+                                            <hr>
+                                            <p class="small-text">Posted on @comment.Created</p>
+                                        </div>
+                                        <div class="form-group">
+                                            @using (Html.BeginForm("Create", "TicketComments", FormMethod.Post))
+                                            {
+                                                @Html.AntiForgeryToken()
+                                                @Html.Hidden("TicketId", tickets.Id);
+                                                <label class="form-label"><i class="fa fa-reply"></i>&nbsp;Post a reply</label>
+                                                <div class="controls">
+                                                    <input type="text" class="form-control" name="Comment" id="Comment">
+                                                    <button class="btn btn-primary btn-cons" type="submit">Submit</button>
+                                                </div>
+                                            }
+
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+
+
+                        }
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    }
+
+    <h4>Closed <span class="semi-bold">Tickets</span></h4>
+    <br>
+    @foreach (var tickets in Model.Tickets.Where(t => t.TicketStatus.Name == "Archived"))
+    {
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="grid simple no-border">
+                    <div class="grid-title no-border descriptive clickable">
+                        <h4 class="semi-bold">@tickets.Title</h4>
+                        <p><span class="text-success bold">Ticket #@tickets.Id</span> - Created on @tickets.Created - @tickets.OwnerUser.FullName @*Last reply About 1 Month ago by alex&nbsp;&nbsp;*@<span class="label label-important">@tickets.TicketPriority.Name</span></p>
+                        <div class="actions"> <a class="view" href="javascript:;"><i class="fa fa-search"></i></a> <a class="remove" href="javascript:;"><i class="fa fa-times"></i></a> </div>
+                    </div>
+                    <div class="grid-body  no-border" style="display:none">
+                        <div class="post">
+                            <div class="user-profile-pic-wrapper">
+                                <div class="user-profile-pic-normal"> <img width="35" height="35" data-src-retina="@tickets.OwnerUser.AvatarURL" data-src="@tickets.OwnerUser.AvatarURL" src="@tickets.OwnerUser.AvatarURL" alt=""> </div>
+                            </div>
+                            <div class="info-wrapper">
+                                <div class="info">
+                                    @tickets.Description
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <br>
+                        @foreach (var comment in tickets.TicketComments.OrderByDescending(c => c.Created))
+                        {
+                            <div class="form-actions">
+                                <div class="post col-md-12">
+                                    <div class="user-profile-pic-wrapper">
+                                        <div class="user-profile-pic-normal"> <img width="35" height="35" data-src-retina="@comment.User.AvatarURL" data-src="@comment.User.AvatarURL" src="@comment.User.AvatarURL" alt=""> </div>
+                                    </div>
+                                    <div class="info-wrapper">
+                                        <div class="info">
+                                            @comment.Comment
+                                            <hr>
+                                            <p class="small-text">Posted on @comment.Created</p>
+                                        </div>
+
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+
+
+                        }
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    }
+
+
+
+
+</div>
+
+@if (linkHelper.UserCanEditProject())
+{
     <div>
-        <h4>Project</h4>
+        <h4>@Model.Name</h4>
         <hr />
-        <dl class="dl-horizontal">
-            <dt>
-                @Html.DisplayNameFor(model => model.Name)
-            </dt>
 
-            <dd>
-                @Html.DisplayFor(model => model.Name)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.Description)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Description)
-            </dd>
-
-        </dl>
     </div>
     <p>
         @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
         @Html.ActionLink("Back to List", "Index")
     </p>
 
-
-
-    @using (Html.BeginForm("ManageProjects", "Admin", FormMethod.Post))
+    using (Html.BeginForm("ManageProjects", "Admin", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
         @Html.Hidden("ProjectId", Model.Id)
@@ -63,11 +352,38 @@
 
         <div class="row">
             <div class="col-md-12 text-center">
-                <button tyoe ="submit" class="btn btn-primary btn-lg">ASSIGN</button>
+                <button tyoe="submit" class="btn btn-primary btn-lg">ASSIGN</button>
             </div>
         </div>
 
 
     }
-</body>
-</html>
+
+}
+else
+{
+    <div>
+        <h4>@Model.Name</h4>
+        <hr />
+
+    </div>
+    <p>
+        @Html.ActionLink("Back to List", "Index")
+
+    </p>
+
+}
+
+
+
+
+
+
+
+
+@section scripts{
+
+
+    <script src="~/Scripts/support_ticket.js"></script>
+
+}

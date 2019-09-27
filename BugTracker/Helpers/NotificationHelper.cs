@@ -117,7 +117,11 @@ namespace BugTracker.Helpers
             Db.TicketNotifications.Add(notification);
             Db.SaveChanges();
         }
+        public static List<TicketNotification> GetAllNotifications()
+        {
 
+            return Db.TicketNotifications.ToList();
+        }
         public static int GetUserNewNotificationCount()
         {
             var userId = HttpContext.Current.User.Identity.GetUserId();
