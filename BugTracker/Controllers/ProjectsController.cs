@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using BugTracker.Helpers;
 using BugTracker.Models;
+using Microsoft.AspNet.Identity;
 
 namespace BugTracker.Controllers
 {
@@ -16,7 +17,7 @@ namespace BugTracker.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
         private UserRolesHelper roleHelper = new UserRolesHelper();
         private ProjectsHelper projectHelper = new ProjectsHelper();
-
+        private NotificationHelper notificationHelper = new NotificationHelper();
         // GET: Projects
 
         public ActionResult Index()
@@ -85,12 +86,18 @@ namespace BugTracker.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,Description,Created")] Project project)
+        public ActionResult Create([Bind(Include = "Id,Name,Description")] Project project)
         {
             if (ModelState.IsValid)
             {
+                
                 db.Projects.Add(project);
                 db.SaveChanges();
+                var userId = User.Identity.GetUserId();
+                var  user = db.Users.Find(userId);
+                if (User.IsInRole("Project Manager"))
+                    projectHelper.AddUserToProject(userId, project.Id);
+
                 return RedirectToAction("Index");
             }
 

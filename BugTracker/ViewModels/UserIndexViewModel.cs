@@ -38,6 +38,8 @@ namespace BugTracker.ViewModels
         [Display(Name = "Avatar Path")]
         public string AvatarURL { get; set; }
 
+        public string ActiveRole { get; set; }
+
         public SelectList CurrentRole { get; set; }
 
         public MultiSelectList CurrentProjects { get; set; }

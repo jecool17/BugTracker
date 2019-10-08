@@ -19,7 +19,7 @@ namespace BugTracker.Controllers
         private ProjectsHelper projectHelper = new ProjectsHelper();
         private LinkHelper linkHelper = new LinkHelper();
         // GET: Tickets
-        public ActionResult Index()
+        public ActionResult AdminIndex()
         {
             var tickets = db.Tickets.Include(t => t.AssignedToUser).Include(t => t.OwnerUser).Include(t => t.Project).Include(t => t.TicketPriority).Include(t => t.TicketStatus).Include(t => t.TicketType);
             return View(tickets.ToList());
@@ -27,11 +27,21 @@ namespace BugTracker.Controllers
 
         }
 
+        public ActionResult Index(string userId)
+        {
+            var user = db.Users.Find(userId);
+            //var projects = db.Projects.Where(t => t.Users.Contains(user)).ToList();
+            //var projectTickets = db.Tickets.Where(t => t.Project.Tickets.Contains(user.Tickets)).ToList();
+            var tickets = user.Projects.SelectMany(p => p.Tickets).ToList();
+            return View(tickets);
+        }
+
         public ActionResult UserTickets(string userId)
         {
             var user = db.Users.Find(userId);
+            var tickets = db.Tickets.Where(t => t.AssignedToUserId == userId).ToList();
             //check for null/ add sweet alert.
-            var tickets = user.Tickets.ToList();
+
 
             return View(tickets);
 
@@ -40,11 +50,20 @@ namespace BugTracker.Controllers
         // GET: Tickets/Details/5
         public ActionResult Details(int? id)
         {
+            
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Ticket ticket = db.Tickets.Find(id);
+            var myProjects = projectHelper.ListUserProjects(User.Identity.GetUserId());
+
+            ViewBag.ProjectId = new SelectList(myProjects, "Id", "Name", ticket.ProjectId);
+            ViewBag.TicketPriorityId = new SelectList(db.TicketPriorities, "Id", "Name", ticket.TicketPriorityId);
+
+            ViewBag.TicketTypeId = new SelectList(db.TicketTypes, "Id", "Name", ticket.TicketTypeId);
+            ViewBag.AssignedToUserId = new SelectList(projectHelper.UsersInRoleOnProject2(ticket.ProjectId, "Developer"), "Id", "FirstName", ticket.AssignedToUserId);
             if (ticket == null)
             {
                 return HttpNotFound();
@@ -53,7 +72,7 @@ namespace BugTracker.Controllers
         }
         
         // GET: Tickets/Create
-        [Authorize(Roles = "Submitter, Admin")]
+        [Authorize(Roles = "Submitter, MasterAdmin")]
         public ActionResult Create()
         {
 
@@ -75,22 +94,29 @@ namespace BugTracker.Controllers
         public ActionResult Create([Bind(Include = "ProjectId,TicketTypeId,TicketPriorityId,Title,Description")] Ticket ticket)
         {
 
-            var ctick = db.Tickets.Find(ticket.Id);
-            var project = db.Projects.Find(ctick.ProjectId);
+            
+            
+            
 
             if (ModelState.IsValid)
             {
 
-                if (linkHelper.UserCanCreateTicket(project))
+                if (linkHelper.UserCanCreateTicket(ticket.ProjectId))
                 {
                     ticket.Created = DateTime.Now;
                     ticket.OwnerUserId = User.Identity.GetUserId();
-
+                    
                     ticket.AssignedToUserId = User.Identity.GetUserId();
+                    
                     ticket.TicketStatusId = db.TicketStatuses.FirstOrDefault(t => t.Name == "New / Unassigned").Id;
+                    ticket.TicketStatus.Value = 0;
+                    
                     db.Tickets.Add(ticket);
                     db.SaveChanges();
                 }
+
+                
+                NotificationHelper.GeneratePMNewTicketNotifications(ticket);
                 
                 return RedirectToAction("Index");
             }
@@ -164,6 +190,7 @@ namespace BugTracker.Controllers
                 {
                     db.Entry(ticket).Property(x => x.AssignedToUserId).IsModified = true;
                     ticket.TicketStatusId = db.TicketStatuses.FirstOrDefault(t => t.Name == "Assigned").Id;
+                    ticket.TicketStatus.Value = 15;
                 }
                     
                 
@@ -183,6 +210,46 @@ namespace BugTracker.Controllers
             return View(ticket);
         }
 
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Advance(int ticketId)
+        {
+            var ticket = db.Tickets.Find(ticketId);
+            if (ticket.TicketStatus.Name == "Assigned")
+            {
+                ticket.TicketStatus.Name = "Assigned / In Progress";
+                ticket.TicketStatus.Value = 40;
+                db.SaveChanges();
+                return RedirectToAction("Details", "Tickets", new { id = ticketId });
+            }
+                
+
+            if (ticket.TicketStatus.Name == "Assigned / In Progress")
+            {
+                ticket.TicketStatus.Name = "Resolved";
+                ticket.TicketStatus.Value = 75;
+                db.SaveChanges();
+                return RedirectToAction("Details", "Tickets", new { id = ticketId });
+            }
+
+
+            return RedirectToAction("Details", "Tickets", new { id = ticketId });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ArchiveP(int ticketId)
+        {
+            var ticket = db.Tickets.Find(ticketId);
+            ticket.TicketStatus.Name = "Archived";
+            ticket.TicketStatus.Value = 100;
+            db.SaveChanges();
+
+
+            return RedirectToAction("Details", "Tickets", new { id = ticketId });
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]

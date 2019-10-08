@@ -1,5 +1,6 @@
 ﻿using BugTracker.Helpers;
 using BugTracker.Models;
+using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,12 @@ namespace BugTracker.Controllers
 
         public ActionResult Dashboard()
         {
+            var myProjects = projectHelper.ListUserProjects(User.Identity.GetUserId());
+
+            ViewBag.ProjectId = new SelectList(myProjects, "Id", "Name");
+            ViewBag.TicketPriorityId = new SelectList(db.TicketPriorities, "Id", "Name");
+
+            ViewBag.TicketTypeId = new SelectList(db.TicketTypes, "Id", "Name");
 
             var tickets = db.Tickets;
             return View(tickets.ToList());

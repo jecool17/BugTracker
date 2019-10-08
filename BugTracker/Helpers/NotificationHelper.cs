@@ -82,7 +82,7 @@ namespace BugTracker.Helpers
             }
         }
 
-        private static void GenerateUnAssignmentNotification(Ticket oldTicket, Ticket newTicket)
+        private static void GenerateAssignmentNotification(Ticket oldTicket, Ticket newTicket)
         {
 
             var notification = new TicketNotification
@@ -92,7 +92,7 @@ namespace BugTracker.Helpers
                 Read = false,
                 RecipientId = newTicket.AssignedToUserId,
                 SenderId = HttpContext.Current.User.Identity.GetUserId(),
-                NotificationBody = $"Please acknowledge that you have read this notification by marking it read",
+                NotificationBody = $"Click To Be redirected to Ticket",
                 TicketId = newTicket.Id
 
             };
@@ -101,7 +101,7 @@ namespace BugTracker.Helpers
 
         }
 
-        private static void GenerateAssignmentNotification(Ticket oldTicket, Ticket newTicket)
+        private static void GenerateUnAssignmentNotification(Ticket oldTicket, Ticket newTicket)
         {
             var notification = new TicketNotification
             {
@@ -116,6 +116,43 @@ namespace BugTracker.Helpers
 
             Db.TicketNotifications.Add(notification);
             Db.SaveChanges();
+        }
+
+        public static void GeneratePMNewTicketNotifications(Ticket newTicket)
+        {
+            //get all new ticket notifications for pm on project
+            var ctick = Db.Tickets.Find(newTicket.Id);
+            
+            var Pm = ProjectHelper.UsersInRoleOnProject2(ctick.ProjectId, "Project Manager");
+
+            foreach (var user in Pm)
+            {
+
+                var notification = new TicketNotification
+                {
+                    Created = DateTime.Now,
+                    Subject = $"You have a new Ticket to assign (Ticket  #{newTicket.Id} on {DateTime.Now})",
+                    Read = false,
+                    RecipientId = user.Id,
+                    Recipient = user,
+                    SenderId = HttpContext.Current.User.Identity.GetUserId(),
+                    NotificationBody = $"NEW TICKET",
+                    TicketId = newTicket.Id
+                };
+                
+                
+                
+                Db.TicketNotifications.Add(notification);
+                
+
+            }
+            
+
+           
+            Db.SaveChanges();
+
+            
+
         }
         public static List<TicketNotification> GetAllNotifications()
         {
@@ -148,5 +185,24 @@ namespace BugTracker.Helpers
 
         }
 
+        public static int GetPMNotificationsCount()
+        {
+            var userId = HttpContext.Current.User.Identity.GetUserId();
+            return Db.TicketNotifications.Where(t => t.RecipientId == userId).Count();
+
+
+        }
+
+        public static int GetNewTicketsCount()
+        {
+
+            return Db.TicketNotifications.Where(t => t.NotificationBody == "NEW TICKET").Count();
+        }
+
+        public static int GetDevNewAssignmentCount()
+        {
+            var userId = HttpContext.Current.User.Identity.GetUserId();
+            return Db.TicketNotifications.Where(t => t.RecipientId == userId && t.NotificationBody == "Click To Be redirected to Ticket").Count();
+        }
     }
 }

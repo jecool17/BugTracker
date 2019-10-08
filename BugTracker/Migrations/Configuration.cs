@@ -1,5 +1,6 @@
 namespace BugTracker.Migrations
 {
+    using BugTracker.Helpers;
     using BugTracker.Models;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.EntityFramework;
@@ -7,6 +8,7 @@ namespace BugTracker.Migrations
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
+    using System.Web.Configuration;
 
     internal sealed class Configuration : DbMigrationsConfiguration<BugTracker.Models.ApplicationDbContext>
     {
@@ -23,6 +25,11 @@ namespace BugTracker.Migrations
             //  to avoid creating duplicate seed data.
 
             var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
+            if (!context.Roles.Any(r => r.Name == "MasterAdmin"))
+            {
+                roleManager.Create(new IdentityRole { Name = "MasterAdmin" });
+            }
+
             if (!context.Roles.Any(r => r.Name == "Admin"))
             {
                 roleManager.Create(new IdentityRole { Name = "Admin" });
@@ -44,6 +51,19 @@ namespace BugTracker.Migrations
             }
 
             UserManager<ApplicationUser> userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+
+
+            if (!context.Users.Any(r => r.UserName == "MasterAdmin@mailinator.com"))
+            {
+                ApplicationUser masterUser = new ApplicationUser()
+                {
+                    DisplayName = "Master",
+                    UserName = "MasterAdmin@mailinator.com",
+                    Email = "MasterAdmin@mailinator.com",
+                };
+                userManager.Create(masterUser, "PassW0rd");
+            }
+
 
             if (!context.Users.Any(r => r.UserName == "Jecool17@gmail.com"))
             {
@@ -88,13 +108,21 @@ namespace BugTracker.Migrations
                     DisplayName = "Submitter",
                     UserName = "Submitter@mailinator.com",
                     Email = "Submitter@mailinator.com",
+                    FirstName = "John",
+                    LastName = "Singleton"
                 };
 
                 userManager.Create(subUser, "PassWord");
             }
 
-
+            context.SaveChanges();
             //Initialize
+
+            ApplicationUser maU = context.Users.FirstOrDefault(r => r.Email == "MasterAdmin@mailinator.com");
+            if (maU != null)
+            {
+                userManager.AddToRole(maU.Id, "MasterAdmin");
+            }
 
             ApplicationUser adU = context.Users.FirstOrDefault(r => r.Email == "Jecool17@gmail.com");
             if (adU != null)
@@ -121,7 +149,7 @@ namespace BugTracker.Migrations
             }
 
 
-
+            context.SaveChanges();
 
 
             //demo users
@@ -132,10 +160,12 @@ namespace BugTracker.Migrations
                     DisplayName = "DemoAdmin",
                     UserName = "DemoAdmin@mailinator.com",
                     Email = "DemoAdmin@mailinator.com",
+                    AvatarURL = WebConfigurationManager.AppSettings["DefaultAvi"]
                 };
 
                 userManager.Create(demoadminUser, "PassWord");
             }
+
 
             if (!context.Users.Any(r => r.UserName == "DemoProjectManager@mailinator.com"))
             {
@@ -144,6 +174,7 @@ namespace BugTracker.Migrations
                     DisplayName = "DemoProjectManager",
                     UserName = "DemoProjectManager@mailinator.com",
                     Email = "DemoProjectManager@mailinator.com",
+                    AvatarURL = WebConfigurationManager.AppSettings["DefaultAvi"]
                 };
 
                 userManager.Create(demoprojectUser, "PassWord");
@@ -156,6 +187,7 @@ namespace BugTracker.Migrations
                     DisplayName = "DemoSubmitter",
                     UserName = "DemoSub@mailinator.com",
                     Email = "DemoSub@mailinator.com",
+                    AvatarURL = WebConfigurationManager.AppSettings["DefaultAvi"]
                 };
 
                 userManager.Create(demosubUser, "PassWord");
@@ -168,10 +200,13 @@ namespace BugTracker.Migrations
                     DisplayName = "DemoDeveloper",
                     UserName = "DemoDeveloper@mailinator.com",
                     Email = "DemoDeveloper@mailinator.com",
+                    AvatarURL = WebConfigurationManager.AppSettings["DefaultAvi"]
                 };
 
                 userManager.Create(demodevUser, "PassWord");
             }
+
+            context.SaveChanges();
 
             //initialize demo users
             ApplicationUser demoadU = context.Users.FirstOrDefault(r => r.Email == "DemoAdmin@mailinator.com");
@@ -197,8 +232,8 @@ namespace BugTracker.Migrations
             {
                 userManager.AddToRole(demodevU.Id, "Developer");
             }
-            
 
+            context.SaveChanges();
 
 
             //Seed name and descriptions tables
@@ -208,7 +243,7 @@ namespace BugTracker.Migrations
                                                         new TicketType { Name = "Docuentation Request", Description = "A client has called requesting additonal documentation" },
                                                         new TicketType { Name = "Training Request", Description = "A client has called in to request a schedule training appointment" },
                                                         new TicketType { Name = "Complaint", Description = "A client has called in to make a general complaint" },
-                                                        new TicketType { Name = "Other", Description = "A call has been recieved that requires additonal follow up" }); 
+                                                        new TicketType { Name = "Other", Description = "A call has been recieved that requires prompt follow up" }); 
 
 
              
@@ -223,10 +258,10 @@ namespace BugTracker.Migrations
 
             
 
-            context.TicketPriorities.AddOrUpdate(t => t.Name, new TicketPriority { Name = "Low", Description = "Requires attention, Developers should complete if there are no Low/Medium/High?Urgent priority tickts" },
-                                                         new TicketPriority { Name = "Medium", Description = "Requires Normal attention, Developers should complete if there are no High/Urgent priority tickets" },
-                                                         new TicketPriority { Name = "High", Description = "Requires urgent attention, Developers should focus on completing before medium/low priority tickets" },
-                                                         new TicketPriority { Name = "URGENT", Description = "Highest demand, Developers should abandon all unfinish task and focus on current ticket" });
+            context.TicketPriorities.AddOrUpdate(t => t.Name, new TicketPriority { Name = "Low", Description = "Requires attention. Developers should complete if there are no Medium/High/Urgent priority tickets" },
+                                                         new TicketPriority { Name = "Medium", Description = "Requires Normal attention. Developers should complete if there are no High/Urgent priority tickets" },
+                                                         new TicketPriority { Name = "High", Description = "Requires Urgent attention. Developers should focus on completing before medium/low priority tickets" },
+                                                         new TicketPriority { Name = "URGENT", Description = "Highest Demand. Developers should abandon all unfinish task and focus on current ticket" });
 
 
             
@@ -237,6 +272,68 @@ namespace BugTracker.Migrations
 
             context.SaveChanges();
 
+            var blogSiteId = context.Projects.FirstOrDefault(p => p.Name == "Blog Site").Id;
+            var portfolioId = context.Projects.FirstOrDefault(p => p.Name == "Portfolio").Id;
+            var bugTradkerId = context.Projects.FirstOrDefault(p => p.Name == "BugTracker").Id;
+
+            var projectHelper = new ProjectsHelper();
+
+            projectHelper.AddUserToProject(demopmU.Id, blogSiteId);
+            projectHelper.AddUserToProject(demodevU.Id, blogSiteId);
+            projectHelper.AddUserToProject(demosubU.Id, blogSiteId);
+
+            projectHelper.AddUserToProject(demopmU.Id, portfolioId);
+            projectHelper.AddUserToProject(demodevU.Id, portfolioId);
+            projectHelper.AddUserToProject(demosubU.Id, portfolioId);
+
+            projectHelper.AddUserToProject(demopmU.Id, bugTradkerId);
+            projectHelper.AddUserToProject(demodevU.Id, bugTradkerId);
+            projectHelper.AddUserToProject(demosubU.Id, bugTradkerId);
+
+            context.SaveChanges();
+
+
+            context.Tickets.AddOrUpdate(
+                p => p.Title,
+                    new Ticket
+                    {
+                        ProjectId = blogSiteId,
+                        OwnerUserId = demosubU.Id,
+                        Title = "New Things",
+                        Description = "Clients have requested that the blog site project have more functionality",
+                        Created = DateTime.Now,
+                        TicketPriorityId = context.TicketPriorities.FirstOrDefault(t => t.Name == "Medium").Id,
+                        TicketStatusId = context.TicketStatuses.FirstOrDefault(t => t.Name == "New / Unassigned").Id,
+                        TicketTypeId = context.TicketTypes.FirstOrDefault(t => t.Name == "Feature Request").Id,
+                    },
+                    new Ticket
+                    {
+                        ProjectId = portfolioId,
+                        OwnerUserId = demosubU.Id,
+                        AssignedToUserId = demodevU.Id,
+                        Title = "Notify",
+                        Description = "Clients have requested that the porfolio be updated with new projects",
+                        Created = DateTime.Now,
+                        TicketPriorityId = context.TicketPriorities.FirstOrDefault(t => t.Name == "Medium").Id,
+                        TicketStatusId = context.TicketStatuses.FirstOrDefault(t => t.Name == "Assigned").Id,
+                        TicketTypeId = context.TicketTypes.FirstOrDefault(t => t.Name == "Feature Request").Id,
+                    },
+                    new Ticket
+                    {
+                        ProjectId = bugTradkerId,
+                        OwnerUserId = demosubU.Id,
+                        AssignedToUserId = demodevU.Id,
+                        Title = "Estimated Time of Publish?",
+                        Description = "Clients Wants to be notified when Developers have finish the first version of the release",
+                        Created = DateTime.Now,
+                        TicketPriorityId = context.TicketPriorities.FirstOrDefault(t => t.Name == "High").Id,
+                        TicketStatusId = context.TicketStatuses.FirstOrDefault(t => t.Name == "Assigned / In Progress").Id,
+                        TicketTypeId = context.TicketTypes.FirstOrDefault(t => t.Name == "Other").Id,
+
+                    });
+                    
+                    
+                
 
 
 

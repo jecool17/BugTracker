@@ -37,8 +37,9 @@ namespace BugTracker.Models
                 return $"{LastName}, {FirstName} - {Email}";
             }
         }
-
-
+        
+        public string ActiveRole { get; set; }
+        
         public virtual ICollection<Ticket> Tickets { get; set; }
         public virtual ICollection<Project> Projects { get; set; }
         public virtual ICollection<TicketNotification> TicketNotifications { get; set; }

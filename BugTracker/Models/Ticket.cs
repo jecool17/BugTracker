@@ -15,7 +15,7 @@ namespace BugTracker.Models
         public string OwnerUserId { get; set; }
         public string AssignedToUserId { get; set; }
 
-
+        
         
         public string Title { get; set; }
         public string Description { get; set; }
@@ -23,14 +23,16 @@ namespace BugTracker.Models
         public DateTime? Updated { get; set; }
 
         //Navigation 
+        
         public virtual ApplicationUser OwnerUser { get; set; }
         public virtual ApplicationUser AssignedToUser { get; set; }
         public virtual Project Project { get; set; }
         public virtual TicketType TicketType { get; set; }
         public virtual TicketStatus TicketStatus { get; set; }
         public virtual TicketPriority TicketPriority { get; set; }
+        
 
-
+       
         public virtual ICollection<TicketComment> TicketComments { get; set; }
         public virtual ICollection<TicketAttachment> TicketAttachments { get; set; }
         public virtual ICollection<TicketHistory> TicketHistories { get; set; }
@@ -43,6 +45,7 @@ namespace BugTracker.Models
             TicketAttachments = new HashSet<TicketAttachment>();
             TicketHistories = new HashSet<TicketHistory>();
             TicketNotifications = new HashSet<TicketNotification>();
+            
         }
     }
 }

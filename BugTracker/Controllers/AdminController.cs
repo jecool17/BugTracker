@@ -27,7 +27,8 @@ namespace BugTracker.Controllers
                 FullName = u.LastName + ", " + u.FirstName,               
                 DisplayName = u.DisplayName,
                 AvatarURL = u.AvatarURL,
-                Email = u.Email
+                Email = u.Email,
+                ActiveRole = u.ActiveRole
 
             }).ToList();
 
@@ -38,6 +39,11 @@ namespace BugTracker.Controllers
                 user.CurrentProjects = new MultiSelectList(projects, "Id", "Name", projectHelper.ListUserProjects(user.Id).Select(u => u.Id));
             }
 
+            foreach (var user in users)
+            {
+
+                user.ActiveRole = roleHelper.GetUserRole(user.Id)
+;            }
             return View(users);
         }
 
@@ -170,36 +176,36 @@ namespace BugTracker.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ManageProjects(int projectId, List<string> ProjectManagers, List<string> Devlopers, List<string> Submitters)
+        public ActionResult ManageProjects(int projectId, List<string> ProjectManagers, List<string> Developers, List<string> Submitters)
         {
-            //foreach (var user in projectHelper.UsersOnProject(projectId).ToList())
-            //{
-            //    projectHelper.RemoveUserFromProject(user.Id, projectId);
-            //}
+            foreach (var user in projectHelper.UsersOnProject(projectId).ToList())
+            {
+                projectHelper.RemoveUserFromProject(user.Id, projectId);
+            }
 
-            //if (ProjectManagers != null)
-            //{
-            //    foreach(var  projectManagerId in ProjectManagers)
-            //    {
-            //        projectHelper.AddUserToProject(projectManagerId, projectId);
-            //    }
-            //}
+            if (ProjectManagers != null)
+            {
+                foreach(var  projectManagerId in ProjectManagers)
+                {
+                    projectHelper.AddUserToProject(projectManagerId, projectId);
+                }
+            }
 
-            //if (Devlopers != null)
-            //{
-            //    foreach (var developerId in ProjectManagers)
-            //    {
-            //        projectHelper.AddUserToProject(developerId, projectId);
-            //    }
-            //}
+            if (Developers != null)
+            {
+                foreach (var developerId in Developers)
+                {
+                   projectHelper.AddUserToProject(developerId, projectId);
+                }
+            }
 
-            //if (Submitters != null)
-            //{
-            //    foreach (var submitterId in ProjectManagers)
-            //    {
-            //        projectHelper.AddUserToProject(submitterId, projectId);
-            //    }
-            //}
+            if (Submitters != null)
+            {
+                foreach (var submitterId in Submitters)
+                {
+                    projectHelper.AddUserToProject(submitterId, projectId);
+                }
+            }
             return RedirectToAction("Details", "Projects", new { id = projectId});
         }
 

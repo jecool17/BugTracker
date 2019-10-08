@@ -43,6 +43,10 @@
                             {
                                 AssignedUser = "New / Unassigned";
                             }
+                            else if (ticket.AssignedToUserId == null)
+                            {
+                                AssignedUser = "New / Unassigned";
+                            }
                             else
                             {
                                 AssignedUser = ticket.AssignedToUser.FirstName;

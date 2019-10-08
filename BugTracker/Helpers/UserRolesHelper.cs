@@ -15,9 +15,14 @@ namespace BugTracker.Helpers
 
         private  UserManager<ApplicationUser> userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
         ApplicationDbContext db = new ApplicationDbContext();
-       
+        public string GetUserRole(string userId)
+        {
+            return ListUserRoles(userId).FirstOrDefault();
+
+        }
         public bool IsUserInRole(string userId, string roleName)
         {
+           
             return userManager.IsInRole(userId, roleName);
         }
 

@@ -9,7 +9,7 @@
     var projectHelper = new ProjectsHelper();
     var currentProjectManagers = projectHelper.UsersInRoleOnProject2(Model.Id, "Project Manager");
     var currentSubmitters = projectHelper.UsersInRoleOnProject2(Model.Id, "Submitter");
-    var currentDevelopers = projectHelper.UsersInRoleOnProject2(Model.Id, "Submitter");
+    var currentDevelopers = projectHelper.UsersInRoleOnProject2(Model.Id, "Developer");
 
 }
 
@@ -121,7 +121,7 @@
         </div>
     </div>
 </div>
-@if (linkHelper.UserCanCreateTicket(Model))
+@if (linkHelper.UserCanCreateTicketFromProject(Model))
 {
     <div class="pull-right actions">
         <button class="btn btn-primary btn-cons" type="button" id="btn-new-ticket">New Ticket</button>
@@ -352,7 +352,7 @@
 
         <div class="row">
             <div class="col-md-12 text-center">
-                <button tyoe="submit" class="btn btn-primary btn-lg">ASSIGN</button>
+                <button type="submit" class="btn btn-primary btn-lg">ASSIGN</button>
             </div>
         </div>
 

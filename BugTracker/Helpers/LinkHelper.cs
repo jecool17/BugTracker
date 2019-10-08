@@ -12,11 +12,11 @@ namespace BugTracker.Helpers
         {
             switch (CurrentRole)
             {
-                case "DemoAdmin":
+                case "MasterAdmin":
                     return true;
                 case "Admin":
                     return true;
-                case "ProjectManager":
+                case "Project Manager":
                     return true;
                 case "Developer":
                     return false;
@@ -32,11 +32,11 @@ namespace BugTracker.Helpers
         {
             switch (CurrentRole)
             {
-                case "DemoAdmin":
+                case "MasterAdmin":
                     return true;
                 case "Admin":
                     return true;
-                case "ProjectManager":
+                case "Project Manager":
                     return CurrentUser.Projects.SelectMany(t => t.Tickets).Select(t => t.Id).Contains(ticket.Id);
                 case "Developer":
                     return ticket.AssignedToUserId == CurrentUser.Id;
@@ -52,11 +52,11 @@ namespace BugTracker.Helpers
         {
             switch (CurrentRole)
             {
-                case "DemoAdmin":
+                case "MasterAdmin":
                     return true;
                 case "Admin":
                     return true;
-                case "ProjectManager":
+                case "Project Manager":
                     return CurrentUser.Projects.SelectMany(t => t.Tickets).Select(t => t.Id).Contains(ticket.Id);
                 case "Developer":
                     return ticket.AssignedToUserId == CurrentUser.Id;
@@ -72,11 +72,11 @@ namespace BugTracker.Helpers
         {
             switch (CurrentRole)
             {
-                case "DemoAdmin":
+                case "MasterAdmin":
                     return true;
                 case "Admin":
                     return true;
-                case "ProjectManager":
+                case "Project Manager":
                     return CurrentUser.Projects.SelectMany(t => t.Tickets).Select(t => t.Id).Contains(ticket.Id);
                 case "Developer":
                     return ticket.AssignedToUserId == CurrentUser.Id;
@@ -93,11 +93,11 @@ namespace BugTracker.Helpers
         {
             switch (CurrentRole)
             {
-                case "DemoAdmin":
+                case "MasterAdmin":
                     return true;
                 case "Admin":
                     return true;
-                case "ProjectManager":
+                case "Project Manager":
                     return CurrentUser.Projects.SelectMany(t => t.Tickets).Select(t => t.Id).Contains(ticket.Id);
                 case "Developer":
                     return false;
@@ -108,15 +108,36 @@ namespace BugTracker.Helpers
             }
         }
 
-        public bool UserCanCreateTicket(Project project)
+        public bool UserCanCreateTicket(int project)
         {
             switch (CurrentRole)
             {
-                case "DemoAdmin":
+                case "MasterAdmin":
                     return true;
                 case "Admin":
                     return false;
-                case "ProjectManager":
+                case "Project Manager":
+                    return false;
+                case "Developer":
+                    return false;
+                case "Submitter":
+                    return CurrentUser.Projects.Select(t => t.Id).Contains(project);
+                default:
+                    return false;
+            }
+
+        }
+
+
+        public bool UserCanCreateTicketFromProject(Project project)
+        {
+            switch (CurrentRole)
+            {
+                case "MasterAdmin":
+                    return true;
+                case "Admin":
+                    return false;
+                case "Project Manager":
                     return false;
                 case "Developer":
                     return false;
@@ -125,7 +146,6 @@ namespace BugTracker.Helpers
                 default:
                     return false;
             }
-
         }
     }
 }

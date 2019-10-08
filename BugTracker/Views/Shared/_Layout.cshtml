@@ -293,7 +293,7 @@
                         <ul class="sub-menu">
                             <li> <a href="@Url.Action("Create","Tickets")">Create Ticket</a> </li>
 
-                            <li> <a href="@Url.Action("Index","Tickets")">All Tickets</a> </li>
+                            <li> <a href="@Url.Action("Index","Tickets", new { userId = user.Id})">All Tickets</a> </li>
                             <li> <a href="@Url.Action("UserTickets","Tickets", new { userId = user.Id })">My Tickets</a> </li>
                             <li> <a href="theme_elegant.html">Elegant</a> </li>
                         </ul>
