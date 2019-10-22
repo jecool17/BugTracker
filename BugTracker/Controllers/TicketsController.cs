@@ -26,9 +26,15 @@ namespace BugTracker.Controllers
 
 
         }
-
+        [Authorize]
         public ActionResult Index(string userId)
         {
+            if (User.IsInRole("Admin"))
+            {
+                var Atickets = db.Tickets.ToList();
+                return View(Atickets);
+
+            }
             var user = db.Users.Find(userId);
             //var projects = db.Projects.Where(t => t.Users.Contains(user)).ToList();
             //var projectTickets = db.Tickets.Where(t => t.Project.Tickets.Contains(user.Tickets)).ToList();
@@ -41,7 +47,12 @@ namespace BugTracker.Controllers
             var user = db.Users.Find(userId);
             var tickets = db.Tickets.Where(t => t.AssignedToUserId == userId).ToList();
             //check for null/ add sweet alert.
+            if (User.IsInRole("Submitter"))
+            {
 
+                var subtickets = db.Tickets.Where(t => t.OwnerUserId == userId).ToList();
+                return View(subtickets);
+            }
 
             return View(tickets);
 
@@ -109,7 +120,7 @@ namespace BugTracker.Controllers
                     ticket.AssignedToUserId = User.Identity.GetUserId();
                     
                     ticket.TicketStatusId = db.TicketStatuses.FirstOrDefault(t => t.Name == "New / Unassigned").Id;
-                    ticket.TicketStatus.Value = 0;
+                    
                     
                     db.Tickets.Add(ticket);
                     db.SaveChanges();
@@ -118,7 +129,7 @@ namespace BugTracker.Controllers
                 
                 NotificationHelper.GeneratePMNewTicketNotifications(ticket);
                 
-                return RedirectToAction("Index");
+                return RedirectToAction("Dashboard", "Home");
             }
             //var myProjects = projectHelper.ListUserProjects(User.Identity.GetUserId());
 
@@ -190,7 +201,7 @@ namespace BugTracker.Controllers
                 {
                     db.Entry(ticket).Property(x => x.AssignedToUserId).IsModified = true;
                     ticket.TicketStatusId = db.TicketStatuses.FirstOrDefault(t => t.Name == "Assigned").Id;
-                    ticket.TicketStatus.Value = 15;
+                    db.SaveChanges();
                 }
                     
                 
@@ -199,7 +210,7 @@ namespace BugTracker.Controllers
 
                 NotificationHelper.ManageNotifications(oldTicket, ticket);
                 HistoryHelper.RecordHistory(oldTicket, ticket);
-                return RedirectToAction("Index");
+                return RedirectToAction("Dashboard", "Home");
             }
             ViewBag.AssignedToUserId = new SelectList(db.Users, "Id", "FirstName", ticket.AssignedToUserId);
             ViewBag.OwnerUserId = new SelectList(db.Users, "Id", "FirstName", ticket.OwnerUserId);

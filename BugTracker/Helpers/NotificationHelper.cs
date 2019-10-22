@@ -133,8 +133,7 @@ namespace BugTracker.Helpers
                     Created = DateTime.Now,
                     Subject = $"You have a new Ticket to assign (Ticket  #{newTicket.Id} on {DateTime.Now})",
                     Read = false,
-                    RecipientId = user.Id,
-                    Recipient = user,
+                    RecipientId = user.Id,                   
                     SenderId = HttpContext.Current.User.Identity.GetUserId(),
                     NotificationBody = $"NEW TICKET",
                     TicketId = newTicket.Id
@@ -158,6 +157,22 @@ namespace BugTracker.Helpers
         {
 
             return Db.TicketNotifications.ToList();
+        }
+
+        public static List<TicketNotification> GetPMNotifications(string userId)
+        {
+            var currentUser = Db.Users.Find(userId);
+
+            var notifications = currentUser.Projects.SelectMany(p => p.Tickets).SelectMany(n => n.TicketNotifications).ToList();
+            return (notifications);
+        }
+
+        public static List<TicketNotification> GetSubNotifications(string userId)
+        {
+
+            var currentUser = Db.Users.Find(userId);
+            var notifications = Db.Tickets.Where(t => t.OwnerUserId == userId).SelectMany(n => n.TicketNotifications).ToList();
+            return (notifications);
         }
         public static int GetUserNewNotificationCount()
         {
@@ -188,8 +203,11 @@ namespace BugTracker.Helpers
         public static int GetPMNotificationsCount()
         {
             var userId = HttpContext.Current.User.Identity.GetUserId();
-            return Db.TicketNotifications.Where(t => t.RecipientId == userId).Count();
+            //return Db.TicketNotifications.Where(t => t.RecipientId == userId).Count();
+            var currentUser = Db.Users.Find(userId);
 
+            var notifications = currentUser.Projects.SelectMany(p => p.Tickets).Where(t => t.TicketStatus.Name == "New / Unassigned").Count();
+            return (notifications);
 
         }
 

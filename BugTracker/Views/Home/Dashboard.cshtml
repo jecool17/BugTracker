@@ -569,8 +569,8 @@
     {
 
     }
-    
-   @*manage Ticket div*@
+
+    @*manage Ticket div*@
     <div class="col-md-3 col-vlg-3 col-sm-6">
         <div class="tiles red m-b-10">
             <div class="tiles-body">
@@ -602,7 +602,7 @@
 
                     <div class="widget-stats">
                         <div class="wrapper transparent">
-                            <span class="item-title">New Tickets</span> <span class="item-count animate-number semi-bold" data-value="@NotificationHelper.GetPMNotificationsCount()" data-animation-duration="700">0</span>
+                            <span class="item-title">New Tickets</span> <span class="item-count animate-number semi-bold" data-value="@NotificationHelper.GetPMNotificationsCount()" data-animation-duration="700">@NotificationHelper.GetPMNotificationsCount()</span>
                         </div>
                         <br />
                         <button class="btn btn-lg" data-toggle="modal" data-target="#CreateProject"> Create Project</button>
@@ -645,7 +645,7 @@
             </div>
         </div>
     </div>
-    
+
 </div>
 @*Active Tickets*@
 @if (User.IsInRole("Developer"))
@@ -669,7 +669,7 @@
 
                         <h4>My Open <span class="semi-bold">Tickets</span></h4>
                         <br>
-                        @foreach (var tickets in Model.Where(t =>t.AssignedToUserId == userId && t.TicketStatus.Name != "Resolved" && t.TicketStatus.Name != "Archived").ToList())
+                        @foreach (var tickets in Model.Where(t => t.AssignedToUserId == userId && t.TicketStatus.Name != "Resolved" && t.TicketStatus.Name != "Archived").ToList())
                         {
 
                             <div class="row">
@@ -738,7 +738,7 @@
 
                         <h4>My Completed Tickets <span class="semi-bold">Tickets</span></h4>
                         <br>
-                        @foreach (var tickets in Model.Where(t =>t.AssignedToUserId == userId && t.TicketStatus.Name == "Resolved"))
+                        @foreach (var tickets in Model.Where(t => t.AssignedToUserId == userId && t.TicketStatus.Name == "Resolved"))
                         {
 
                             <div class="row">
@@ -796,7 +796,7 @@
 
                         <h4>Archived <span class="semi-bold">Tickets</span></h4>
                         <br>
-                        @foreach (var tickets in Model.Where(t =>t.AssignedToUserId == userId && t.TicketStatus.Name == "Archived"))
+                        @foreach (var tickets in Model.Where(t => t.AssignedToUserId == userId && t.TicketStatus.Name == "Archived"))
                         {
 
                             <div class="row">
@@ -1093,7 +1093,7 @@ else if (User.IsInRole("Project Manager"))
 
                         <h4>New <span class="semi-bold">Tickets</span></h4>
                         <br>
-                        @foreach (var tickets in user.Projects.SelectMany(p=>p.Tickets).Where(t=>t.TicketStatus.Name == "New / Unassigned"))
+                        @foreach (var tickets in user.Projects.SelectMany(p => p.Tickets).Where(t => t.TicketStatus.Name == "New / Unassigned").OrderByDescending(c =>c.Created))
                         {
 
                             <div class="row">
@@ -1162,7 +1162,7 @@ else if (User.IsInRole("Project Manager"))
 
                         <h4>Completed Tickets <span class="semi-bold">Tickets</span></h4>
                         <br>
-                        @foreach (var tickets in user.Projects.SelectMany(p=>p.Tickets).Where(t=>t.TicketStatus.Name == "Resolved"))
+                        @foreach (var tickets in user.Projects.SelectMany(p => p.Tickets).Where(t => t.TicketStatus.Name == "Resolved"))
                         {
 
                             <div class="row">
@@ -1220,7 +1220,7 @@ else if (User.IsInRole("Project Manager"))
 
                         <h4>Archived <span class="semi-bold">Tickets</span></h4>
                         <br>
-                        @foreach (var tickets in user.Projects.SelectMany(p=>p.Tickets).Where(t=>t.TicketStatus.Name == "Archived"))
+                        @foreach (var tickets in user.Projects.SelectMany(p => p.Tickets).Where(t => t.TicketStatus.Name == "Archived"))
                         {
 
                             <div class="row">
@@ -1305,7 +1305,7 @@ else if (User.IsInRole("Submitter"))
 
                         <h4>My Open <span class="semi-bold">Tickets</span></h4>
                         <br>
-                        @foreach (var tickets in Model.Where(t=>t.OwnerUserId == userId && t.TicketStatus.Name != "Archived" ))
+                        @foreach (var tickets in Model.Where(t => t.OwnerUserId == userId && t.TicketStatus.Name != "Archived"))
                         {
 
                             <div class="row">
@@ -1372,7 +1372,7 @@ else if (User.IsInRole("Submitter"))
                             </div>
                         }
 
-                        
+
 
 
                         <h4>My Archived <span class="semi-bold">Tickets</span></h4>
@@ -1446,74 +1446,369 @@ else
 
 }
 
-@*Recents*@
+@*Recents Notifications/ Comments*@
 <div class="row">
     @*recent notifications for developers,project ticket notifications for PM, all for admin*@
-    <div class="col-md-6 col-sm-6">
-        <div class="tiles gradient-grey">
-            <div class="tiles-body">
-                <div class="controller">
-                    <a href="javascript:;" class="reload"></a>
-                    <a href="javascript:;" class="remove"></a>
-                </div>
-                <div class="tiles-title text-black">Recent NOTIFICATIONS </div>
-                <br>
-                @foreach (var notification in NotificationHelper.GetUserNotifications().OrderByDescending(b => b.Created).Take(3))
-                {
-
-                    <div class="notification-messages info">
-                        <div class="user-profile"> <img src="@notification.Recipient.AvatarURL" @*alt="" data-src="~/img/profiles/c.jpg" data-src-retina="~/img/profiles/c2x.jpg"*@ width="35" height="35"> </div>
-                        <div class="message-wrapper">
-                            <div class="heading"> @notification.Subject </div>
-                            <div class="description"> @notification.NotificationBody </div>
-                        </div>
-                        <div class="date pull-right"> @notification.Created </div>
-                        <div class="clearfix"></div>
+    @if (User.IsInRole("Developer"))
+    {
+        <div class="col-md-6 col-sm-6">
+            <div class="tiles gradient-grey">
+                <div class="tiles-body">
+                    <div class="controller">
+                        <a href="javascript:;" class="reload"></a>
+                        <a href="javascript:;" class="remove"></a>
                     </div>
+                    <div class="tiles-title text-black">Recent NOTIFICATIONS </div>
+                    <br>
+                    @foreach (var notification in NotificationHelper.GetUserNotifications().OrderByDescending(b => b.Created).Take(3))
+                    {
+                        if (notification.Recipient != null)
+                        {
+                            <div class="notification-messages info">
+                                <div class="user-profile"> <img src="@notification.Recipient.AvatarURL" @*alt="" data-src="~/img/profiles/c.jpg" data-src-retina="~/img/profiles/c2x.jpg"*@ width="35" height="35"> </div>
+                                <div class="message-wrapper">
+                                    <div class="heading"> @notification.Subject </div>
+                                    <div class="description"> @notification.NotificationBody </div>
+                                </div>
+                                <div class="date pull-right"> @notification.Created </div>
+                                <div class="clearfix"></div>
+                            </div>
 
-                }
 
 
+                        }
+                        else
+                        {
+                            <div class="notification-messages info">
+                                <div class="user-profile"> <img src="/Uploads/Master-Joda-icon.png" @*alt="" data-src="~/img/profiles/c.jpg" data-src-retina="~/img/profiles/c2x.jpg"*@ width="35" height="35"> </div>
+                                <div class="message-wrapper">
+                                    <div class="heading"> @notification.Subject </div>
+                                    <div class="description"> @notification.NotificationBody </div>
+                                </div>
+                                <div class="date pull-right"> @notification.Created </div>
+                                <div class="clearfix"></div>
+                            </div>
+
+                        }
+
+
+                    }
+
+
+
+
+                </div>
 
 
             </div>
-
-
         </div>
-    </div>
-    @*recent comments for devolopers on tickets they are assigne to, for project tickets for PM, all for admin*@
-    <div class="col-md-6 col-sm-6">
-        <div class="tiles gradient-grey">
-            <div class="tiles-body">
-                <div class="controller">
-                    <a href="javascript:;" class="reload"></a>
-                    <a href="javascript:;" class="remove"></a>
-                </div>
-                <div class="tiles-title text-black">Recent Comments </div>
-                <br>
-                @foreach (var comment in CommentHelper.GetUserTicketComments().OrderByDescending(b => b.Created).Take(3))
-                {
 
-                    <div class="notification-messages info">
-                        <div class="user-profile"> <img src="@comment.User.AvatarURL" @*alt="" data-src="~/img/profiles/c.jpg" data-src-retina="~/img/profiles/c2x.jpg"*@ width="35" height="35"> </div>
-                        <div class="message-wrapper">
-                            <div class="heading"> @comment.Comment </div>
-                            <div class="description">Ticket #@comment.Ticket.Id </div>
-                        </div>
-                        <div class="date pull-right"> @comment.Created </div>
-                        <div class="clearfix"></div>
+        <div class="col-md-6 col-sm-6">
+            <div class="tiles gradient-grey">
+                <div class="tiles-body">
+                    <div class="controller">
+                        <a href="javascript:;" class="reload"></a>
+                        <a href="javascript:;" class="remove"></a>
                     </div>
+                    <div class="tiles-title text-black">Recent Comments </div>
+                    <br>
+                    @foreach (var comment in CommentHelper.GetUserTicketComments().OrderByDescending(b => b.Created).Take(3))
+                    {
 
-                }
+                        <div class="notification-messages info">
+                            <div class="user-profile"> <img src="@comment.User.AvatarURL" @*alt="" data-src="~/img/profiles/c.jpg" data-src-retina="~/img/profiles/c2x.jpg"*@ width="35" height="35"> </div>
+                            <div class="message-wrapper">
+                                <div class="heading"> @comment.Comment </div>
+                                <div class="description">Ticket #@comment.Ticket.Id </div>
+                            </div>
+                            <div class="date pull-right"> @comment.Created </div>
+                            <div class="clearfix"></div>
+                        </div>
+
+                    }
 
 
+
+
+                </div>
 
 
             </div>
-
-
         </div>
-    </div>
+
+    }
+    else if (User.IsInRole("Project Manager"))
+    {
+        <div class="col-md-6 col-sm-6">
+            <div class="tiles gradient-grey">
+                <div class="tiles-body">
+                    <div class="controller">
+                        <a href="javascript:;" class="reload"></a>
+                        <a href="javascript:;" class="remove"></a>
+                    </div>
+                    <div class="tiles-title text-black">Recent NOTIFICATIONS </div>
+                    <br>
+                    @foreach (var notification in NotificationHelper.GetPMNotifications(userId).OrderByDescending(b => b.Created).Take(3))
+                    {
+                        if (notification.Recipient != null)
+                        {
+                            <div class="notification-messages info">
+                                <div class="user-profile"> <img src="@notification.Recipient.AvatarURL" @*alt="" data-src="~/img/profiles/c.jpg" data-src-retina="~/img/profiles/c2x.jpg"*@ width="35" height="35"> </div>
+                                <div class="message-wrapper">
+                                    <div class="heading"> @notification.Subject </div>
+                                    <div class="description"> @notification.NotificationBody </div>
+                                </div>
+                                <div class="date pull-right"> @notification.Created </div>
+                                <div class="clearfix"></div>
+                            </div>
+
+
+
+                        }
+                        else
+                        {
+                            <div class="notification-messages info">
+                                <div class="user-profile"> <img src="/Uploads/Master-Joda-icon.png" @*alt="" data-src="~/img/profiles/c.jpg" data-src-retina="~/img/profiles/c2x.jpg"*@ width="35" height="35"> </div>
+                                <div class="message-wrapper">
+                                    <div class="heading"> @notification.Subject </div>
+                                    <div class="description"> @notification.NotificationBody </div>
+                                </div>
+                                <div class="date pull-right"> @notification.Created </div>
+                                <div class="clearfix"></div>
+                            </div>
+
+                        }
+
+
+                    }
+
+
+
+
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="col-md-6 col-sm-6">
+            <div class="tiles gradient-grey">
+                <div class="tiles-body">
+                    <div class="controller">
+                        <a href="javascript:;" class="reload"></a>
+                        <a href="javascript:;" class="remove"></a>
+                    </div>
+                    <div class="tiles-title text-black">Recent Comments </div>
+                    <br>
+                    @foreach (var comment in CommentHelper.GetPMTicketComments(userId).OrderByDescending(b => b.Created).Take(3))
+                    {
+
+                        <div class="notification-messages info">
+                            <div class="user-profile"> <img src="@comment.User.AvatarURL" @*alt="" data-src="~/img/profiles/c.jpg" data-src-retina="~/img/profiles/c2x.jpg"*@ width="35" height="35"> </div>
+                            <div class="message-wrapper">
+                                <div class="heading"> @comment.Comment </div>
+                                <div class="description">Ticket #@comment.Ticket.Id </div>
+                            </div>
+                            <div class="date pull-right"> @comment.Created </div>
+                            <div class="clearfix"></div>
+                        </div>
+
+                    }
+
+
+
+
+                </div>
+
+
+            </div>
+        </div>
+
+    }
+    else if (User.IsInRole("Submitter"))
+    {
+        <div class="col-md-6 col-sm-6">
+            <div class="tiles gradient-grey">
+                <div class="tiles-body">
+                    <div class="controller">
+                        <a href="javascript:;" class="reload"></a>
+                        <a href="javascript:;" class="remove"></a>
+                    </div>
+                    <div class="tiles-title text-black">Recent NOTIFICATIONS </div>
+                    <br>
+                    @foreach (var notification in NotificationHelper.GetSubNotifications(userId).OrderByDescending(c =>c.Created).Take(3))
+                    {
+                        if (notification.Recipient != null)
+                        {
+                            <div class="notification-messages info">
+                                <div class="user-profile"> <img src="@notification.Recipient.AvatarURL" @*alt="" data-src="~/img/profiles/c.jpg" data-src-retina="~/img/profiles/c2x.jpg"*@ width="35" height="35"> </div>
+                                <div class="message-wrapper">
+                                    <div class="heading"> @notification.Subject </div>
+                                    <div class="description"> @notification.NotificationBody </div>
+                                </div>
+                                <div class="date pull-right"> @notification.Created </div>
+                                <div class="clearfix"></div>
+                            </div>
+
+
+
+                        }
+                        else
+                        {
+                            <div class="notification-messages info">
+                                <div class="user-profile"> <img src="/Uploads/Master-Joda-icon.png" @*alt="" data-src="~/img/profiles/c.jpg" data-src-retina="~/img/profiles/c2x.jpg"*@ width="35" height="35"> </div>
+                                <div class="message-wrapper">
+                                    <div class="heading"> @notification.Subject </div>
+                                    <div class="description"> @notification.NotificationBody </div>
+                                </div>
+                                <div class="date pull-right"> @notification.Created </div>
+                                <div class="clearfix"></div>
+                            </div>
+
+                        }
+
+
+                    }
+
+
+
+
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="col-md-6 col-sm-6">
+            <div class="tiles gradient-grey">
+                <div class="tiles-body">
+                    <div class="controller">
+                        <a href="javascript:;" class="reload"></a>
+                        <a href="javascript:;" class="remove"></a>
+                    </div>
+                    <div class="tiles-title text-black">Recent Comments </div>
+                    <br>
+                    @foreach (var comment in CommentHelper.GetSubTicketComments(userId).OrderByDescending(b => b.Created).Take(3))
+                    {
+
+                        <div class="notification-messages info">
+                            <div class="user-profile"> <img src="@comment.User.AvatarURL" @*alt="" data-src="~/img/profiles/c.jpg" data-src-retina="~/img/profiles/c2x.jpg"*@ width="35" height="35"> </div>
+                            <div class="message-wrapper">
+                                <div class="heading"> @comment.Comment </div>
+                                <div class="description">Ticket #@comment.Ticket.Id </div>
+                            </div>
+                            <div class="date pull-right"> @comment.Created </div>
+                            <div class="clearfix"></div>
+                        </div>
+
+                    }
+
+
+
+
+                </div>
+
+
+            </div>
+        </div>
+
+    }
+    else if (User.IsInRole("Admin") || User.IsInRole("MasterAdmin"))
+    {
+        <div class="col-md-6 col-sm-6">
+            <div class="tiles gradient-grey">
+                <div class="tiles-body">
+                    <div class="controller">
+                        <a href="javascript:;" class="reload"></a>
+                        <a href="javascript:;" class="remove"></a>
+                    </div>
+                    <div class="tiles-title text-black">Recent NOTIFICATIONS </div>
+                    <br>
+                    @foreach (var notification in NotificationHelper.GetAllNotifications().OrderByDescending(b => b.Created).Take(3))
+                    {
+                        if (notification.Recipient != null)
+                        {
+                            <div class="notification-messages info">
+                                <div class="user-profile"> <img src="@notification.Recipient.AvatarURL" @*alt="" data-src="~/img/profiles/c.jpg" data-src-retina="~/img/profiles/c2x.jpg"*@ width="35" height="35"> </div>
+                                <div class="message-wrapper">
+                                    <div class="heading"> @notification.Subject </div>
+                                    <div class="description"> @notification.NotificationBody </div>
+                                </div>
+                                <div class="date pull-right"> @notification.Created </div>
+                                <div class="clearfix"></div>
+                            </div>
+
+
+
+                        }
+                        else
+                        {
+                            <div class="notification-messages info">
+                                <div class="user-profile"> <img src="/Uploads/Master-Joda-icon.png" @*alt="" data-src="~/img/profiles/c.jpg" data-src-retina="~/img/profiles/c2x.jpg"*@ width="35" height="35"> </div>
+                                <div class="message-wrapper">
+                                    <div class="heading"> @notification.Subject </div>
+                                    <div class="description"> @notification.NotificationBody </div>
+                                </div>
+                                <div class="date pull-right"> @notification.Created </div>
+                                <div class="clearfix"></div>
+                            </div>
+
+                        }
+
+
+                    }
+
+
+
+
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="col-md-6 col-sm-6">
+            <div class="tiles gradient-grey">
+                <div class="tiles-body">
+                    <div class="controller">
+                        <a href="javascript:;" class="reload"></a>
+                        <a href="javascript:;" class="remove"></a>
+                    </div>
+                    <div class="tiles-title text-black">Recent Comments </div>
+                    <br>
+                    @foreach (var comment in CommentHelper.GetAllTicketComments().OrderByDescending(b => b.Created).Take(3))
+                    {
+
+                        <div class="notification-messages info">
+                            <div class="user-profile"> <img src="@comment.User.AvatarURL" @*alt="" data-src="~/img/profiles/c.jpg" data-src-retina="~/img/profiles/c2x.jpg"*@ width="35" height="35"> </div>
+                            <div class="message-wrapper">
+                                <div class="heading"> @comment.Comment </div>
+                                <div class="description">Ticket #@comment.Ticket.Id </div>
+                            </div>
+                            <div class="date pull-right"> @comment.Created </div>
+                            <div class="clearfix"></div>
+                        </div>
+
+                    }
+
+
+
+
+                </div>
+
+
+            </div>
+        </div>
+
+    }
+    else
+    {
+
+    }
+
+
+
+
 </div>
 
 <div class="row">
@@ -1527,70 +1822,45 @@ else
 
 
 @*Charts*@
-<div class="row">
-    <div class="col-md-6">
-        <div class="grid simple ">
-            <div class="grid-title no-border  ">
-                <h4>Status <span class="semi-bold">Chart</span></h4>
-                <div class="tools">
-                    <a href="javascript:;" class="collapse"></a>
-                    <a href="#grid-config" data-toggle="modal" class="config"></a>
-                    <a href="javascript:;" class="reload"></a>
-                    <a href="javascript:;" class="remove"></a>
+
+
+@if (User.IsInRole("Admin") || User.IsInRole("MasterAdmin"))
+{
+    <div class="row">
+        <div class="col-md-6">
+            <div class="grid simple ">
+                <div class="grid-title no-border  ">
+                    <h4>Status <span class="semi-bold">Chart</span></h4>
+                    <div class="tools">
+                        <a href="javascript:;" class="collapse"></a>
+                        <a href="#grid-config" data-toggle="modal" class="config"></a>
+                        <a href="javascript:;" class="reload"></a>
+                        <a href="javascript:;" class="remove"></a>
+                    </div>
                 </div>
-            </div>
-            <div class="grid-body no-border ">
-                <h4>Ticket <span class="semi-bold">Statuses</span></h4>
-                <p>NUMBER OF TICKETS AND THEIR RESPECTIVE STATUS  </p>
-                <div id="MorrisDonutChart" style="height:200px;"> </div>
+                <div class="grid-body no-border ">
+                    <h4>Ticket <span class="semi-bold">Statuses</span></h4>
+                    <p>NUMBER OF TICKETS AND THEIR RESPECTIVE STATUS  </p>
+                    <div id="MorrisDonutChart" style="height:200px;"> </div>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="col-md-6">
-        <div class="grid simple">
-            <div class="grid-title no-border">
-                <h4>Priority <span class="semi-bold">Chart</span></h4>
-                <div class="tools">
-                    <a href="javascript:;" class="collapse"></a>
-                    <a href="#grid-config" data-toggle="modal" class="config"></a>
-                    <a href="javascript:;" class="reload"></a>
-                    <a href="javascript:;" class="remove"></a>
+        <div class="col-md-6">
+            <div class="grid simple">
+                <div class="grid-title no-border">
+                    <h4>Priority <span class="semi-bold">Chart</span></h4>
+                    <div class="tools">
+                        <a href="javascript:;" class="collapse"></a>
+                        <a href="#grid-config" data-toggle="modal" class="config"></a>
+                        <a href="javascript:;" class="reload"></a>
+                        <a href="javascript:;" class="remove"></a>
+                    </div>
                 </div>
-            </div>
-            <div class="grid-body no-border">
-                <h4>Ticket <span class="semi-bold">Priorities</span></h4>
-                <p>NUMBER OF TICKETS AND THEIR RESPECTIVE PRIORITY LEVEL </p>
-                <div id="MorrisDonutChart1" style="height:200px;"> </div>
-            </div>
-        </div>
-    </div>
-
-
-
-
-
-
-</div>
-
-
-
-<div class="row">
-    <div class="col-md-12">
-        <div class="grid simple">
-            <div class="grid-title no-border">
-                <h4>Type<span class="semi-bold">Chart</span></h4>
-                <div class="tools">
-                    <a href="javascript:;" class="collapse"></a>
-                    <a href="#grid-config" data-toggle="modal" class="config"></a>
-                    <a href="javascript:;" class="reload"></a>
-                    <a href="javascript:;" class="remove"></a>
+                <div class="grid-body no-border">
+                    <h4>Ticket <span class="semi-bold">Priorities</span></h4>
+                    <p>NUMBER OF TICKETS AND THEIR RESPECTIVE PRIORITY LEVEL </p>
+                    <div id="MorrisDonutChart1" style="height:200px;"> </div>
                 </div>
-            </div>
-            <div class="grid-body no-border">
-                <h4>Ticket  <span class="semi-bold"> Types</span></h4>
-                <p>NUMBER OF TICKETS AND THIER RESPECTIVE TYPE</p>
-                <br>
-                <div id="MorrisBarChart" style="height:250px"></div>
             </div>
         </div>
 
@@ -1602,7 +1872,208 @@ else
     </div>
 
 
-</div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="grid simple">
+                <div class="grid-title no-border">
+                    <h4>Type<span class="semi-bold">Chart</span></h4>
+                    <div class="tools">
+                        <a href="javascript:;" class="collapse"></a>
+                        <a href="#grid-config" data-toggle="modal" class="config"></a>
+                        <a href="javascript:;" class="reload"></a>
+                        <a href="javascript:;" class="remove"></a>
+                    </div>
+                </div>
+                <div class="grid-body no-border">
+                    <h4>Ticket  <span class="semi-bold"> Types</span></h4>
+                    <p>NUMBER OF TICKETS AND THIER RESPECTIVE TYPE</p>
+                    <br>
+                    <div id="MorrisBarChart" style="height:250px"></div>
+                </div>
+            </div>
+
+
+
+
+
+
+        </div>
+
+
+    </div>
+
+}
+
+
+@if (User.IsInRole("Developer"))
+{
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="grid simple ">
+                <div class="grid-title no-border  ">
+                    <h4>Status <span class="semi-bold">Chart</span></h4>
+                    <div class="tools">
+                        <a href="javascript:;" class="collapse"></a>
+                        <a href="#grid-config" data-toggle="modal" class="config"></a>
+                        <a href="javascript:;" class="reload"></a>
+                        <a href="javascript:;" class="remove"></a>
+                    </div>
+                </div>
+                <div class="grid-body no-border ">
+                    <h4>Ticket <span class="semi-bold">Statuses</span></h4>
+                    <p>NUMBER OF TICKETS AND THEIR RESPECTIVE STATUS  </p>
+                    <div id="MorrisDonutChart" style="height:200px;"> </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="grid simple">
+                <div class="grid-title no-border">
+                    <h4>Priority <span class="semi-bold">Chart</span></h4>
+                    <div class="tools">
+                        <a href="javascript:;" class="collapse"></a>
+                        <a href="#grid-config" data-toggle="modal" class="config"></a>
+                        <a href="javascript:;" class="reload"></a>
+                        <a href="javascript:;" class="remove"></a>
+                    </div>
+                </div>
+                <div class="grid-body no-border">
+                    <h4>Ticket <span class="semi-bold">Priorities</span></h4>
+                    <p>NUMBER OF TICKETS AND THEIR RESPECTIVE PRIORITY LEVEL </p>
+                    <div id="MorrisDonutChart1" style="height:200px;"> </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+    </div>
+
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="grid simple">
+                <div class="grid-title no-border">
+                    <h4>Type<span class="semi-bold">Chart</span></h4>
+                    <div class="tools">
+                        <a href="javascript:;" class="collapse"></a>
+                        <a href="#grid-config" data-toggle="modal" class="config"></a>
+                        <a href="javascript:;" class="reload"></a>
+                        <a href="javascript:;" class="remove"></a>
+                    </div>
+                </div>
+                <div class="grid-body no-border">
+                    <h4>Ticket  <span class="semi-bold"> Types</span></h4>
+                    <p>NUMBER OF TICKETS AND THIER RESPECTIVE TYPE</p>
+                    <br>
+                    <div id="MorrisBarChart" style="height:250px"></div>
+                </div>
+            </div>
+
+
+
+
+
+
+        </div>
+
+
+    </div>
+
+
+
+}
+
+@if (User.IsInRole("Submitter"))
+{
+    <div class="row">
+        <div class="col-md-6">
+            <div class="grid simple ">
+                <div class="grid-title no-border  ">
+                    <h4>Status <span class="semi-bold">Chart</span></h4>
+                    <div class="tools">
+                        <a href="javascript:;" class="collapse"></a>
+                        <a href="#grid-config" data-toggle="modal" class="config"></a>
+                        <a href="javascript:;" class="reload"></a>
+                        <a href="javascript:;" class="remove"></a>
+                    </div>
+                </div>
+                <div class="grid-body no-border ">
+                    <h4>Ticket <span class="semi-bold">Statuses</span></h4>
+                    <p>NUMBER OF TICKETS AND THEIR RESPECTIVE STATUS  </p>
+                    <div id="MorrisDonutChart" style="height:200px;"> </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="grid simple">
+                <div class="grid-title no-border">
+                    <h4>Priority <span class="semi-bold">Chart</span></h4>
+                    <div class="tools">
+                        <a href="javascript:;" class="collapse"></a>
+                        <a href="#grid-config" data-toggle="modal" class="config"></a>
+                        <a href="javascript:;" class="reload"></a>
+                        <a href="javascript:;" class="remove"></a>
+                    </div>
+                </div>
+                <div class="grid-body no-border">
+                    <h4>Ticket <span class="semi-bold">Priorities</span></h4>
+                    <p>NUMBER OF TICKETS AND THEIR RESPECTIVE PRIORITY LEVEL </p>
+                    <div id="MorrisDonutChart1" style="height:200px;"> </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+    </div>
+
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="grid simple">
+                <div class="grid-title no-border">
+                    <h4>Type<span class="semi-bold">Chart</span></h4>
+                    <div class="tools">
+                        <a href="javascript:;" class="collapse"></a>
+                        <a href="#grid-config" data-toggle="modal" class="config"></a>
+                        <a href="javascript:;" class="reload"></a>
+                        <a href="javascript:;" class="remove"></a>
+                    </div>
+                </div>
+                <div class="grid-body no-border">
+                    <h4>Ticket  <span class="semi-bold"> Types</span></h4>
+                    <p>NUMBER OF TICKETS AND THIER RESPECTIVE TYPE</p>
+                    <br>
+                    <div id="MorrisBarChart" style="height:250px"></div>
+                </div>
+            </div>
+
+
+
+
+
+
+        </div>
+
+
+    </div>
+
+}
+
+
+
+
 
 
 

@@ -25,6 +25,22 @@ namespace BugTracker.Helpers
 
         }
 
+        public static List<TicketComment> GetPMTicketComments(string userId)
+        {
+            var currentUser = Db.Users.Find(userId);
+            var ticketComments = currentUser.Projects.SelectMany(p => p.Tickets).SelectMany(n => n.TicketComments).ToList();
+
+
+            return ticketComments;
+        }
+
+        public static List<TicketComment> GetSubTicketComments(string userId)
+        {
+            var currentUser = Db.Users.Find(userId);
+            var ticketComments = Db.Tickets.Where(t => t.OwnerUserId == userId).SelectMany(n => n.TicketComments).ToList();
+            return ticketComments;
+        }
+
 
     }
 }

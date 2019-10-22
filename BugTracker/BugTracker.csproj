@@ -222,6 +222,8 @@
     <Compile Include="ViewModels\UserProfileViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content2\bootstrap.min.css" />
+    <Content Include="Content2\now-ui-dashboard.css" />
     <Content Include="Content\animate.min.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
@@ -235,6 +237,7 @@
     <Content Include="Content\jquery.dataTables.css" />
     <Content Include="Content\morris.css" />
     <Content Include="Content\morris.min.css" />
+    <Content Include="Content\now-ui-dashboard.min.css" />
     <Content Include="Content\pace-theme-flash.css" />
     <Content Include="Content\select2.css" />
     <Content Include="Content\webarch.css" />
@@ -244,7 +247,10 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="img\bg14.jpg" />
     <Content Include="img\cooleybrand.png" />
+    <Content Include="img\cooleybrandDarkmode.png" />
+    <Content Include="img\cooleylogo.png" />
     <Content Include="img\cover_pic.png" />
     <Content Include="img\doc.png" />
     <Content Include="img\docx.png" />
@@ -346,6 +352,19 @@
     <Content Include="img\xls.png" />
     <Content Include="img\xlsx.png" />
     <Content Include="img\zip.png" />
+    <Content Include="Scripts2\bootstrap-notify.js" />
+    <Content Include="Scripts2\bootstrap-selectpicker.js" />
+    <Content Include="Scripts2\bootstrap.min.js" />
+    <Content Include="Scripts2\jasny-bootstrap.min.js" />
+    <Content Include="Scripts2\jquery.bootstrap-wizard.js" />
+    <Content Include="Scripts2\jquery.min.js" />
+    <Content Include="Scripts2\jquery.validate.min.js" />
+    <Content Include="Scripts2\moment.min.js" />
+    <Content Include="Scripts2\nouislider.min.js" />
+    <Content Include="Scripts2\now-ui-dashboard.min.js" />
+    <Content Include="Scripts2\perfect-scrollbar.jquery.min.js" />
+    <Content Include="Scripts2\popper.min.js" />
+    <Content Include="Scripts2\sweetalert2.min.js" />
     <Content Include="Scripts\bootstrap-wysihtml5\bootstrap-wysihtml5.css" />
     <Content Include="Scripts\bootstrap-wysihtml5\bootstrap-wysihtml5.js" />
     <Content Include="Scripts\bootstrap-wysihtml5\bootstrap-wysihtml5.min.css" />
@@ -424,6 +443,7 @@
     <Content Include="Scripts\jquery-ui-1.10.1.custom.min.js" />
     <Content Include="Scripts\jquery.animateNumbers.js" />
     <Content Include="Scripts\jquery.dataTables.min.js" />
+    <Content Include="Scripts\jquery.min.js" />
     <Content Include="Scripts\jquery.scrollbar.min.js" />
     <Content Include="Scripts\jquery.tinymce.min.js" />
     <Content Include="Scripts\jquery.unveil.min.js" />
@@ -435,7 +455,9 @@
     <Content Include="Scripts\lodash.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\morris.min.js" />
+    <Content Include="Scripts\now-ui-dashboard.min.js" />
     <Content Include="Scripts\pace.min.js" />
+    <Content Include="Scripts\popper.min.js" />
     <Content Include="Scripts\select2.min.js" />
     <Content Include="Scripts\support_ticket.js" />
     <Content Include="Scripts\tinymce.min.js" />
@@ -529,6 +551,8 @@
     <Content Include="Views\Admin\ManageUserProjects.cshtml" />
     <Content Include="Views\Projects\Index.cshtml" />
     <Content Include="Views\Tickets\UserTickets.cshtml" />
+    <Content Include="Views\Account\DemoUser.cshtml" />
+    <Content Include="Views\Shared\_CustomLogin.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

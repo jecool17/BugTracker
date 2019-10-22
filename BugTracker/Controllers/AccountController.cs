@@ -150,6 +150,8 @@ namespace BugTracker.Controllers
         public ActionResult Register()
         {
             var tuple = new Tuple<LoginViewModel, RegisterViewModel, ForgotPasswordViewModel>(new LoginViewModel(), new RegisterViewModel(), new ForgotPasswordViewModel());
+            
+
             return View(tuple);
         }
 
@@ -216,6 +218,14 @@ namespace BugTracker.Controllers
 
             // If we got this far, something failed, redisplay form
             return View(model);
+        }
+
+        [AllowAnonymous]
+
+        public ActionResult DemoUser()
+        {
+
+            return View();
         }
 
         //

@@ -5,15 +5,8 @@
 }
 @{
     Layout = null;
- }
-<style>
-    .container
-{
-    float: none;
-    margin: O auto;
 }
-
-</style>
+    
 
 <!DOCTYPE html>
 
@@ -26,7 +19,7 @@
     <meta content="" name="description" />
     <meta content="" name="author" />
     <!-- BEGIN PLUGIN CSS -->
-    
+
     <link href="~/Content/pace-theme-flash.css" rel="stylesheet" type="text/css" media="screen" />
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" type="text/css" />
@@ -37,6 +30,17 @@
     <!-- BEGIN CORE CSS FRAMEWORK -->
     <link href="~/Content/webarch.css" rel="stylesheet" type="text/css" />
     <!-- END CORE CSS FRAMEWORK -->
+
+
+    <style>
+        .container {
+            
+            margin:  auto;
+            padding-right: 120px;
+        }
+    </style>
+
+
 </head>
 <!-- END HEAD -->
 <!-- BEGIN BODY -->
@@ -44,7 +48,7 @@
 ">
     <div class="container">
         <div class="row login-container animated fadeInUp">
-            <div class="col-md-7 col-md-offset-2 tiles white no-padding">
+            <div class=" center-text col-md-offset-2 tiles white no-padding">
                 <div class="p-t-30 p-l-40 p-b-20 xs-p-t-10 xs-p-l-10 xs-p-b-10">
                     <h2 class="normal">
                         Sign in to CodeTracker
@@ -53,19 +57,23 @@
                         Use Facebook, Linkedin, Google or your Username to sign in.
                         <br>
                     </p>
-                    
+
                     <div class="row">
-                        <div class="col-md-6 col-sm-6 ">
+                        <div class="  col-md-12 ">
 
                             @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
                         </div>
+                        <div class="col-md-6 col-sm-6">
+
+                        </div>
                     </div>
-                        
-                            
-                    
+
+
+
                     <div role="tablist">
-                        <a href="#tab_login" class="btn btn-primary btn-cons" role="tab" data-toggle="tab">Login</a> or&nbsp;&nbsp;
-                        <a href="#tab_register" class="btn btn-info btn-cons" role="tab" data-toggle="tab">Create an account</a>
+                        <a href="#tab_login" class="btn btn-primary btn-cons" role="tab" data-toggle="tab">Login</a> ||&nbsp;&nbsp;
+                        <a href="#tab_register" class="btn btn-info btn-cons" role="tab" data-toggle="tab">Create an account</a>||&nbsp;&nbsp;
+                        <a href="@Url.Action("DemoUser", "Account")" class="btn btn-dark btn-cons"  >DEMO</a>
                     </div>
 
                 </div>
@@ -82,37 +90,37 @@
                                 <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
                                     <div class="col-md-6 col-sm-6 ">
 
-                                        
 
-                                        @Html.TextBoxFor(m => m.Item1.Email, new {@Name = "Email", placeholder = "Email", @class = "form-control" })
+
+                                        @Html.TextBoxFor(m => m.Item1.Email, new { @Name = "Email", placeholder = "Email", @class = "form-control" })
                                         @Html.ValidationMessageFor(m => m.Item1.Email, "", new { @class = "text-danger" })
                                         @*<input class="form-control" id="login_username" name="login_username" placeholder="Username" type="email" required>*@
                                     </div>
                                     <div class="col-md-6 col-sm-6">
-                                        @Html.PasswordFor(m => m.Item1.Password, new {@Name = "Password", placeholder = "Password", @class = "form-control" })
+                                        @Html.PasswordFor(m => m.Item1.Password, new { @Name = "Password", placeholder = "Password", @class = "form-control" })
                                         @Html.ValidationMessageFor(m => m.Item1.Password, "", new { @class = "text-danger" })
                                         @*<input class="form-control" id="login_pass" name="login_pass" placeholder="Password" type="password" required>*@
                                     </div>
                                 </div>
                                 <div class="row p-t-10 m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
-                                    <div class="control-group col-md-10">
+                                    <div class="control-group col-md-12">
                                         @*<div class="checkbox checkbox check-success">*@
                                         @*<a href="#">Trouble login in?</a>*@
-                                        
-                                            <a href="#tab_forgot" role="tab" data-toggle="tab">Trouble Loggin in?</a>
-                                        
+
+                                        <a href="#tab_forgot" role="tab" data-toggle="tab">Trouble Loggin in?</a>
+
                                         &nbsp;&nbsp;
                                         @Html.LabelFor(m => m.Item1.RememberMe)
                                         @Html.CheckBoxFor(m => m.Item1.RememberMe)
 
                                         @*<input id="checkbox1" type="checkbox" value="1">
-                            <label for="checkbox1">Keep me reminded</label>*@
+                                            <label for="checkbox1">Keep me reminded</label>*@
                                         @*</div>*@
                                         <br />
                                     </div>
                                 </div>
                                 <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
-                                    <div class="col-md-6 col-sm-6">
+                                    <div class="col-md-12">
                                         <input type="submit" value="Log in" class="btn btn-primary btn-cons" />
                                     </div>
                                 </div>
@@ -144,39 +152,39 @@
                                         @Html.PasswordFor(t => t.Item2.ConfirmPassword, new { @Name = "ConfirmPassword", placeholder = "Confirm Pasword", @class = "form-control" })
                                         @*<input class="form-control" id="reg_mail" name="reg_mail" placeholder="Mailing Address" type="email" required>*@
                                     </div>
-                                    
+
 
                                 </div>
 
 
 
 
-                                    <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
-                                        <div class="col-md-6 col-sm-6">
-                                            @Html.TextBoxFor(t => t.Item2.FirstName, new { @Name = "FirstName", placeholder = "First Name", @class = "form-control" })
+                                <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
+                                    <div class="col-md-6 col-sm-6">
+                                        @Html.TextBoxFor(t => t.Item2.FirstName, new { @Name = "FirstName", placeholder = "First Name", @class = "form-control" })
 
-                                            @*<input class="form-control" id="reg_first_Name" name="reg_first_Name" placeholder="First Name" type="text" required>*@
-                                        </div>
-                                        <div class="col-md-6 col-sm-6">
-                                            @Html.TextBoxFor(t => t.Item2.LastName, new { @Name = "LastName", placeholder = "Last Name", @class = "form-control" })
-                                            @*<input class="form-control" id="reg_first_Name" name="reg_first_Name" placeholder="Last Name" type="text" required>*@
-                                        </div>
+                                        @*<input class="form-control" id="reg_first_Name" name="reg_first_Name" placeholder="First Name" type="text" required>*@
                                     </div>
-                                    <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
-                                        <div class="col-md-12">
-                                            @Html.TextBoxFor(t => t.Item2.Email, new { @Name = "Email", placeholder = "Email", @class = "form-control" })
-                                            @*<input class="form-control" id="reg_email" name="reg_email" placeholder="Email" type="email" required>*@
-                                        </div>
+                                    <div class="col-md-6 col-sm-6">
+                                        @Html.TextBoxFor(t => t.Item2.LastName, new { @Name = "LastName", placeholder = "Last Name", @class = "form-control" })
+                                        @*<input class="form-control" id="reg_first_Name" name="reg_first_Name" placeholder="Last Name" type="text" required>*@
                                     </div>
-                                    <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
-                                        <div class="col-md-12">
-                                            <input type="submit" class="btn btn-info btn-cons" value="Register" />
-                                        </div>
+                                </div>
+                                <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
+                                    <div class="col-md-12">
+                                        @Html.TextBoxFor(t => t.Item2.Email, new { @Name = "Email", placeholder = "Email", @class = "form-control" })
+                                        @*<input class="form-control" id="reg_email" name="reg_email" placeholder="Email" type="email" required>*@
                                     </div>
+                                </div>
+                                <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
+                                    <div class="col-md-12">
+                                        <input type="submit" class="btn btn-info btn-cons" value="Register" />
+                                    </div>
+                                </div>
 
-</form>
+                            </form>
                         }
-                        </div>
+                    </div>
 
                     <div role="tabpanel" class="tab-pane" id="tab_forgot">
                         @using (Html.BeginForm("ForgotPassword", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
@@ -188,20 +196,20 @@
 
 
                                 <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
-                                    
-                                        @Html.TextBoxFor(m => m.Item3.Email, new {@Name = "Email", placeholder = "Email", @class = "form-control" })
-                                    
-                                       
-                                        
-                                        
-                                    
-                                    
+
+                                    @Html.TextBoxFor(m => m.Item3.Email, new { @Name = "Email", placeholder = "Email", @class = "form-control" })
+
+
+
+
+
+
                                 </div>
-                                
+
                                 <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
-                                    
-                                        <input type="submit" value="Reset Password" class="btn btn-primary btn-cons" />
-                                    
+
+                                    <input type="submit" value="Reset Password" class="btn btn-primary btn-cons" />
+
                                 </div>
 
                             </form>
@@ -231,5 +239,5 @@
 </body>
 </html>
 @*@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}*@
+        @Scripts.Render("~/bundles/jqueryval")
+    }*@

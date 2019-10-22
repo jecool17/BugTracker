@@ -98,7 +98,7 @@ namespace BugTracker.Controllers
                 if (User.IsInRole("Project Manager"))
                     projectHelper.AddUserToProject(userId, project.Id);
 
-                return RedirectToAction("Index");
+                return RedirectToAction("Dashboard", "Home");
             }
 
             return View(project);
@@ -130,7 +130,7 @@ namespace BugTracker.Controllers
             {
                 db.Entry(project).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Dashboard", "Home");
             }
             return View(project);
         }

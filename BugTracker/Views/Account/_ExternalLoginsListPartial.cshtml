@@ -2,6 +2,8 @@
 @using Microsoft.Owin.Security
 
 
+
+
 @{
     var loginProviders = Context.GetOwinContext().Authentication.GetExternalAuthenticationTypes();
     if (loginProviders.Count() == 0) {
@@ -15,10 +17,10 @@
     else {
         using (Html.BeginForm("ExternalLogin", "Account", new { ReturnUrl = Model.ReturnUrl })) {
             @Html.AntiForgeryToken()
-            <div id="socialLoginList">
+            <div class="c" id="socialLoginList">
                 <p>
                     @foreach (AuthenticationDescription p in loginProviders) {
-                    <button type="button" class="btn btn-block btn-success " id="@p.AuthenticationType" name="provider" value="@p.AuthenticationType" title="Log in using your @p.Caption account"><span class="pull-left icon-@p.AuthenticationType" style="font-style: italic"></span> <span class="bold">Login with @p.AuthenticationType</span></button>
+                    <button type="submit" class="btn  btn-success " id="@p.AuthenticationType" name="provider" value="@p.AuthenticationType" title="Log in using your @p.Caption account"><span class="pull-left icon-@p.AuthenticationType" style="font-style: italic"></span> <span class="bold">Login with @p.AuthenticationType</span></button>
                     }
                 </p>
             </div>

@@ -160,7 +160,7 @@ namespace BugTracker.Migrations
                     DisplayName = "DemoAdmin",
                     UserName = "DemoAdmin@mailinator.com",
                     Email = "DemoAdmin@mailinator.com",
-                    AvatarURL = WebConfigurationManager.AppSettings["DefaultAvi"]
+                    AvatarURL = "/Uploads/Master-joda-icon.png"
                 };
 
                 userManager.Create(demoadminUser, "PassWord");
@@ -174,7 +174,7 @@ namespace BugTracker.Migrations
                     DisplayName = "DemoProjectManager",
                     UserName = "DemoProjectManager@mailinator.com",
                     Email = "DemoProjectManager@mailinator.com",
-                    AvatarURL = WebConfigurationManager.AppSettings["DefaultAvi"]
+                    AvatarURL = "/Uploads/Profile-512.png"
                 };
 
                 userManager.Create(demoprojectUser, "PassWord");
@@ -187,7 +187,7 @@ namespace BugTracker.Migrations
                     DisplayName = "DemoSubmitter",
                     UserName = "DemoSub@mailinator.com",
                     Email = "DemoSub@mailinator.com",
-                    AvatarURL = WebConfigurationManager.AppSettings["DefaultAvi"]
+                    AvatarURL = "/Uploads/sub.png"
                 };
 
                 userManager.Create(demosubUser, "PassWord");
@@ -200,7 +200,7 @@ namespace BugTracker.Migrations
                     DisplayName = "DemoDeveloper",
                     UserName = "DemoDeveloper@mailinator.com",
                     Email = "DemoDeveloper@mailinator.com",
-                    AvatarURL = WebConfigurationManager.AppSettings["DefaultAvi"]
+                    AvatarURL = "/Uploads/profile-picture-icon-11.jpg"
                 };
 
                 userManager.Create(demodevUser, "PassWord");
@@ -238,37 +238,37 @@ namespace BugTracker.Migrations
 
             //Seed name and descriptions tables
             context.TicketTypes.AddOrUpdate(t => t.Name, new TicketType { Name = "Bug", Description = "An error has occured that resulted in either a database issue or file retrievment issue" },
-                                                        new TicketType { Name = "Defect", Description = "An error has occured that resulted in either an display issue or presentation issue" },
+                                                       new TicketType { Name = "Defect", Description = "An error has occured that resulted in either an display issue or presentation issue" },
                                                         new TicketType { Name = "Feature Request", Description = "A client has called requesting new features" },
-                                                        new TicketType { Name = "Docuentation Request", Description = "A client has called requesting additonal documentation" },
-                                                        new TicketType { Name = "Training Request", Description = "A client has called in to request a schedule training appointment" },
-                                                        new TicketType { Name = "Complaint", Description = "A client has called in to make a general complaint" },
-                                                        new TicketType { Name = "Other", Description = "A call has been recieved that requires prompt follow up" }); 
+                                                       new TicketType { Name = "Docuentation Request", Description = "A client has called requesting additonal documentation" },
+                                                       new TicketType { Name = "Training Request", Description = "A client has called in to request a schedule training appointment" },
+                                                       new TicketType { Name = "Complaint", Description = "A client has called in to make a general complaint" },
+                                                        new TicketType { Name = "Other", Description = "A call has been recieved that requires prompt follow up" });
 
+            context.SaveChanges();
 
-             
 
             context.TicketStatuses.AddOrUpdate(t => t.Name, new TicketStatus { Name = "New / Unassigned", Description = "New ticket that has not been assigned", Value = 0 },
                                                          new TicketStatus { Name = "Assigned", Description = "The ticket has been assigned", Value = 15 },                                                         
                                                          new TicketStatus { Name = "Assigned / In Progress", Description = "Ticket that has been assigned and in progress", Value = 40 },
-                                                         new TicketStatus { Name = "Resolved", Description = "Completed Ticket by assigned developer", Value = 75},
-                                                          new TicketStatus { Name = "Archived", Description = "Ticket has been completed and approved by Manager", Value = 100 });
+                                                        new TicketStatus { Name = "Resolved", Description = "Completed Ticket by assigned developer", Value = 75},
+                                                         new TicketStatus { Name = "Archived", Description = "Ticket has been completed and approved by Manager", Value = 100 });
 
 
+            context.SaveChanges();
 
-            
 
             context.TicketPriorities.AddOrUpdate(t => t.Name, new TicketPriority { Name = "Low", Description = "Requires attention. Developers should complete if there are no Medium/High/Urgent priority tickets" },
-                                                         new TicketPriority { Name = "Medium", Description = "Requires Normal attention. Developers should complete if there are no High/Urgent priority tickets" },
+                                                        new TicketPriority { Name = "Medium", Description = "Requires Normal attention. Developers should complete if there are no High/Urgent priority tickets" },
                                                          new TicketPriority { Name = "High", Description = "Requires Urgent attention. Developers should focus on completing before medium/low priority tickets" },
                                                          new TicketPriority { Name = "URGENT", Description = "Highest Demand. Developers should abandon all unfinish task and focus on current ticket" });
 
 
-            
+
 
             context.Projects.AddOrUpdate(t => t.Name, new Project { Name = "Portfolio", Description = "This project is a collection of projects in the proccess of development. Currently has bootstrap excercises" },
-                                                      new Project { Name = "Blog Site", Description = "This project is a display of blogs that accepts and allows users to comment on post. Admin of site can also create post. Displays the ability to use encapsulation,inheritance, interfaces and etc" },
-                                                      new Project { Name = "BugTracker", Description = "This project is a display of all previous project skillset. " });
+                                                     new Project { Name = "Blog Site", Description = "This project is a display of blogs that accepts and allows users to comment on post. Admin of site can also create post. Displays the ability to use encapsulation,inheritance, interfaces and etc" },
+                                                     new Project { Name = "BugTracker", Description = "This project is a display of all previous project skillset. " });
 
             context.SaveChanges();
 
@@ -296,8 +296,8 @@ namespace BugTracker.Migrations
             context.Tickets.AddOrUpdate(
                 p => p.Title,
                     new Ticket
-                    {
-                        ProjectId = blogSiteId,
+                   {
+                     ProjectId = blogSiteId,
                         OwnerUserId = demosubU.Id,
                         Title = "New Things",
                         Description = "Clients have requested that the blog site project have more functionality",
@@ -308,7 +308,7 @@ namespace BugTracker.Migrations
                     },
                     new Ticket
                     {
-                        ProjectId = portfolioId,
+                       ProjectId = portfolioId,
                         OwnerUserId = demosubU.Id,
                         AssignedToUserId = demodevU.Id,
                         Title = "Notify",
@@ -321,19 +321,21 @@ namespace BugTracker.Migrations
                     new Ticket
                     {
                         ProjectId = bugTradkerId,
-                        OwnerUserId = demosubU.Id,
+                      OwnerUserId = demosubU.Id,
                         AssignedToUserId = demodevU.Id,
                         Title = "Estimated Time of Publish?",
                         Description = "Clients Wants to be notified when Developers have finish the first version of the release",
                         Created = DateTime.Now,
-                        TicketPriorityId = context.TicketPriorities.FirstOrDefault(t => t.Name == "High").Id,
+                       TicketPriorityId = context.TicketPriorities.FirstOrDefault(t => t.Name == "High").Id,
                         TicketStatusId = context.TicketStatuses.FirstOrDefault(t => t.Name == "Assigned / In Progress").Id,
                         TicketTypeId = context.TicketTypes.FirstOrDefault(t => t.Name == "Other").Id,
 
                     });
-                    
-                    
-                
+
+
+
+            context.SaveChanges();
+
 
 
 
