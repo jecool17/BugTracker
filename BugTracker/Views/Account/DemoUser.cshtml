@@ -14,92 +14,181 @@
 
 <div class="full-page login-page section-image" filter-color="blue" data-image="/img/bg14.jpg">
 
+
     <!--   you can change the color of the filter page using: data-color="blue | purple | green | orange | red | rose " -->
     <div class="content">
         <div class="container">
-            <div class="col-md-4 ml-auto mr-auto">
-                <form class="form" method="" action="">
-                    <div class="card card-login card-plain">
-                        <div class="card-header ">
-                            <div class="logo-container">
-                                <img src="/img/cooleylogo.png" alt="">
-                            </div>
-                        </div>
+            <div class="row">
+                <div class="col-md-6 ml-auto mr-auto text-center">
+                    <h2 class="title">Choose Demo Role</h2>
+
+                    <img src="~/img/cooleylogo.png" />
+
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-lg-3 col-md-6">
+                    <div class="card card-pricing card-plain">
+                        <h6 class="card-category"> ADMIN</h6>
                         <div class="card-body">
-                            <div class="input-group no-border form-control-lg">
-                                <span class="input-group-prepend">
-                                    @*<div class="input-group-text">
-                                            <i class="now-ui-icons users_circle-08"></i>
-                                        </div>*@
-                                </span>
-                                <input type="text" class="form-control" placeholder="First Name...">
+                            <div class="card-icon icon-warning ">
+                                <i class="now-ui-icons media-1_button-power"></i>
                             </div>
-                            <div class="input-group no-border form-control-lg">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text">
-                                        <i class="now-ui-icons text_caps-small"></i>
-                                    </div>
-                                </div>
-                                <input type="text" placeholder="Last Name..." class="form-control">
-                            </div>
+                            <h3 class="card-title">
+                                <img src="~/Uploads/Master-Joda-icon.png" />
+                            </h3>
+                            <ul>
+                                <li>View/Edit all Users</li>
+                                <li>Create Projects</li>
+                                <li>Assign/Unassign users to Roles</li>
+                                <li>Assign/Unassign users to Projects</li>
+                                <li>Assign/Unassign tickets to Developers</li>
+                                <li>Archive Tickets</li>
+
+                            </ul>
                         </div>
-                        <div class="card-footer ">
-                            <a href="#pablo" class="btn btn-primary btn-round btn-lg btn-block mb-3">Get Started</a>
-                            <div class="pull-left">
-                                <h6>
-                                    <a href="#pablo" class="link footer-link">Create Account</a>
-                                </h6>
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.Hidden("key", "DemoAdmin")
+                            <div class="card-footer">
+                                <button class="btn btn-round  btn-warning" type="submit">Demo Role</button>
                             </div>
-                            <div class="pull-right">
-                                <h6>
-                                    <a href="#pablo" class="link footer-link">Need Help?</a>
-                                </h6>
-                            </div>
-                        </div>
+
+                        }
+
                     </div>
-                </form>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="card card-pricing card-plain">
+                        <h6 class="card-category"> PROJECT MANAGER</h6>
+                        <div class="card-body">
+                            <div class="card-icon icon-primary ">
+                                <i class="now-ui-icons objects_diamond"></i>
+                            </div>
+                            <h3 class="card-title">
+                                <img src="~/Uploads/Profile-512.png" />
+                            </h3>
+                            <ul>
+                                <li>View all Users</li>
+                                <li>Create projects</li>
+                                <li>Assign/Unassign Users to Projects</li>
+                                <li>Assign/Unassign Tickets to Developers</li>
+                                <li>Archive Tickets</li>
+                            </ul>
+                        </div>
+
+                        @using (Html.BeginForm("DemoUser","Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.Hidden("key", "DemoProjectManager")
+                            <div class="card-footer">
+                                <button class="btn btn-round  btn-primary" type="submit">Demo Role</button>
+                            </div>
+
+                        }
+                        
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="card card-pricing card-plain">
+                        <h6 class="card-category"> DEVELOPER</h6>
+                        <div class="card-body">
+                            <div class="card-icon icon-success ">
+                                <i class="now-ui-icons media-2_sound-wave"></i>
+                            </div>
+                            <h3 class="card-title">
+                                <img src="~/Uploads/profile-picture-icon-11.jpg" />
+                            </h3>
+                            <ul>
+                                <li>View Tickets on Projects that are Assigned</li>
+                                <li>View Ticket details that are Assigned</li>
+                                <li>Edit Ticket</li>
+                            </ul>
+                        </div>
+                        @using (Html.BeginForm("DemoUser","Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.Hidden("key", "DemoDeveloper")
+                            <div class="card-footer">
+                                <button class="btn btn-round  btn-success" type="submit">Demo Role</button>
+                            </div>
+
+                        }
+                        
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="card card-pricing card-plain">
+                        <h6 class="card-category"> SUBMITTER</h6>
+                        <div class="card-body">
+                            <div class="card-icon icon-danger ">
+                                <i class="now-ui-icons education_atom"></i>
+                            </div>
+                            <h3 class="card-title">
+                                <img src="~/Uploads/sub.png" />
+                            </h3>
+                            <ul>
+                                <li>Create Tickets</li>
+                                <li>View Created Tickets</li>
+                            </ul>
+                        </div>
+                        @using (Html.BeginForm("DemoUser","Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" } ))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.Hidden("key", "DemoSubmitter")
+                            <div class="card-footer">
+                                <button class="btn btn-round  btn-danger" type="submit">Demo Role</button>
+                            </div>
+
+                        }
+
+                        
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    <footer class="footer">
-        <div class=" container-fluid ">
-            <nav>
-                <ul>
-                    <li>
-                        <a href="https://www.creative-tim.com">
-                            Creative Tim
-                        </a>
-                    </li>
-                    <li>
-                        <a href="http://presentation.creative-tim.com">
-                            About Us
-                        </a>
-                    </li>
-                    <li>
-                        <a href="http://blog.creative-tim.com">
-                            Blog
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-
         </div>
-    </footer>
-</div>
+            <footer class="footer">
+                <div class=" container-fluid ">
+                    <nav>
+                        <ul>
+                            <li>
+                                <a href="https://cooleyportfolio.azurewebsites.net">
+                                    Portfolio
+                                </a>
+                            </li>
+                            <li>
+                                <a href="http://blogprojectcooley.azurewebsites.net/home/contact">
+                                    Contact Me
+                                </a>
+                            </li>
+                            <li>
+                                <a href="http://blogprojectcooley.azurewebsites.net">
+                                    Blog
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+
+                </div>
+            </footer>
+        </div>
 
 
 
 
-@section scripts
+        @section scripts
 
 {
 
-    <script>
-        $(document).ready(function () {
-            demo.checkFullPageBackgroundImage();
-        });
-    </script>
+            <script>
+                $(document).ready(function () {
+                    demo.checkFullPageBackgroundImage();
+                });
+            </script>
 
 
-}
+        }
 

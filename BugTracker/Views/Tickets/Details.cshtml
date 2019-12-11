@@ -13,18 +13,40 @@
     var userId = User.Identity.GetUserId();
     ApplicationUser user = new ApplicationUser();
     var linkHelper = new LinkHelper();
+    var projectHelper = new ProjectsHelper();
+    var currentProjectManagers = projectHelper.UsersInRoleOnProject2(Model.ProjectId, "Project Manager");
+    
+
+
+
     if (userId != null)
     {
         var db = new ApplicationDbContext();
         user = db.Users.Find(userId);
 
-       
+        
+
 
     }
 
 
 
 }
+
+    <style>
+        .notification-messages {
+            color: #000000;
+        }
+
+            .notification-messages .date {
+                opacity: 0.8;
+            }
+
+
+        time.timeline-time {
+    width: 10px;
+}
+    </style>
 
     <div class="modal fade" id="EditTicket" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -34,7 +56,7 @@
                     <br>
                     <i class="fa fa-credit-card fa-7x"></i>
                     <h4 id="CreateTicket" class="semi-bold">Hello @user.FirstName </h4>
-                    <p class="no-margin">PLEASE FILL OUT ALL AVAILABLE INFORTMATION FOR TICKET </p>
+                    <p class="no-margin">PLEASE FILL OUT ALL AVAILABLE INFORMATION FOR TICKET </p>
                     <br>
                 </div>
                 @using (Html.BeginForm("Edit", "Tickets", FormMethod.Post))
@@ -44,13 +66,15 @@
                     
                     @Html.Hidden("Id", Model.Id)
                     @Html.Hidden("TicketStatusId", Model.TicketStatusId)
+                    
+                    
                     <div class="modal-body">
 
 
 
                         <div class="row form-row">
                             <div class="col-md-8">
-                                <input type="text" class="form-control" placeholder="@Model.Title" id="Title" name="Title">
+                                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control col-md-8" } })
                             </div>
                             <div class="col-md-4">
                                 @Html.DropDownList("ProjectID", null, "Project", htmlAttributes: new { @class = "form-control" })
@@ -58,7 +82,7 @@
                         </div>
                         <div class="row form-row">
                             <div class="col-md-12">
-                                <input type="text" class="form-control" placeholder="@Model.Description" id="Description" name="Description">
+                                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control col-md-12" } })
                             </div>
                         </div>
                         <div class="row form-row">
@@ -108,6 +132,7 @@
                     @Html.AntiForgeryToken()
 
                     @Html.Hidden("ticketId", Model.Id)
+                    @Html.Hidden("userId", userId)
 
                     
                     <div class="modal-footer">
@@ -597,25 +622,65 @@
 
 
     @*Project Chart and Ticket notifications*@
-    <div class="row">
-        <div class="col-md-4">
-            <div class="grid simple black ">
-                <div class="grid-title no-border">
-                    <h4>@Model.Project.Name<span class="semi-bold"> Project</span></h4>
-                    <div class="tools">
-                        <a href="javascript:;" class="collapse"></a>
-                        <a href="#grid-config" data-toggle="modal" class="config"></a>
+<div class="row">
+    <div class="col-md-4">
+        <div class="grid simple black ">
+            <div class="grid-title no-border">
+                <h4>@Model.Project.Name<span class="semi-bold"> Project</span></h4>
+                <div class="tools">
+                    <a href="javascript:;" class="collapse"></a>
+                    <a href="#grid-config" data-toggle="modal" class="config"></a>
+                    <a href="javascript:;" class="reload"></a>
+                    <a href="javascript:;" class="remove"></a>
+                </div>
+            </div>
+            <div class="grid-body no-border">
+                <h4><span class="semi-bold">Other Active Tickets on Project</span></h4>
+
+                <div id="DonutTypesChart" style="height:200px;"> </div>
+            </div>
+        </div>
+    </div>
+    @if (User.IsInRole("Admin") || (User.IsInRole("Master Admin")) || (User.IsInRole("Project Manager")))
+    {
+        <div class="col-md-8 col-sm-8">
+            <div class="tiles gradient-grey">
+                <div class="tiles-body">
+                    <div class="controller">
                         <a href="javascript:;" class="reload"></a>
                         <a href="javascript:;" class="remove"></a>
                     </div>
-                </div>
-                <div class="grid-body no-border">
-                    <h4><span class="semi-bold">Other Active Tickets on Project</span></h4>
+                    <div class="tiles-title text-black">TICKET #@Model.Id NOTIFICATIONS </div>
+                    <br>
+                    @foreach (var notification in Model.TicketNotifications.OrderByDescending(b => b.Created))
+                    {
 
-                    <div id="DonutTypesChart" style="height:200px;"> </div>
+                        <div class="notification-messages info">
+                            <div class="user-profile"> <img src="@notification.Sender.AvatarURL" @*alt="" data-src="~/img/profiles/c.jpg" data-src-retina="~/img/profiles/c2x.jpg"*@ width="35" height="35"> </div>
+                            <div class="message-wrapper">
+                                <div class="heading"> @notification.Subject </div>
+                                <div class="description"> @notification.NotificationBody </div>
+                            </div>
+                            <div class="date pull-right"> @notification.Created </div>
+                            <div class="clearfix"></div>
+                        </div>
+
+                    }
+
+
+
+
                 </div>
+
+
             </div>
         </div>
+
+
+
+    }
+    else
+    {
 
         <div class="col-md-8 col-sm-8">
             <div class="tiles gradient-grey">
@@ -649,7 +714,9 @@
 
             </div>
         </div>
-    </div>
+    }
+
+</div>
     @*Ticket Summary Comments and Attachments*@
     <div class="row">
         
@@ -657,112 +724,197 @@
         <div class="col-md-5 col-vlg-4 col-sm-4 no-padding">
             <div class="tiles black">
                 <div class="tiles-body">
-                    <h5 class="text-white"><span class="semi-bold">Ticket</span> Summary</h5>
-
                     <div class="row">
-                        @Model.Title
-                    </div>
-                    <br />
-                    <div class="row">
-                        @Model.Description
-                    </div>
-                    <div class="m-t-40">
-                        <div class="widget-stats">
-                            <div class="wrapper"> <span class="item-title">@Model.TicketType.Name</span> <span class="item-count animate-number semi-bold" data-value="2415" data-animation-duration="700">0</span> </div>
-                        </div>
-                        <div class="widget-stats">
-                            <div class="wrapper"> <span class="item-title">@Model.TicketPriority.Name</span> <span class="item-count animate-number semi-bold" data-value="751" data-animation-duration="700">0</span> </div>
-                        </div>
-                        <div class="widget-stats hidden-sm">
-                            <div class="wrapper last"> <span class="item-title">@Model.TicketStatus.Name</span> <span class="item-count animate-number semi-bold" data-value="1547" data-animation-duration="700">0</span> </div>
-                        </div>
-                        <div class="progress transparent progress-small no-radius m-t-20" style="width:90%">
-                            <div class="progress-bar progress-bar-success animate-progress-bar" data-percentage="@Model.TicketStatus.Value%"></div>
-                        </div>
-                        <div class="description">
-                            <span class="text-white mini-description ">This Ticket Has Been assigned to you by @Model.OwnerUser.FullName <span class="blend"></span></span>
-                        </div>
-                    </div>
-                </div>
-                <br />
-
-                <div class="grid-title no-border text-white">
-                    <h4><span class="semi-bold"> </span></h4>
-                    <div class="tools">
-                        <a href="javascript:;" class="collapse"></a>
-                        <a href="#grid-config" data-toggle="modal" class="config"></a>
-                        <a href="javascript:;" class="reload"></a>
-                        <a href="javascript:;" class="remove"></a>
-                    </div>
-                </div>
-                <div class="grid-body no-border">
-                    <h4><span class="semi-bold text-white">Attachments  </span></h4>
-
-                    <div class="tiles">
-
-                        @foreach (var attachment in Model.TicketAttachments)
-                        {
-                            <div class="row ">
+                        <div class="col-md-12">
+                            <div class="grid simple">
+                                <div class="grid-body no-border invoice-body">
+                                    <div class="row">
+                                        <div class="pull-left">
+                                            <img src="/img/cooleybrand.png" data-src="/img/cooleybrand.png" data-src-retina="/img/cooleybrand.png" width="159" height="100">
 
 
-                                <div class="col-md-3" style="width: 60px;">
+                                        </div>
 
-                                    <img src="@BugTracker.Helpers.ImageUploadValidator.GetIconPath(attachment.FileUrl)" class="img-responsive" />
+                                    </div>
+                                    
+                                    <br>
+                                    <div class="row">
+                                        <div class="pull-right">
+                                            <h2>@Model.Title</h2>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="pull-left">
+                                            
+                                            <address>
+                                                <strong>Cooley Code</strong><br>
+                                                104 Swan Haven Lane<br>
+                                                Greensboro, NC 27405<br>
+                                                <abbr title="Phone">P:</abbr> (555) 555-5555
+                                            </address>
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                    <div class="clearfix"></div>
+                                    <br>
+                                    <br>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-md-9">
+                                            <h4 class="semi-bold">Project Manager(s)</h4>
+                                            <address>
+                                                @foreach (var pm in currentProjectManagers)
+                                        {
+                                            <strong>@pm.FullName.</strong><br>
+                                            @pm.Email<br>
+                                        }
+
+
+                                            </address>
+
+                                        </div>
+                                    </div>
+                                        <div class=" row">
+                                            <div class="col-md-9">
+                                                <br>
+                                                <div class="well well-small green ">
+                                                    <div class="pull-left"> Ticket # : </div>
+                                                    <div class="pull-right"> @Model.Id </div>
+                                                    <div class="clearfix"></div>
+                                                </div>
+
+                                                
+                                                <div  class="well well-small green ">
+                                                    <div class="pull-left"> Ticket Priority : </div>
+                                                    <div class="pull-right"> @Model.TicketPriority.Name</div>
+                                                    <div class="clearfix"></div>
+                                                </div>
+                                               
+                                                <div class="well well-small green ">
+                                                    <div class="pull-left"> Ticket Type : </div>
+                                                    <div class="pull-right"> @Model.TicketType.Name </div>
+                                                    <div class="clearfix"></div>
+                                                </div>
+                                                
+                                                <div class="well well-small green">
+                                                    <div class="pull-left"> Ticket Status : </div>
+                                                    <div class="pull-right"> @Model.TicketStatus.Name </div>
+                                                    <div class="clearfix"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                    
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+
+                                                <th class="text-left">DESCRIPTION</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+
+                                                <td>@Model.Description</td>
+
+
+                                            </tr>
+
+                                            <tr>
+                                                <td colspan="2" rowspan="4">
+                                                    <h4 class="semi-bold">Developer(s)</h4>
+                                                    <address>
+                                                        @if (Model.AssignedToUser != null)
+                                                        {
+                                                            @Model.AssignedToUser.FullNameWithEmail
+
+                                                        }
+                                                        else
+                                                        {
+
+
+                                                        }
+
+
+
+                                                    </address>
+                                                </td>
+
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                    <br>
+                                    <br>
+                                    <h5 class="text-right text-black">Submitter(s)</h5>
+                                    @*@foreach (var user in currentSubmitters)
+                            {
+                                <h5 class="text-right semi-bold text-black">@user.FullName</h5>
+                            }*@
+                                     <h5 class="text-right semi-bold text-black">@Model.OwnerUser.FullNameWithEmail</h5>
+                                    <br>
+                                    <br>
+
+
+
+
+
+
+
                                 </div>
-                                <div class="col-md-9">
-                                    <a target="_blank" href="@attachment.FileUrl">@Path.GetFileNameWithoutExtension(attachment.FileUrl) </a>
-                                </div>
-
-
-
-
-
-
-
-
                             </div>
-
-
-
-
-
-                        }
-
+                        </div>
                     </div>
-
-
-
-
-
-
                 </div>
+                    <br />
 
-
-
-                <br />
-
-                <div class="tiles gradient-grey">
-                    <div class="tiles-body">
-                        <div class="controller">
+                    <div class="grid-title  text-white">
+                        <h4><span class="semi-bold"> </span></h4>
+                        <div class="tools">
+                            <a href="javascript:;" class="collapse"></a>
+                            <a href="#grid-config" data-toggle="modal" class="config"></a>
                             <a href="javascript:;" class="reload"></a>
                             <a href="javascript:;" class="remove"></a>
                         </div>
-                        <div class="tiles-title text-white">TICKET #@Model.Id Comments </div>
-                        <br>
-                        @foreach (var comment in Model.TicketComments.OrderByDescending(c => c.Created))
-                        {
+                    </div>
+                    <div class="grid-body ">
+                        <h4><span class="semi-bold text-white">Attachments  </span></h4>
 
-                            <div class="notification-messages info">
-                                <div class="user-profile"> <img src="@comment.User.AvatarURL" @*alt="" data-src="~/img/profiles/c.jpg" data-src-retina="~/img/profiles/c2x.jpg"*@ width="35" height="35"> </div>
-                                <div class="message-wrapper">
-                                    <div class="heading"> @comment.Comment </div>
-                                    <div class="description"> @comment.Created </div>
+                        @*<div class="tiles">*@
+
+                            @foreach (var attachment in Model.TicketAttachments)
+                            {
+                                <div class="row ">
+
+
+                                    <div class="col-md-3" style="width: 80px;">
+
+                                        <img src="@BugTracker.Helpers.ImageUploadValidator.GetIconPath(attachment.FileUrl)" class="img-responsive" />
+                                    </div>
+                                    <div class="col-md-9">
+                                        <a target="_blank" href="@attachment.FileUrl">@Path.GetFileNameWithoutExtension(attachment.FileUrl) </a>
+                                    </div>
+
+
+
+
+
+
+
+
                                 </div>
-                                <div class="date pull-right"> @comment.User.FirstName </div>
-                                <div class="clearfix"></div>
-                            </div>
 
-                        }
+
+
+
+
+                            }
+
+                        @*</div>*@
+
+
 
 
 
@@ -770,31 +922,63 @@
                     </div>
 
 
-                </div>
 
+                    <br />
 
-                <br />
-                <div id="chart" style="height:123px">
-                    @using (Html.BeginForm("Create", "TicketComments", FormMethod.Post))
-                    {
-                        @Html.AntiForgeryToken()
-                        @Html.Hidden("TicketId", Model.Id);
-                        <div class="comment-form-wrap container-fluid pt-5">
-                            <h3 class="mb-5">Leave a comment</h3>
-                            <form action="#" class="p-5 bg-light">
-                                <div class="form-group">
-                                    @Html.TextArea("Comment", new { @class = "Form-control" })
-                                    <button class="btn btn-primary" type="submit" value="Post">Post Comment</button>
+                    <div class="tiles gradient-grey">
+                        <div class="tiles-body">
+                            <div class="controller">
+                                <a href="javascript:;" class="reload"></a>
+                                <a href="javascript:;" class="remove"></a>
+                            </div>
+                            <div class="tiles-title text-white">TICKET #@Model.Id Comments </div>
+                            <br>
+                            @foreach (var comment in Model.TicketComments.OrderByDescending(c => c.Created))
+                            {
+
+                                <div class="notification-messages info">
+                                    <div class="user-profile"> <img src="@comment.User.AvatarURL" @*alt="" data-src="~/img/profiles/c.jpg" data-src-retina="~/img/profiles/c2x.jpg"*@ width="35" height="35"> </div>
+                                    <div class="message-wrapper">
+                                        <div class="heading"> @comment.Comment </div>
+                                        <div class="description"> @comment.Created </div>
+                                    </div>
+                                    <div class="date pull-right"> @comment.User.FirstName </div>
+                                    <div class="clearfix"></div>
                                 </div>
 
+                            }
 
-                            </form>
+
+
+
                         </div>
-                    }
 
+
+                    </div>
+
+
+                    <br />
+                    <div id="chart" style="height:123px">
+                        @using (Html.BeginForm("Create", "TicketComments", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.Hidden("TicketId", Model.Id);
+                            <div class="comment-form-wrap container-fluid pt-5">
+                                <h3 class="mb-5">Leave a comment</h3>
+                                <form action="#" class="p-5 bg-light">
+                                    <div class="form-group">
+                                        @Html.TextArea("Comment", new { @class = "Form-control" })
+                                        <button class="btn btn-primary" type="submit" value="Post">Post Comment</button>
+                                    </div>
+
+
+                                </form>
+                            </div>
+                        }
+
+                    </div>
                 </div>
             </div>
-        </div>
 
         @using (Html.BeginForm("Create", "TicketAttachments", FormMethod.Post, new { enctype = "Multipart/form-data" }))
         {
@@ -896,7 +1080,29 @@
                     </div>
 
                 </div>
+                <div class="col-lg-12">
+                    <div class="timeline-centered timeline-sm">
+                        @foreach (var item in Model.TicketHistories.OrderByDescending(c => c.Changed))
+                        {
+                            <article class="timeline-entry">
+                                <div class="timeline-entry-inner">
+                                    <time datetime="2014-01-09T13:22" class="timeline-time" ><span>@item.Changed</span></time>
+                                    <div class="timeline-icon bg-orange"><i class="fa fa-paper-plane"></i></div>
+                                    <div class="timeline-label bg-orange">
+                                        <h4 class="timeline-title">@item.Property</h4>
 
+                                        <p>The current ticket has been modified from the value of: @item.OldValue</p>
+                                        <hr>
+                                        <p>To the value of: @item.NewValue</p>
+                                    </div>
+                                </div>
+                                
+                            </article>
+
+                        }
+
+                    </div>
+                </div>
 
             </div>
 

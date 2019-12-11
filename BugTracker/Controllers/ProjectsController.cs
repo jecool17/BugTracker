@@ -12,6 +12,7 @@ using Microsoft.AspNet.Identity;
 
 namespace BugTracker.Controllers
 {
+    [Authorize]
     public class ProjectsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -29,10 +30,13 @@ namespace BugTracker.Controllers
         {
             
                 var user = db.Users.Find(userId);
-           
-            
+            if (user != null)
+            {
                 var projects = user.Projects.ToList();
                 return View(projects);
+            }
+            return View("Error");
+                
             
                 
             
@@ -124,11 +128,14 @@ namespace BugTracker.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name")] Project project)
+        public ActionResult Edit([Bind(Include = "Id,Name, Description")] Project project)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(project).State = EntityState.Modified;
+                db.Projects.Attach(project);
+                db.Entry(project).Property(x => x.Name).IsModified = true;
+                db.Entry(project).Property(x => x.Description).IsModified = true;
+               
                 db.SaveChanges();
                 return RedirectToAction("Dashboard", "Home");
             }

@@ -28,7 +28,7 @@
     <div class="span12">
         <div class="grid simple ">
             <div class="grid-title">
-                <h4>@user.FirstName <span class="semi-bold">Open Tickets</span></h4>
+                <h4>@user.FirstName's <span class="semi-bold">Tickets</span></h4>
                 <div class="tools">
                     <a href="javascript:;" class="collapse"></a>
                     @*<a href="#grid-config" data-toggle="modal" class="config"></a>*@
@@ -42,11 +42,11 @@
                         <tr>
 
                             <th style="width:10%">
-                                Manage Ticket
+                                Ticket Title
                             </th>
-                            <th style="width:10%">Ticket ID</th>
-                            <th style="width:22%" data-hide="phone,tablet">Title</th>
-                            <th style="width:6%">Description</th>
+                            <th style="width:10%">Ticket Type</th>
+                            <th style="width:22%" data-hide="phone,tablet">Description</th>
+                            <th style="width:6%">Ticket Priority</th>
                             <th style="width:6%">Submitter</th>
                             <th style="width:10%" data-hide="phone,tablet">Progress</th>
                         </tr>
@@ -70,11 +70,11 @@
 
 
 
-
-                            <tr>
+                             
+                            <tr >
 
                                 <td class="v-align-middle">
-                                    @Html.ActionLink("Details", "Details", new { id = ticket.Id }) || @Html.ActionLink("Edit", "Edit", new { id = ticket.Id })
+                                    <a href="@Url.Action("Details", "Tickets", new { id = ticket.Id })">@ticket.Title</a>
 
 
                                 </td>
@@ -82,21 +82,22 @@
 
 
 
-                                <td class="v-align-middle">@ticket.Id</td>
-                                <td class="v-align-middle"><span class="muted">@ticket.Title</span></td>
-                                <td><span class="muted">@ticket.Description</span></td>
-                                <td><span class="muted">@ticket.OwnerUser.FullName</span></td>
+                                <td class="v-align-middle"><a href="@Url.Action("Details", "Tickets", new { id = ticket.Id })"> @ticket.TicketType.Name</a></td>
+                                <td class="v-align-middle"><span class="muted"><a href="@Url.Action("Details", "Tickets", new { id = ticket.Id })">@ticket.Description</a></span></td>
+                                <td><span class="muted"><a href="@Url.Action("Details", "Tickets", new { id = ticket.Id })">@ticket.TicketPriority.Name</a></span></td>
+                                <td><span class="muted"><a href="@Url.Action("Details", "Tickets", new { id = ticket.Id })">@ticket.OwnerUser.FullName</a></span></td>
                                 <td class="v-align-middle">
-                                    <div class="progress ">
-                                        <div data-percentage="@ticket.TicketStatus.Value%" class="progress-bar progress-bar-success animate-progress-bar"></div>
+                                    <div class="progress "><a href="@Url.Action("Details", "Tickets", new { id = ticket.Id })">
+                                        <div data-percentage="@ticket.TicketStatus.Value%" class="progress-bar progress-bar-success animate-progress-bar"></div></a>
                                     </div>
                                 </td>
                             </tr>
+                            
                         }
 
 
 
-                    </tbody>
+                        </tbody>
                 </table>
             </div>
         </div>

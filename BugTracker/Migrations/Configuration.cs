@@ -60,30 +60,24 @@ namespace BugTracker.Migrations
                     DisplayName = "Master",
                     UserName = "MasterAdmin@mailinator.com",
                     Email = "MasterAdmin@mailinator.com",
+                    AvatarURL = "/Uploads/Master-joda-icon.png"
                 };
-                userManager.Create(masterUser, "PassW0rd");
+                userManager.Create(masterUser, "PassWord");
             }
 
 
-            if (!context.Users.Any(r => r.UserName == "Jecool17@gmail.com"))
-            {
-                ApplicationUser adminUser = new ApplicationUser()
-                {
-                    DisplayName = "Admin",
-                    UserName = "Jecool17@gmail.com",
-                    Email = "Jecool17@gmail.com",
-                };
-
-                userManager.Create(adminUser, "PassWord");
-            }
+            
 
             if (!context.Users.Any(r => r.UserName == "Cooley.e.James@gmail.com"))
             {
                 ApplicationUser projMUser = new ApplicationUser()
                 {
                     DisplayName = "Project Manager",
+                    FirstName = "James",
+                    LastName = "Cooley",
                     UserName = "Cooley.e.James@gmail.com",
                     Email = "Cooley.e.James@gmail.com",
+                    AvatarURL = "/Uploads/cooleylink.JPEG"
                 };
 
                 userManager.Create(projMUser, "PassWord");
@@ -94,8 +88,11 @@ namespace BugTracker.Migrations
                 ApplicationUser devUser = new ApplicationUser()
                 {
                     DisplayName = "Developer",
+                    FirstName = "John",
+                    LastName = "Snow",
                     UserName = "Developer@mailinator.com",
                     Email = "Developer@mailinator.com",
+                    AvatarURL = "/img/profiles/a.jpg"
                 };
 
                 userManager.Create(devUser, "PassWord");
@@ -108,8 +105,9 @@ namespace BugTracker.Migrations
                     DisplayName = "Submitter",
                     UserName = "Submitter@mailinator.com",
                     Email = "Submitter@mailinator.com",
-                    FirstName = "John",
-                    LastName = "Singleton"
+                    FirstName = "Ashley",
+                    LastName = "Singleton",
+                    AvatarURL = "/img/profiles/2.png"
                 };
 
                 userManager.Create(subUser, "PassWord");
@@ -124,11 +122,7 @@ namespace BugTracker.Migrations
                 userManager.AddToRole(maU.Id, "MasterAdmin");
             }
 
-            ApplicationUser adU = context.Users.FirstOrDefault(r => r.Email == "Jecool17@gmail.com");
-            if (adU != null)
-            {
-                userManager.AddToRole(adU.Id, "Admin");
-            }
+            
 
             ApplicationUser pmU = context.Users.FirstOrDefault(r => r.Email == "Cooley.e.James@gmail.com");
             if (pmU != null)
@@ -157,7 +151,9 @@ namespace BugTracker.Migrations
             {
                 ApplicationUser demoadminUser = new ApplicationUser()
                 {
-                    DisplayName = "DemoAdmin",
+                    DisplayName = "Demo Admin",
+                    FirstName = "John",
+                    LastName = "Stewart",
                     UserName = "DemoAdmin@mailinator.com",
                     Email = "DemoAdmin@mailinator.com",
                     AvatarURL = "/Uploads/Master-joda-icon.png"
@@ -171,7 +167,9 @@ namespace BugTracker.Migrations
             {
                 ApplicationUser demoprojectUser = new ApplicationUser()
                 {
-                    DisplayName = "DemoProjectManager",
+                    DisplayName = "Demo Project Manager",
+                    FirstName = "Eric",
+                    LastName = "Temple",
                     UserName = "DemoProjectManager@mailinator.com",
                     Email = "DemoProjectManager@mailinator.com",
                     AvatarURL = "/Uploads/Profile-512.png"
@@ -184,7 +182,9 @@ namespace BugTracker.Migrations
             {
                 ApplicationUser demosubUser = new ApplicationUser()
                 {
-                    DisplayName = "DemoSubmitter",
+                    DisplayName = "Demo Submitter",
+                    FirstName = "Malcom",
+                    LastName = "Mueller",
                     UserName = "DemoSub@mailinator.com",
                     Email = "DemoSub@mailinator.com",
                     AvatarURL = "/Uploads/sub.png"
@@ -197,7 +197,9 @@ namespace BugTracker.Migrations
             {
                 ApplicationUser demodevUser = new ApplicationUser()
                 {
-                    DisplayName = "DemoDeveloper",
+                    DisplayName = "Demo Developer",
+                    FirstName = "Ashton",
+                    LastName = "Farmer",
                     UserName = "DemoDeveloper@mailinator.com",
                     Email = "DemoDeveloper@mailinator.com",
                     AvatarURL = "/Uploads/profile-picture-icon-11.jpg"
@@ -240,10 +242,10 @@ namespace BugTracker.Migrations
             context.TicketTypes.AddOrUpdate(t => t.Name, new TicketType { Name = "Bug", Description = "An error has occured that resulted in either a database issue or file retrievment issue" },
                                                        new TicketType { Name = "Defect", Description = "An error has occured that resulted in either an display issue or presentation issue" },
                                                         new TicketType { Name = "Feature Request", Description = "A client has called requesting new features" },
-                                                       new TicketType { Name = "Docuentation Request", Description = "A client has called requesting additonal documentation" },
+                                                       new TicketType { Name = "Docuentation Request", Description = "A client has called requesting additional documentation" },
                                                        new TicketType { Name = "Training Request", Description = "A client has called in to request a schedule training appointment" },
                                                        new TicketType { Name = "Complaint", Description = "A client has called in to make a general complaint" },
-                                                        new TicketType { Name = "Other", Description = "A call has been recieved that requires prompt follow up" });
+                                                        new TicketType { Name = "Other", Description = "A call has been received that requires prompt follow up" });
 
             context.SaveChanges();
 
@@ -261,26 +263,37 @@ namespace BugTracker.Migrations
             context.TicketPriorities.AddOrUpdate(t => t.Name, new TicketPriority { Name = "Low", Description = "Requires attention. Developers should complete if there are no Medium/High/Urgent priority tickets" },
                                                         new TicketPriority { Name = "Medium", Description = "Requires Normal attention. Developers should complete if there are no High/Urgent priority tickets" },
                                                          new TicketPriority { Name = "High", Description = "Requires Urgent attention. Developers should focus on completing before medium/low priority tickets" },
-                                                         new TicketPriority { Name = "URGENT", Description = "Highest Demand. Developers should abandon all unfinish task and focus on current ticket" });
+                                                         new TicketPriority { Name = "URGENT", Description = "Highest Demand. Developers should abandon all unfinished task and focus on current ticket" });
 
 
 
 
-            context.Projects.AddOrUpdate(t => t.Name, new Project { Name = "Portfolio", Description = "This project is a collection of projects in the proccess of development. Currently has bootstrap excercises" },
+            context.Projects.AddOrUpdate(t => t.Name, new Project { Name = "Portfolio", Description = "This project is a collection of projects in the process of development. Currently has bootstrap exercises, access to Blogsite, BugTracker, and Cash Portal" },
                                                      new Project { Name = "Blog Site", Description = "This project is a display of blogs that accepts and allows users to comment on post. Admin of site can also create post. Displays the ability to use encapsulation,inheritance, interfaces and etc" },
-                                                     new Project { Name = "BugTracker", Description = "This project is a display of all previous project skillset. " });
+                                                     new Project { Name = "BugTracker", Description = "This project is a display of all previous project skill-set. This application can be use in procurement processes or to track the status of issues amongst levels of authorization" },
+                                                     new Project { Name = "Cash Portal", Description = "This project is a budget application. Designed to give users the ability to create budgets for their household"});
 
             context.SaveChanges();
 
             var blogSiteId = context.Projects.FirstOrDefault(p => p.Name == "Blog Site").Id;
             var portfolioId = context.Projects.FirstOrDefault(p => p.Name == "Portfolio").Id;
             var bugTradkerId = context.Projects.FirstOrDefault(p => p.Name == "BugTracker").Id;
-
+            var cashportalId = context.Projects.FirstOrDefault(p => p.Name == "Cash Portal").Id;
             var projectHelper = new ProjectsHelper();
 
             projectHelper.AddUserToProject(demopmU.Id, blogSiteId);
             projectHelper.AddUserToProject(demodevU.Id, blogSiteId);
             projectHelper.AddUserToProject(demosubU.Id, blogSiteId);
+
+
+            projectHelper.AddUserToProject(pmU.Id, blogSiteId);
+            projectHelper.AddUserToProject(devU.Id, blogSiteId);
+            projectHelper.AddUserToProject(subU.Id, blogSiteId);
+
+            projectHelper.AddUserToProject(pmU.Id, cashportalId);
+            projectHelper.AddUserToProject(devU.Id, cashportalId);
+            projectHelper.AddUserToProject(subU.Id, cashportalId);
+
 
             projectHelper.AddUserToProject(demopmU.Id, portfolioId);
             projectHelper.AddUserToProject(demodevU.Id, portfolioId);
@@ -312,7 +325,7 @@ namespace BugTracker.Migrations
                         OwnerUserId = demosubU.Id,
                         AssignedToUserId = demodevU.Id,
                         Title = "Notify",
-                        Description = "Clients have requested that the porfolio be updated with new projects",
+                        Description = "Clients have requested that the portfolio be updated with new projects",
                         Created = DateTime.Now,
                         TicketPriorityId = context.TicketPriorities.FirstOrDefault(t => t.Name == "Medium").Id,
                         TicketStatusId = context.TicketStatuses.FirstOrDefault(t => t.Name == "Assigned").Id,

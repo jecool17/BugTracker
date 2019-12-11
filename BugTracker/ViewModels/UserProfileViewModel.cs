@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace BugTracker.ViewModels
 {
@@ -39,5 +40,10 @@ namespace BugTracker.ViewModels
        
         
         public HttpPostedFileBase Avatar { get; set; }
+
+        public SelectList CurrentRole { get; set; }
+
+        public MultiSelectList CurrentProjects { get; set; }
+
     }
 }

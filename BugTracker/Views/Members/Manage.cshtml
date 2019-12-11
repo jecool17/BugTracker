@@ -1,0 +1,88 @@
+﻿@using BugTracker.Helpers
+@using Microsoft.AspNet.Identity
+@using BugTracker.Models
+@using System.Web.Configuration;
+
+
+
+@{
+    var db = new ApplicationDbContext();
+    
+    ApplicationUser user = new ApplicationUser();
+    if ((string)ViewBag.UserId != null)
+    {
+
+        user = db.Users.Find((string)ViewBag.UserId);
+
+
+
+    }
+    var roleHelper = new UserRolesHelper();
+    var projectHelper = new ProjectsHelper();
+
+}
+
+
+<div class="container">
+    <div class="lockscreen-wrapper animated  flipInX">
+        <div class="row ">
+            <div class="col-md-8 col-md-offset-4 col-sm-6 col-sm-offset-4 col-xs-offset-2">
+
+
+
+                @using (Html.BeginForm("UserIndex", "Admin", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.Hidden("userId", (string)ViewBag.userId)
+
+
+                    <div class="profile-wrapper">
+
+
+                        <img width="69" height="69" data-src-retina="@user.AvatarURL" data-src="@user.AvatarURL" src="@user.AvatarURL" alt="">
+
+
+
+
+                    </div>
+                    if (User.IsInRole("Admin") || (User.IsInRole("Project Manager")))
+                    {
+                        <div class="user-form">
+                            <h2 class="user">Manage <span class="semi-bold">User</span></h2>
+                            @Html.DropDownList("CurrentRole", null, "Assign Role")
+                            <p>
+
+                                @Html.ListBox("CurrentProjects")
+                            <p>
+
+                                <br>
+                                <button type="submit" class="btn btn-primary "><i class="fa fa-check">Save All</i></button>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="user-form">
+                            <h2 class="user">Manage <span class="semi-bold">User</span></h2>
+                            
+                            <p>
+
+                                @Html.ListBox("CurrentProjects")
+                            <p>
+
+                                <br>
+                                <button type="submit" class="btn btn-primary "><i class="fa fa-check">Save</i></button>
+                        </div>
+                    }
+
+                }
+
+            </div>
+
+
+            <div>
+                @Html.ActionLink("Back to Dashboard", "Dashboard", "Home")
+            </div>
+                </div>
+    </div>
+    <div id="push"></div>
+</div>

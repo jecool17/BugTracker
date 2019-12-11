@@ -1,14 +1,16 @@
 ﻿@using BugTracker.Helpers
 @using Microsoft.AspNet.Identity
-
+@using BugTracker.Models
 @model IEnumerable<BugTracker.Models.Project>
 
 
 @{
     var roleHelper = new UserRolesHelper();
     var userId = User.Identity.GetUserId();
+    var db = new ApplicationDbContext();
+    var user = db.Users.Find(userId);
 
-
+   
 }
 
 <div class="page-title">
@@ -19,7 +21,7 @@
     <div class="span12">
         <div class="grid simple ">
             <div class="grid-title">
-                <h4>@User.Identity.Name's<span class="semi-bold">Projects</span></h4>
+                <h4>@user.FirstName's<span class="semi-bold">Projects</span></h4>
                 <div class="tools">
                     <a href="javascript:;" class="collapse"></a>
                     @*<a href="#grid-config" data-toggle="modal" class="config"></a>*@

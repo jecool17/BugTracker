@@ -35,6 +35,7 @@ namespace BugTracker.Controllers
                 dataSet.Add(new MorrisChartData { label = tickettypes.Name, value = value });
             }
             return Json(dataSet);
+
         }
 
         public JsonResult GetMorrisDataTicketPriorities()

@@ -12,8 +12,10 @@ namespace BugTracker.Helpers
         public static List<TicketComment> GetUserTicketComments()
         {
             var userId = HttpContext.Current.User.Identity.GetUserId();
-            var userTicketComments = Db.Users.Find(userId).Tickets.SelectMany(t=>t.TicketComments).ToList();
-           
+            
+            var userTicketComments = Db.Tickets.Where(t => t.AssignedToUserId == userId).SelectMany(t => t.TicketComments).ToList();
+
+
             return userTicketComments;
 
         }

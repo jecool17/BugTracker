@@ -1,70 +1,129 @@
-﻿@model BugTracker.ViewModels.UserProfileViewModel
+﻿@using BugTracker.Helpers
+@using Microsoft.AspNet.Identity
+@using BugTracker.Models
+@using System.Web.Configuration;
 
+
+@model BugTracker.ViewModels.UserProfileViewModel
 @{
-    ViewBag.Title = "EditProfile";
+    var db = new ApplicationDbContext();
+    var userId = User.Identity.GetUserId();
+    ApplicationUser user = new ApplicationUser();
+    if (userId != null)
+    {
+
+        user = db.Users.Find(userId);
+
+
+
+    }
+    var roleHelper = new UserRolesHelper();
+    var projectHelper = new ProjectsHelper();
+    
 }
 
-<h2>EditProfile</h2>
 
-@using (Html.BeginForm("EditProfile", "Members", FormMethod.Post, new { enctype = "Multipart/form-data"}))
-{
 
-    @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>UserProfileViewModel</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.Id)
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+
+
+
+
+<div class="container">
+    <div class="lockscreen-wrapper animated  flipInX">
+        <div class="row ">
+            <div class="col-md-8 col-md-offset-4 col-sm-6 col-sm-offset-4 col-xs-offset-2">
+
+
+                @using (Html.BeginForm("EditProfile", "Members", FormMethod.Post, new { enctype = "Multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(model => model.Id)
+
+                    <div class="profile-wrapper">
+
+
+                        <img width="69" height="69" data-src-retina="@Model.AvatarURL" data-src="@Model.AvatarURL" src="@Model.AvatarURL" alt="">
+
+
+
+
+                    </div>
+
+                    <div class="user-form">
+                        <h2 class="user">Edit <span class="semi-bold">Profile</span></h2>
+                        @Html.EditorFor(model => model.FirstName)
+
+                        <button type="submit" class="btn btn-primary "><i class="fa fa-male"></i></button>
+                        <p>
+                            
+                            @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                            
+                        <p>
+                            @Html.EditorFor(model => model.LastName)
+                            <button type="submit" class="btn btn-primary "><i class="fa fa-meh-o"></i></button>
+                        <p>
+                            @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+                        <p>
+                            @Html.EditorFor(model => model.DisplayName)
+                            <button type="submit" class="btn btn-primary "><i class="fa fa-check"></i></button>
+                        <p>
+                            @Html.ValidationMessageFor(model => model.DisplayName, "", new { @class = "text-danger" })
+                        <p>
+                            @Html.EditorFor(model => model.Email)
+                            <button type="submit" class="btn btn-primary "><i class="fa fa-envelope-o"></i></button>
+                        <p>
+                            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                        <p>
+                            <input name="Avatar" type="file" class="form-control" id="fileUpload" />
+
+                        <p>
+
+
+                            <button type="submit" class="btn btn-primary "><i class="fa fa-check">Save All</i></button>
+                            @if (Model.Id == userId)
+                            {
+                                <a href="@Url.Action("ChangePassWord","Account", new {email = Model.Email }) " class="btn btn-primary "><i class="fa fa-check">Change Password</i></a>
+                            }
+
+                            <div>
+
+
+                            </div>
+
+</div>
+                }
+
+
+                
+
             </div>
-        </div>
+            
+            <div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                @if (User.IsInRole("Admin") || User.IsInRole("Project Manager"))
+                {
+                    @Html.ActionLink("Back to Dashboard", "Dashboard", "Home")  
+                    <br>
+                    @Html.ActionLink("Manage User", "Manage", "Members", new { userId = Model.Id }, null);
+                }
+                else
+                {
+                    @Html.ActionLink("Back to Dashboard", "Dashboard", "Home")
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.DisplayName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.DisplayName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.DisplayName, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                }
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
-            </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.AvatarURL, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <input name="Avatar" type="file" class="form-control" id="fileUpload" />
-                @Html.ValidationMessageFor(model => model.AvatarURL, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
             </div>
         </div>
     </div>
-}
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
+    <div id="push"></div>
 </div>
+
+@section scripts
+{
+
+    <script src="~/Scripts/form_validations.js"></script>
+
+}

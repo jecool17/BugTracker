@@ -8,6 +8,27 @@ namespace BugTracker.Helpers
 {
     public class LinkHelper : CommonHelper
     {
+        public bool UserNoRoleView()
+        {
+            switch (CurrentRole)
+            {
+                case "MasterAdmin":
+                    return false;
+                case "Admin":
+                    return false;
+                case "Project Manager":
+                    return false;
+                case "Developer":
+                    return false;
+                case "Submitter":
+                    return false;
+                default:
+                    return true;
+
+            }
+
+        }
+
         public bool UserCanEditProject()
         {
             switch (CurrentRole)

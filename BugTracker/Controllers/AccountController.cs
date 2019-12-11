@@ -16,9 +16,11 @@ using System.IO;
 
 namespace BugTracker.Controllers
 {
+    [RequireHttps]
     [Authorize]
     public class AccountController : Controller
     {
+        private LinkHelper linkHelper = new LinkHelper();
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
@@ -61,9 +63,11 @@ namespace BugTracker.Controllers
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
-            
             ViewBag.ReturnUrl = returnUrl;
-            return View();
+            return RedirectToAction("Register", "Account", new {  returnUrl = returnUrl});
+            
+           
+            //return View();
         }
 
         //
@@ -74,13 +78,14 @@ namespace BugTracker.Controllers
         public async Task<ActionResult> Login(LoginViewModel model)
         {
 
-            var errors = ModelState
-    .Where(x => x.Value.Errors.Count > 0)
-    .Select(x => new { x.Key, x.Value.Errors })
-    .ToArray();
+                    var errors = ModelState
+            .Where(x => x.Value.Errors.Count > 0)
+            .Select(x => new { x.Key, x.Value.Errors })
+            .ToArray();
             if (!ModelState.IsValid)
             {
-                return View(model);
+                var tuple = new Tuple<LoginViewModel, RegisterViewModel, ForgotPasswordViewModel>(new LoginViewModel(), new RegisterViewModel(), new ForgotPasswordViewModel());
+                return View("Register", tuple);
             }
 
             // This doesn't count login failures towards account lockout
@@ -97,7 +102,8 @@ namespace BugTracker.Controllers
                 case SignInStatus.Failure:
                 default:
                     ModelState.AddModelError("", "Invalid login attempt.");
-                    return View(model);
+                    var tuple = new Tuple<LoginViewModel, RegisterViewModel, ForgotPasswordViewModel>(new LoginViewModel(), new RegisterViewModel(), new ForgotPasswordViewModel());
+                    return View("Register", tuple); ;
             }
         }
 
@@ -202,7 +208,7 @@ namespace BugTracker.Controllers
                         var svc = new PersonalEmail();
                         await svc.SendAsync(email);
 
-                        return RedirectToAction("ForgotPasswordConfirmation", "Account");
+                        return RedirectToAction("RegisterEmailConfirmation", "Account");
                     }
                     catch (Exception ex)
                     {
@@ -212,12 +218,13 @@ namespace BugTracker.Controllers
                     
                 }
                 AddErrors(result);
-                var tuple = new Tuple<LoginViewModel, RegisterViewModel, ForgotPasswordViewModel>(new LoginViewModel(), new RegisterViewModel(), new ForgotPasswordViewModel());
-                return View(tuple);
+                var tuple1 = new Tuple<LoginViewModel, RegisterViewModel, ForgotPasswordViewModel>(new LoginViewModel(), new RegisterViewModel(), new ForgotPasswordViewModel());
+                return View(tuple1);
             }
 
             // If we got this far, something failed, redisplay form
-            return View(model);
+            var tuple = new Tuple<LoginViewModel, RegisterViewModel, ForgotPasswordViewModel>(new LoginViewModel(), new RegisterViewModel(), new ForgotPasswordViewModel());
+            return View(tuple);
         }
 
         [AllowAnonymous]
@@ -228,6 +235,56 @@ namespace BugTracker.Controllers
             return View();
         }
 
+        
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DemoUser(string key)
+        {
+
+            var email = WebConfigurationManager.AppSettings[key];
+            var password = WebConfigurationManager.AppSettings["DemoUserPassword"];
+
+
+            var result = await SignInManager.PasswordSignInAsync(email, password, false, shouldLockout: false);
+            switch (result)
+            {
+                case SignInStatus.Success:
+                    return RedirectToAction("Dashboard", "Home");
+                case SignInStatus.Failure:
+                default:
+                    ModelState.AddModelError("", "Invalid login attempt.");
+                    return View();
+            }
+
+        }
+
+
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+
+        public async Task<ActionResult> Devuser(string key)
+        {
+            var email = WebConfigurationManager.AppSettings[key];
+            var password = "PassWord1!";
+
+
+            var result = await SignInManager.PasswordSignInAsync(email, password, false, shouldLockout: false);
+            switch (result)
+            {
+                case SignInStatus.Success:
+                    return RedirectToAction("Dashboard", "Home");
+                case SignInStatus.Failure:
+                default:
+                    ModelState.AddModelError("", "Invalid login attempt.");
+                    return View();
+            }
+
+
+        }
         //
         // GET: /Account/ConfirmEmail
         [AllowAnonymous]
@@ -262,7 +319,7 @@ namespace BugTracker.Controllers
                 if (user == null) /*!(await UserManager.IsEmailConfirmedAsync(user.Id)))*/
                 {
                     // Don't reveal that the user does not exist or is not confirmed
-                    return View("ForgotPasswordConfirmation");
+                    return View("Register");
                 }
 
                 // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
@@ -297,13 +354,19 @@ namespace BugTracker.Controllers
             }
 
             // If we got this far, something failed, redisplay form
-            return View(model);
+            var tuple = new Tuple<LoginViewModel, RegisterViewModel, ForgotPasswordViewModel>(new LoginViewModel(), new RegisterViewModel(), new ForgotPasswordViewModel());
+            return View(tuple);
         }
 
         //
         // GET: /Account/ForgotPasswordConfirmation
         [AllowAnonymous]
         public ActionResult ForgotPasswordConfirmation()
+        {
+            return View();
+        }
+
+        public ActionResult RegisterEmailConfirmation()
         {
             return View();
         }
@@ -318,6 +381,74 @@ namespace BugTracker.Controllers
 
         //
         // POST: /Account/ResetPassword
+        public ActionResult ChangePassWord(string email)
+        {
+            
+            if (linkHelper.UserNoRoleView())
+            {
+                
+                return RedirectToAction("ChangePassWordNoRole", "Account", new { email = email });
+
+            }
+            return email == null ? View("Error") : View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ChangePassWord(ResetPasswordViewModel model, string userId)
+        {
+
+            string code = await UserManager.GeneratePasswordResetTokenAsync(userId);
+            model.Code = code;
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var result = await UserManager.ResetPasswordAsync(userId, code, model.Password);
+            if (result.Succeeded)
+            {
+                //tempdata
+                return RedirectToAction("EditProfile", "Members", new { userId = userId });
+
+            }
+            AddErrors(result);
+            return View(model);
+            
+        }
+
+        public ActionResult ChangePassWordNoRole(string email)
+        {
+            return email == null ? View("Error") : View();
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ChangePassWordNoRole(ResetPasswordViewModel model, string userId)
+        {
+            string code = await UserManager.GeneratePasswordResetTokenAsync(userId);
+            model.Code = code;
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var result = await UserManager.ResetPasswordAsync(userId, code, model.Password);
+            if (result.Succeeded)
+            {
+                //tempdata
+                return RedirectToAction("EditProfile", "Members", new { userId = userId });
+
+            }
+            AddErrors(result);
+            return View(model);
+            
+        }
+
+
+
+
+
+
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -404,7 +535,7 @@ namespace BugTracker.Controllers
             var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync();
             if (loginInfo == null)
             {
-                return RedirectToAction("Login");
+                return RedirectToAction("Register");
             }
 
             // Sign in the user with this external login provider if the user already has a login
@@ -435,7 +566,13 @@ namespace BugTracker.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Index", "Manage");
+                if (linkHelper.UserNoRoleView())
+                {
+
+                    return RedirectToAction("DashboardNorole", "Home");
+
+                }
+                return RedirectToAction("Dashboard", "Home");
             }
 
             if (ModelState.IsValid)
@@ -464,10 +601,7 @@ namespace BugTracker.Controllers
             return View(model);
         }
 
-        public ActionResult Logoff()
-        {
-            return RedirectToAction("Register", "Account");
-        }
+        
         // POST: /Account/LogOff
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -531,7 +665,7 @@ namespace BugTracker.Controllers
             {
                 return Redirect(returnUrl);
             }
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Dashboard", "Home");
         }
 
         internal class ChallengeResult : HttpUnauthorizedResult

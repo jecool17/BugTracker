@@ -10,6 +10,7 @@ using System.Web.Mvc;
 
 namespace BugTracker.Controllers
 {
+    
     public class AdminController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -17,6 +18,10 @@ namespace BugTracker.Controllers
         private ProjectsHelper projectHelper = new ProjectsHelper();
 
         // GET: Admin
+
+        
+        
+       
         public ActionResult UserIndex()
         {
             var projects = db.Projects.ToList();
@@ -78,8 +83,69 @@ namespace BugTracker.Controllers
 
 
 
-            return RedirectToAction("UserIndex");
+            ////return RedirectToAction("EditProfile","Members", new { userId = userId });
+            return RedirectToAction("Manage", "Members", new { userId = userId});
         }
+
+        [Authorize(Roles = "Project Manager")]
+        public ActionResult UserIndexPM()
+        {
+            var projects = db.Projects.ToList();
+            var roles = db.Roles.ToList();
+            var users = db.Users.Select(u => new UserIndexViewModel
+            {
+                Id = u.Id,
+                FullName = u.LastName + ", " + u.FirstName,
+                DisplayName = u.DisplayName,
+                AvatarURL = u.AvatarURL,
+                Email = u.Email,
+                ActiveRole = u.ActiveRole
+
+            }).ToList();
+
+            foreach (var user in users)
+            {
+
+                user.CurrentRole = new SelectList(roles, "Name", "Name", roleHelper.ListUserRoles(user.Id).FirstOrDefault());
+                user.CurrentProjects = new MultiSelectList(projects, "Id", "Name", projectHelper.ListUserProjects(user.Id).Select(u => u.Id));
+            }
+
+            foreach (var user in users)
+            {
+
+                user.ActiveRole = roleHelper.GetUserRole(user.Id)
+;
+            }
+            return View(users);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Project Manager")]
+        public ActionResult UserIndexPM(string userId, List<int> CurrentProjects)
+        {
+
+         
+
+            foreach (var proj in projectHelper.ListUserProjects(userId))
+            {
+                projectHelper.RemoveUserFromProject(userId, proj.Id);
+            }
+
+            if (CurrentProjects != null)
+
+            {
+                foreach (var projectId in CurrentProjects)
+                {
+                    projectHelper.AddUserToProject(userId, projectId);
+                }
+            }
+
+
+
+            return RedirectToAction("UserIndexPM");
+        }
+
 
         public ActionResult ManageUserRole(string userId)
         {

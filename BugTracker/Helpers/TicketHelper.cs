@@ -16,9 +16,10 @@ namespace BugTracker.Helpers
     {
         public static int GetTicketPercentageByStatusA(int ticketId)
         {
-            var ticket = Db.Tickets.Find(ticketId);
-            var total = Db.Tickets.Count();
-            var sum = Db.Tickets.Where(t => t.TicketStatus == ticket.TicketStatus).Count();
+            var db = new ApplicationDbContext();
+            var ticket = db.Tickets.Find(ticketId);
+            var total = db.Tickets.Count();
+            var sum = db.Tickets.Where(t => t.TicketStatus == ticket.TicketStatus).Count();
 
             var percentage = sum * 100;
             var percent = percentage / total;
@@ -27,9 +28,10 @@ namespace BugTracker.Helpers
         }
         public static int GetTicketPercentageByPriorityA(int ticketId)
         {
-            var ticket = Db.Tickets.Find(ticketId);
-            var total = Db.Tickets.Count();
-            var sum = Db.Tickets.Where(t => t.TicketPriority.Name == ticket.TicketPriority.Name).Count();
+            var db = new ApplicationDbContext();
+            var ticket = db.Tickets.Find(ticketId);
+            var total = db.Tickets.Count();
+            var sum = db.Tickets.Where(t => t.TicketPriority.Name == ticket.TicketPriority.Name).Count();
 
             var percentage = sum * 100;
             var percent = percentage / total;
@@ -38,9 +40,10 @@ namespace BugTracker.Helpers
         }
         public static int GetTicketPercentageByTypeA(int ticketId)
         {
-            var ticket = Db.Tickets.Find(ticketId);
-            var total = Db.Tickets.Count();
-            var sum = Db.Tickets.Where(t => t.TicketType.Name == ticket.TicketType.Name).Count();
+            var db = new ApplicationDbContext();
+            var ticket = db.Tickets.Find(ticketId);
+            var total = db.Tickets.Count();
+            var sum = db.Tickets.Where(t => t.TicketType.Name == ticket.TicketType.Name).Count();
 
             var percentage = sum * 100;
             var percent = percentage / total;
@@ -52,9 +55,10 @@ namespace BugTracker.Helpers
 
         public static int GetTicketPercentageByStatusP(int ticketId)
         {
+            var db = new ApplicationDbContext();
             var userId = HttpContext.Current.User.Identity.GetUserId();
-            var currentUser = Db.Users.Find(userId);
-            var ticket = Db.Tickets.Find(ticketId);
+            var currentUser = db.Users.Find(userId);
+            var ticket = db.Tickets.Find(ticketId);
             var total = currentUser.Projects.SelectMany(p => p.Tickets).Count();
             var sum = currentUser.Projects.SelectMany(p => p.Tickets).Where(t => t.TicketStatus == ticket.TicketStatus).Count();
 
@@ -65,9 +69,10 @@ namespace BugTracker.Helpers
         }
         public static int GetTicketPercentageByPriorityP(int ticketId)
         {
+            var db = new ApplicationDbContext();
             var userId = HttpContext.Current.User.Identity.GetUserId();
-            var currentUser = Db.Users.Find(userId);
-            var ticket = Db.Tickets.Find(ticketId);
+            var currentUser = db.Users.Find(userId);
+            var ticket = db.Tickets.Find(ticketId);
             var total = currentUser.Projects.SelectMany(p => p.Tickets).Count();
             var sum = currentUser.Projects.SelectMany(p => p.Tickets).Where(t => t.TicketPriority == ticket.TicketPriority).Count();
 
@@ -78,9 +83,10 @@ namespace BugTracker.Helpers
         }
         public static int GetTicketPercentageByTypeP(int ticketId)
         {
+            var db = new ApplicationDbContext();
             var userId = HttpContext.Current.User.Identity.GetUserId();
-            var currentUser = Db.Users.Find(userId);
-            var ticket = Db.Tickets.Find(ticketId);
+            var currentUser = db.Users.Find(userId);
+            var ticket = db.Tickets.Find(ticketId);
             var total = currentUser.Projects.SelectMany(p => p.Tickets).Count();
             var sum = currentUser.Projects.SelectMany(p => p.Tickets).Where(t => t.TicketType == ticket.TicketType).Count();
 
@@ -93,9 +99,10 @@ namespace BugTracker.Helpers
 
         public static int GetTicketPercentageByStatus(int ticketId)
         {
-            var ticket = Db.Tickets.Find(ticketId);
-            var total = Db.Tickets.Where(t => t.AssignedToUserId == ticket.AssignedToUserId).Count();
-            var sum = Db.Tickets.Where(t => t.AssignedToUserId == ticket.AssignedToUserId && t.TicketStatus == ticket.TicketStatus).Count();
+            var db = new ApplicationDbContext();
+            var ticket = db.Tickets.Find(ticketId);
+            var total = db.Tickets.Where(t => t.AssignedToUserId == ticket.AssignedToUserId).Count();
+            var sum = db.Tickets.Where(t => t.AssignedToUserId == ticket.AssignedToUserId && t.TicketStatus == ticket.TicketStatus).Count();
 
             var percentage = sum * 100;
             var percent = percentage / total;
@@ -104,9 +111,10 @@ namespace BugTracker.Helpers
         }
         public static int GetTicketPercentageByPriority(int ticketId)
         {
-            var ticket = Db.Tickets.Find(ticketId);
-            var total = Db.Tickets.Where(t => t.AssignedToUserId == ticket.AssignedToUserId).Count();
-            var sum = Db.Tickets.Where(t => t.AssignedToUserId == ticket.AssignedToUserId && t.TicketPriority.Name == ticket.TicketPriority.Name).Count();
+            var db = new ApplicationDbContext();
+            var ticket = db.Tickets.Find(ticketId);
+            var total = db.Tickets.Where(t => t.AssignedToUserId == ticket.AssignedToUserId).Count();
+            var sum = db.Tickets.Where(t => t.AssignedToUserId == ticket.AssignedToUserId && t.TicketPriority.Name == ticket.TicketPriority.Name).Count();
 
             var percentage = sum * 100;
             var percent = percentage / total;
@@ -115,9 +123,10 @@ namespace BugTracker.Helpers
         }
         public static int GetTicketPercentageByType(int ticketId)
         {
-            var ticket = Db.Tickets.Find(ticketId);
-            var total = Db.Tickets.Where(t => t.AssignedToUserId == ticket.AssignedToUserId).Count();
-            var sum = Db.Tickets.Where(t => t.AssignedToUserId == ticket.AssignedToUserId && t.TicketType.Name == ticket.TicketType.Name).Count();
+            var db = new ApplicationDbContext();
+            var ticket = db.Tickets.Find(ticketId);
+            var total = db.Tickets.Where(t => t.AssignedToUserId == ticket.AssignedToUserId).Count();
+            var sum = db.Tickets.Where(t => t.AssignedToUserId == ticket.AssignedToUserId && t.TicketType.Name == ticket.TicketType.Name).Count();
 
             var percentage = sum * 100;
             var percent = percentage / total;
@@ -129,9 +138,10 @@ namespace BugTracker.Helpers
 
         public static int GetTicketPercentageByStatusS(int ticketId)
         {
-            var ticket = Db.Tickets.Find(ticketId);
-            var total = Db.Tickets.Where(t => t.OwnerUserId == ticket.OwnerUserId).Count();
-            var sum = Db.Tickets.Where(t => t.OwnerUserId == ticket.OwnerUserId && t.TicketStatus == ticket.TicketStatus).Count();
+            var db = new ApplicationDbContext();
+            var ticket = db.Tickets.Find(ticketId);
+            var total = db.Tickets.Where(t => t.OwnerUserId == ticket.OwnerUserId).Count();
+            var sum = db.Tickets.Where(t => t.OwnerUserId == ticket.OwnerUserId && t.TicketStatus == ticket.TicketStatus).Count();
 
             var percentage = sum * 100;
             var percent = percentage / total;
@@ -140,9 +150,10 @@ namespace BugTracker.Helpers
         }
         public static int GetTicketPercentageByPriorityS(int ticketId)
         {
-            var ticket = Db.Tickets.Find(ticketId);
-            var total = Db.Tickets.Where(t => t.OwnerUserId == ticket.OwnerUserId).Count();
-            var sum = Db.Tickets.Where(t => t.OwnerUserId == ticket.OwnerUserId && t.TicketPriority.Name == ticket.TicketPriority.Name).Count();
+            var db = new ApplicationDbContext();
+            var ticket = db.Tickets.Find(ticketId);
+            var total = db.Tickets.Where(t => t.OwnerUserId == ticket.OwnerUserId).Count();
+            var sum = db.Tickets.Where(t => t.OwnerUserId == ticket.OwnerUserId && t.TicketPriority.Name == ticket.TicketPriority.Name).Count();
 
             var percentage = sum * 100;
             var percent = percentage / total;
@@ -151,9 +162,10 @@ namespace BugTracker.Helpers
         }
         public static int GetTicketPercentageByTypeS(int ticketId)
         {
-            var ticket = Db.Tickets.Find(ticketId);
-            var total = Db.Tickets.Where(t => t.OwnerUserId == ticket.OwnerUserId).Count();
-            var sum = Db.Tickets.Where(t => t.OwnerUserId == ticket.OwnerUserId && t.TicketType.Name == ticket.TicketType.Name).Count();
+            var db = new ApplicationDbContext();
+            var ticket = db.Tickets.Find(ticketId);
+            var total = db.Tickets.Where(t => t.OwnerUserId == ticket.OwnerUserId).Count();
+            var sum = db.Tickets.Where(t => t.OwnerUserId == ticket.OwnerUserId && t.TicketType.Name == ticket.TicketType.Name).Count();
 
             var percentage = sum * 100;
             var percent = percentage / total;

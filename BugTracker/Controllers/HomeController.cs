@@ -9,25 +9,44 @@ using System.Web.Mvc;
 
 namespace BugTracker.Controllers
 {
+    [RequireHttps]
+    [Authorize]
     public class HomeController : Controller
     {
 
         private ApplicationDbContext db = new ApplicationDbContext();
         private UserRolesHelper roleHelper = new UserRolesHelper();
         private ProjectsHelper projectHelper = new ProjectsHelper();
+        private LinkHelper linkHelper = new LinkHelper();
 
         public ActionResult Dashboard()
         {
-            var myProjects = projectHelper.ListUserProjects(User.Identity.GetUserId());
+            
+                if (linkHelper.UserNoRoleView())
+                {
 
-            ViewBag.ProjectId = new SelectList(myProjects, "Id", "Name");
-            ViewBag.TicketPriorityId = new SelectList(db.TicketPriorities, "Id", "Name");
 
-            ViewBag.TicketTypeId = new SelectList(db.TicketTypes, "Id", "Name");
 
-            var tickets = db.Tickets;
-            return View(tickets.ToList());
 
+
+
+
+                    return RedirectToAction("DashboardNorole", "Home");
+
+                }
+                var myProjects = projectHelper.ListUserProjects(User.Identity.GetUserId());
+
+                ViewBag.ProjectId = new SelectList(myProjects, "Id", "Name");
+                ViewBag.TicketPriorityId = new SelectList(db.TicketPriorities, "Id", "Name");
+
+                ViewBag.TicketTypeId = new SelectList(db.TicketTypes, "Id", "Name");
+
+                var tickets = db.Tickets;
+                return View(tickets.ToList());
+        }
+        public ActionResult DashboardNorole()
+        {
+            return View();
         }
 
         public ActionResult About()

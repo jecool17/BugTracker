@@ -12,6 +12,7 @@ using Microsoft.AspNet.Identity;
 
 namespace BugTracker.Controllers
 {
+    [Authorize]
     public class TicketsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -117,7 +118,7 @@ namespace BugTracker.Controllers
                     ticket.Created = DateTime.Now;
                     ticket.OwnerUserId = User.Identity.GetUserId();
                     
-                    ticket.AssignedToUserId = User.Identity.GetUserId();
+                    //ticket.AssignedToUserId = User.Identity.GetUserId();
                     
                     ticket.TicketStatusId = db.TicketStatuses.FirstOrDefault(t => t.Name == "New / Unassigned").Id;
                     
@@ -141,6 +142,7 @@ namespace BugTracker.Controllers
         }
 
         // GET: Tickets/Edit/5
+        [Authorize(Roles = "Submitter, MasterAdmin")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -184,8 +186,11 @@ namespace BugTracker.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,TicketTypeId,TicketStatusId,TicketPriorityId,AssignedToUserId,Title,Description")] Ticket ticket)
+        public ActionResult Edit([Bind(Include = "Id,TicketTypeId,TicketStatusId,TicketPriorityId,AssignedToUserId,Title,Description, ProjectId")] Ticket ticket)
         {
+            var status = db.TicketStatuses.FirstOrDefault(t => t.Name == "Assigned").Id;
+
+
             if (ModelState.IsValid)
             {
                 var oldTicket = db.Tickets.AsNoTracking().FirstOrDefault(t => t.Id == ticket.Id);
@@ -196,11 +201,12 @@ namespace BugTracker.Controllers
                 db.Entry(ticket).Property(x => x.TicketPriorityId).IsModified = true;
                 db.Entry(ticket).Property(x => x.Title).IsModified = true;
                 db.Entry(ticket).Property(x => x.Description).IsModified = true;
-
+                db.Entry(ticket).Property(x => x.ProjectId).IsModified = true;
                 if (linkHelper.UserCanAssignTicket(ticket))
                 {
                     db.Entry(ticket).Property(x => x.AssignedToUserId).IsModified = true;
-                    ticket.TicketStatusId = db.TicketStatuses.FirstOrDefault(t => t.Name == "Assigned").Id;
+                    ticket.TicketStatusId = status;
+                    //ticket.OwnerUserId = User.Identity.GetUserId();
                     db.SaveChanges();
                 }
                     
@@ -209,7 +215,7 @@ namespace BugTracker.Controllers
                 db.SaveChanges();
 
                 NotificationHelper.ManageNotifications(oldTicket, ticket);
-                HistoryHelper.RecordHistory(oldTicket, ticket);
+                //HistoryHelper.RecordHistory(oldTicket, ticket);
                 return RedirectToAction("Dashboard", "Home");
             }
             ViewBag.AssignedToUserId = new SelectList(db.Users, "Id", "FirstName", ticket.AssignedToUserId);
@@ -227,21 +233,26 @@ namespace BugTracker.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Advance(int ticketId)
         {
+            var oldTicket = db.Tickets.AsNoTracking().FirstOrDefault(t => t.Id == ticketId);
             var ticket = db.Tickets.Find(ticketId);
             if (ticket.TicketStatus.Name == "Assigned")
             {
-                ticket.TicketStatus.Name = "Assigned / In Progress";
-                ticket.TicketStatus.Value = 40;
+                ticket.TicketStatusId = db.TicketStatuses.FirstOrDefault(t => t.Name == "Assigned / In Progress").Id;
+                ticket.Updated = DateTime.Now;
                 db.SaveChanges();
+                
+                HistoryHelper.RecordHistory(oldTicket, ticket);
                 return RedirectToAction("Details", "Tickets", new { id = ticketId });
             }
                 
 
             if (ticket.TicketStatus.Name == "Assigned / In Progress")
             {
-                ticket.TicketStatus.Name = "Resolved";
-                ticket.TicketStatus.Value = 75;
+                ticket.TicketStatusId = db.TicketStatuses.FirstOrDefault(t =>t.Name == "Resolved").Id;
+
+                ticket.Updated = DateTime.Now;
                 db.SaveChanges();
+                HistoryHelper.RecordHistory(oldTicket, ticket);
                 return RedirectToAction("Details", "Tickets", new { id = ticketId });
             }
 
@@ -251,11 +262,16 @@ namespace BugTracker.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ArchiveP(int ticketId)
+        public ActionResult ArchiveP(int ticketId, string userId )
         {
+            var oldTicket = db.Tickets.AsNoTracking().FirstOrDefault(t => t.Id == ticketId);
             var ticket = db.Tickets.Find(ticketId);
-            ticket.TicketStatus.Name = "Archived";
-            ticket.TicketStatus.Value = 100;
+            ticket.TicketStatusId = db.TicketStatuses.FirstOrDefault(t=>t.Name == "Archived").Id;
+            ticket.ArchivedById = userId;
+            
+            ticket.Updated = DateTime.Now;
+            db.SaveChanges();
+            HistoryHelper.RecordHistory(oldTicket, ticket);
             db.SaveChanges();
 
 

@@ -40,7 +40,7 @@ namespace BugTracker.Models
         
         public string ActiveRole { get; set; }
         
-        public virtual ICollection<Ticket> Tickets { get; set; }
+        
         public virtual ICollection<Project> Projects { get; set; }
         public virtual ICollection<TicketNotification> TicketNotifications { get; set; }
 
@@ -50,7 +50,7 @@ namespace BugTracker.Models
 
         public ApplicationUser()
         {
-            Tickets = new HashSet<Ticket>();
+            
             Projects = new HashSet<Project>();
             TicketNotifications = new HashSet<TicketNotification>();
             TicketHistories = new HashSet<TicketHistory>();

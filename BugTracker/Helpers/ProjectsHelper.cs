@@ -69,9 +69,13 @@ namespace BugTracker.Helpers
         public ICollection<Project> ListUserProjects(string userId)
         {
             ApplicationUser user = db.Users.Find(userId);
-
-            var projects = user.Projects.ToList();
-            return (projects);
+            
+            
+                var projects = user.Projects.ToList();
+                return (projects);
+            
+            
+           
         }
 
         public void AddUserToProject(string userId, int projectId)

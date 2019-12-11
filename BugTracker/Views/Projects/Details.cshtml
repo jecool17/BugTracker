@@ -1,5 +1,6 @@
 ﻿@using BugTracker.Helpers
-
+@using Microsoft.AspNet.Identity
+@using BugTracker.Models
 @model BugTracker.Models.Project
 
 
@@ -10,9 +11,69 @@
     var currentProjectManagers = projectHelper.UsersInRoleOnProject2(Model.Id, "Project Manager");
     var currentSubmitters = projectHelper.UsersInRoleOnProject2(Model.Id, "Submitter");
     var currentDevelopers = projectHelper.UsersInRoleOnProject2(Model.Id, "Developer");
+    var db = new ApplicationDbContext();
+    var userId = User.Identity.GetUserId();
+    ApplicationUser user1 = new ApplicationUser();
+    if (userId != null)
+    {
+
+        user1 = db.Users.Find(userId);
+
+
+
+    }
 
 }
+<div class="modal fade" id="EditProject" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <br>
+                <i class="fa fa-credit-card fa-7x"></i>
+                <h4 id="CreateProject" class="semi-bold">Hello @user1.FirstName </h4>
+                <p class="no-margin">PLEASE FILL OUT ALL AVAILABLE INFORMATION FOR PROJECT </p>
+                <br>
+            </div>
+            @using (Html.BeginForm("Edit", "Projects", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                @Html.Hidden("Id", Model.Id)
+                
 
+
+                <div class="modal-body">
+
+
+
+                    <div class="row form-row">
+                        <div class="col-md-8">
+                            @Html.EditorFor(model=> model.Name, new { htmlAttributes = new { @class = "form-control col-md-8" } })
+                        </div>
+
+                    </div>
+                    <div class="row form-row">
+                        <div class="col-md-12">
+                            @Html.EditorFor(model=>model.Description, new { htmlAttributes = new { @class = "form-control col-md-12" } })
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+
+
+
+
+
+            }
+
+
+        </div>
+    </div>
+</div>
 
 <div class="row">
     <div class="col-md-11">
@@ -121,6 +182,13 @@
         </div>
     </div>
 </div>
+@if (linkHelper.UserCanEditProject())
+{
+    <div class="pull-right actions">
+        <button class="btn btn-primary btn-cons" data-toggle="modal" data-target="#EditProject">Edit Project</button>
+    </div>
+}
+
 @if (linkHelper.UserCanCreateTicketFromProject(Model))
 {
     <div class="pull-right actions">
@@ -205,7 +273,7 @@
                             <div class="info-wrapper">
                                 <div class="info">
 
-                                   <a href="@Url.Action("Details","Tickets", new { id = tickets.Id })"> @tickets.Description</a>
+                                    <a href="@Url.Action("Details","Tickets", new { id = tickets.Id })"> @tickets.Description</a>
                                 </div>
                                 <div class="clearfix"></div>
                             </div>

@@ -32,10 +32,10 @@ namespace BugTracker.Helpers
 
                 if (oldValue != newValue)
                 {
-                    messageBody.AppendLine(new string('-', 45));
-                    messageBody.AppendLine($"A change was made to Property: {property}.");
-                    messageBody.AppendLine($"The old value was: {oldValue}");
-                    messageBody.AppendLine($"The new value is: {newValue}");
+                    messageBody.AppendLine(new string('-', 23));
+                    messageBody.AppendLine($"A change was made to Property: {property.Name}.");
+                    messageBody.AppendLine($"The old value was: {Utilities.MakeReadable(property.Name, oldValue)}");
+                    messageBody.AppendLine($"The new value is: {Utilities.MakeReadable(property.Name, newValue)}");
                 }
             }
 
@@ -204,23 +204,24 @@ namespace BugTracker.Helpers
         {
             var userId = HttpContext.Current.User.Identity.GetUserId();
             //return Db.TicketNotifications.Where(t => t.RecipientId == userId).Count();
-            var currentUser = Db.Users.Find(userId);
-
-            var notifications = currentUser.Projects.SelectMany(p => p.Tickets).Where(t => t.TicketStatus.Name == "New / Unassigned").Count();
-            return (notifications);
+            var db = new ApplicationDbContext();
+            var currentUser = db.Users.Find(userId);
+            var ticketstatusId = db.TicketStatuses.FirstOrDefault(t => t.Name == "New / Unassigned").Id;
+            var notifications = currentUser.Projects.SelectMany(p => p.Tickets).Where(t => t.TicketStatusId == ticketstatusId).ToList();
+            return (notifications.Count());
 
         }
 
         public static int GetNewTicketsCount()
         {
-
-            return Db.TicketNotifications.Where(t => t.NotificationBody == "NEW TICKET").Count();
+            var db = new ApplicationDbContext();
+            return db.Tickets.Where(t => t.TicketStatus.Name == "New / Unassigned").Count();
         }
 
         public static int GetDevNewAssignmentCount()
         {
             var userId = HttpContext.Current.User.Identity.GetUserId();
-            return Db.TicketNotifications.Where(t => t.RecipientId == userId && t.NotificationBody == "Click To Be redirected to Ticket").Count();
+            return Db.Tickets.Where(t => t.TicketStatus.Name == "Assigned" && t.AssignedToUserId == userId).Count();
         }
     }
 }

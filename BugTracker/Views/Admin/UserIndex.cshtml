@@ -10,8 +10,9 @@
 
 
 
-
 <div class="page-title">
+
+
 
     <h3>All <span class="semi-bold">Users</span></h3>
 </div>
@@ -27,56 +28,82 @@
                     <a href="javascript:;" class="remove"></a>
                 </div>
             </div>
+
             <div class="grid-body ">
-                <table class="table table-hover table-condensed" id="example">
-                    <thead>
-                        <tr>
-                            <th style="width:10%">
-                                Avatar
-                            </th>
-                            <th style="width:10%">User</th>
-                            @*<th style="width: 10%">Current Role</th>*@
-                            <th style="width:22%" data-hide="phone,tablet">Role/Manage</th>
-                            <th style="width:6%">Projects/Manage</th>
-                            <th style="width:6%">Manage User</th>
-                            
-                        </tr>
-                    </thead>
-                    <tbody>
+
+                
+                    <table class="table table-striped" id="example2">
+
+                        <thead>
+                            <tr>
+                                <th style="width:10%">
+                                    Avatar
+                                </th>
+                                <th style="width:20%">User</th>
+                                @*<th style="width: 10%">Current Role</th>*@
+                                <th style="width:22%" data-hide="phone,tablet">UserName</th>
+                                <th style="width:6%">Role</th>
+                                <th style="width:6%">Manage User</th>
+
+                            </tr>
+                        </thead>
+
+
+
+
+
                         @foreach (var user in Model)
                         {
-
+                            var name = user.DisplayName;
+                            if (name == null)
+                            {
+                                name = "N/A";
+                            }
                             var role = user.ActiveRole;
                             if (role == null)
                             {
                                 role = "NONE";
                             }
 
+                       
 
 
 
 
 
 
-                            <tr>
+                        <tr>
+
+
+
+
+
+                            <td class="v-align-middle"><img src="@user.AvatarURL" class="img-responsive" width="30"></td>
+                            <td class="v-align-middle"><span class="muted">@user.FullNameWithEmail</span></td>
+                            @*<td class="v-align-middle"><span class="muted">@role</span></td>*@
+                            <td><span class="muted">@user.DisplayName</span></td>
+                            <td><span class="muted">@role</span></td>
+                            <td class="v-align-middle">
+                                @Html.ActionLink("Manage", "Manage", "Members", new { userId = user.Id }, null) 
                                 
-                                <td class="v-align-middle"><img src="@user.AvatarURL" class="img-responsive" width="30"></td>
-                                <td class="v-align-middle"><span class="muted">@user.FullNameWithEmail</span></td>
-                                @*<td class="v-align-middle"><span class="muted">@role</span></td>*@
-                                <td><span class="muted">@Html.DropDownList("CurrentRole", user.CurrentRole, "NONE")</span></td>
-                                <td><span class="muted">@Html.ListBox("CurrentProjects", user.CurrentProjects)</span></td>
-                                <td class="v-align-middle">
-                                    @Html.ActionLink("Edit", "EditProfile", "Members", new { userId = user.Id }, null) |
-                                    <input type="submit" value="Assign" class="btn btn-default" />
-                                </td>
-                            </tr>
+                            </td>
+
+
+
+                        </tr>
                         }
 
+                        
 
 
-                    </tbody>
-                </table>
-            </div>
+
+
+
+
+                    </table>
+                
+                </div>
+
         </div>
     </div>
 </div>

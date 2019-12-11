@@ -1,10 +1,11 @@
 ﻿@{
     ViewBag.Title = "Confirm Email";
+    Layout = "~/Views/Shared/_Notauthenticated.cshtml";
 }
 
-<h2>@ViewBag.Title.</h2>
+
 <div>
     <p>
-        Thank you for confirming your email. Please @Html.ActionLink("Click here to Log in", "Register", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })
+        Please Check Email
     </p>
 </div>

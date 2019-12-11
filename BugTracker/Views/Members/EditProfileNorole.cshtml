@@ -1,0 +1,91 @@
+﻿@using BugTracker.Helpers
+@using Microsoft.AspNet.Identity
+@using BugTracker.Models
+@using System.Web.Configuration;
+
+
+@model BugTracker.ViewModels.UserProfileViewModel
+@{
+    Layout = "~/Views/Shared/_Notauthenticated.cshtml";
+    var db = new ApplicationDbContext();
+    var userId = User.Identity.GetUserId();
+    ApplicationUser user = new ApplicationUser();
+    if (userId != null)
+    {
+
+        user = db.Users.Find(userId);
+
+
+
+    }
+}
+
+
+
+
+
+
+
+
+
+@using (Html.BeginForm("EditProfileNorole", "Members", FormMethod.Post, new { enctype = "Multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.Id)
+    <div class="profile-wrapper">
+        <img width="69" height="69" data-src-retina="@user.AvatarURL" data-src="@user.AvatarURL" src="@user.AvatarURL" alt="">
+    </div>
+    <div class="user-form">
+        <h2 class="user">Edit <span class="semi-bold">Profile</span></h2>
+        @Html.EditorFor(model => model.FirstName)
+
+        <button type="submit" class="btn btn-primary "><i class="fa fa-male"></i></button>
+        <p>
+            <br>
+            @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+            <br />
+        <p>
+            @Html.EditorFor(model => model.LastName)
+            <button type="submit" class="btn btn-primary "><i class="fa fa-meh-o"></i></button>
+        <p>
+            @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+        <p>
+            @Html.EditorFor(model => model.DisplayName)
+            <button type="submit" class="btn btn-primary "><i class="fa fa-check"></i></button>
+        <p>
+            @Html.ValidationMessageFor(model => model.DisplayName, "", new { @class = "text-danger" })
+        <p>
+            @Html.EditorFor(model => model.Email)
+            <button type="submit" class="btn btn-primary "><i class="fa fa-envelope-o"></i></button>
+        <p>
+            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+        <p>
+            <input name="Avatar" type="file" class="form-control" id="fileUpload" />
+
+        <p>
+
+            <button type="submit" class="btn btn-primary "><i class="fa fa-check">Save All</i></button>
+            <a href="@Url.Action("ChangePassWord","Account", new {email = Model.Email }) " class="btn btn-primary "><i class="fa fa-check">Change Password</i></a>
+            <div>
+
+
+            </div>
+
+</div>
+}
+
+<div>
+    @Html.ActionLink("Back to Dashboard", "Dashboard", "Home")
+</div>
+
+
+<div id="push"></div>
+
+
+@section scripts
+{
+
+    <script src="~/Scripts/form_validations.js"></script>
+
+}

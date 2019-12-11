@@ -14,18 +14,20 @@ namespace BugTracker.Models
         public int TicketPriorityId { get; set; }
         public string OwnerUserId { get; set; }
         public string AssignedToUserId { get; set; }
+        public string ArchivedById { get; set; }
 
-        
-        
+
+
         public string Title { get; set; }
         public string Description { get; set; }
         public DateTime Created { get; set; }
         public DateTime? Updated { get; set; }
 
         //Navigation 
-        
+
         public virtual ApplicationUser OwnerUser { get; set; }
         public virtual ApplicationUser AssignedToUser { get; set; }
+        public virtual ApplicationUser ArchivedBy {get; set;}
         public virtual Project Project { get; set; }
         public virtual TicketType TicketType { get; set; }
         public virtual TicketStatus TicketStatus { get; set; }
