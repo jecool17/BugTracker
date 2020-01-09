@@ -160,7 +160,7 @@ namespace BugTracker.Controllers
                 db.SaveChanges();
 
 
-                return View();
+                return View(member);
 
             }
 

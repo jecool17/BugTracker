@@ -40,6 +40,21 @@ namespace BugTracker.Controllers
             //var projects = db.Projects.Where(t => t.Users.Contains(user)).ToList();
             //var projectTickets = db.Tickets.Where(t => t.Project.Tickets.Contains(user.Tickets)).ToList();
             var tickets = user.Projects.SelectMany(p => p.Tickets).ToList();
+            var openTickets = tickets.Where(t => t.TicketStatus.Name != "Archived");
+
+            //foreach (var ticket in openTickets)
+            //{
+            //    if (!linkHelper.UserCanEditTicket(ticket))
+            //        TempData["Message"] = "You are not authorized to View Ticket Id" + ticket.Id + "based on your assigned tickets";
+            //}
+                
+            return View(openTickets);
+        }
+
+        public ActionResult PMIndex(string userId)
+        {
+            var user = db.Users.Find(userId);
+            var tickets = user.Projects.SelectMany(p => p.Tickets).Where(t => t.TicketStatus.Name == "Archived");
             return View(tickets);
         }
 
@@ -189,6 +204,7 @@ namespace BugTracker.Controllers
         public ActionResult Edit([Bind(Include = "Id,TicketTypeId,TicketStatusId,TicketPriorityId,AssignedToUserId,Title,Description, ProjectId")] Ticket ticket)
         {
             var status = db.TicketStatuses.FirstOrDefault(t => t.Name == "Assigned").Id;
+            var status2 = db.TicketStatuses.FirstOrDefault(t => t.Name == "Unassigned").Id;
 
 
             if (ModelState.IsValid)
@@ -206,6 +222,8 @@ namespace BugTracker.Controllers
                 {
                     db.Entry(ticket).Property(x => x.AssignedToUserId).IsModified = true;
                     ticket.TicketStatusId = status;
+                    if (String.IsNullOrEmpty(ticket.AssignedToUserId))
+                        ticket.TicketStatusId = status2;
                     //ticket.OwnerUserId = User.Identity.GetUserId();
                     db.SaveChanges();
                 }
@@ -215,8 +233,8 @@ namespace BugTracker.Controllers
                 db.SaveChanges();
 
                 NotificationHelper.ManageNotifications(oldTicket, ticket);
-                //HistoryHelper.RecordHistory(oldTicket, ticket);
-                return RedirectToAction("Dashboard", "Home");
+                HistoryHelper.RecordHistory(oldTicket, ticket);
+                return RedirectToAction("Details", "Tickets", new { id = ticket.Id});
             }
             ViewBag.AssignedToUserId = new SelectList(db.Users, "Id", "FirstName", ticket.AssignedToUserId);
             ViewBag.OwnerUserId = new SelectList(db.Users, "Id", "FirstName", ticket.OwnerUserId);

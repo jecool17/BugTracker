@@ -102,7 +102,7 @@ namespace BugTracker.Controllers
                 if (User.IsInRole("Project Manager"))
                     projectHelper.AddUserToProject(userId, project.Id);
 
-                return RedirectToAction("Dashboard", "Home");
+                return RedirectToAction("Details", "Projects", new { id = project.Id});
             }
 
             return View(project);

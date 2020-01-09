@@ -50,7 +50,7 @@ namespace BugTracker.Helpers
                 {
                     TicketId = newTicket.Id,
                     Created = DateTime.Now,
-                    Subject = $"A change has occured on Ticket  #{newTicket.Id}",
+                    Subject = $"A change has occurred on Ticket  #{newTicket.Id}",
                     RecipientId = newTicket.AssignedToUserId,
                     SenderId = senderId,
                     NotificationBody = message.ToString(),
@@ -58,6 +58,9 @@ namespace BugTracker.Helpers
                 };
                 Db.TicketNotifications.Add(notification);
                 Db.SaveChanges();
+
+                
+
             }
 
 
@@ -110,7 +113,7 @@ namespace BugTracker.Helpers
                 Read = false,
                 RecipientId = oldTicket.AssignedToUserId,
                 SenderId = HttpContext.Current.User.Identity.GetUserId(),
-                NotificationBody = $"Please acknowlede that you have read this notificationg by marking it read",
+                NotificationBody = $"Please acknowledge that you have read this notification by marking it read",
                 TicketId = newTicket.Id
             };
 

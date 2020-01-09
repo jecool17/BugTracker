@@ -239,10 +239,10 @@ namespace BugTracker.Migrations
 
 
             //Seed name and descriptions tables
-            context.TicketTypes.AddOrUpdate(t => t.Name, new TicketType { Name = "Bug", Description = "An error has occured that resulted in either a database issue or file retrievment issue" },
-                                                       new TicketType { Name = "Defect", Description = "An error has occured that resulted in either an display issue or presentation issue" },
+            context.TicketTypes.AddOrUpdate(t => t.Name, new TicketType { Name = "Bug", Description = "An error has occurred that resulted in either a database issue or file issue" },
+                                                       new TicketType { Name = "Defect", Description = "An error has occurred that resulted in either an display issue or presentation issue" },
                                                         new TicketType { Name = "Feature Request", Description = "A client has called requesting new features" },
-                                                       new TicketType { Name = "Docuentation Request", Description = "A client has called requesting additional documentation" },
+                                                       new TicketType { Name = "Documentation Request", Description = "A client has called requesting additional documentation" },
                                                        new TicketType { Name = "Training Request", Description = "A client has called in to request a schedule training appointment" },
                                                        new TicketType { Name = "Complaint", Description = "A client has called in to make a general complaint" },
                                                         new TicketType { Name = "Other", Description = "A call has been received that requires prompt follow up" });
@@ -251,6 +251,7 @@ namespace BugTracker.Migrations
 
 
             context.TicketStatuses.AddOrUpdate(t => t.Name, new TicketStatus { Name = "New / Unassigned", Description = "New ticket that has not been assigned", Value = 0 },
+                                                            new TicketStatus { Name = "Unassigned", Description = "Ticket that has not been assigned", Value = 0 },
                                                          new TicketStatus { Name = "Assigned", Description = "The ticket has been assigned", Value = 15 },                                                         
                                                          new TicketStatus { Name = "Assigned / In Progress", Description = "Ticket that has been assigned and in progress", Value = 40 },
                                                         new TicketStatus { Name = "Resolved", Description = "Completed Ticket by assigned developer", Value = 75},

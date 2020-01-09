@@ -583,7 +583,7 @@ namespace BugTracker.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new Models.ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new Models.ApplicationUser { UserName = model.Email, Email = model.Email, AvatarURL = WebConfigurationManager.AppSettings["DefaultAvi"] };
                 var result = await UserManager.CreateAsync(user);
                 if (result.Succeeded)
                 {

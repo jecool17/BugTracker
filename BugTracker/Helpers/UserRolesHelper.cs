@@ -15,6 +15,7 @@ namespace BugTracker.Helpers
 
         private  UserManager<ApplicationUser> userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
         ApplicationDbContext db = new ApplicationDbContext();
+        
         public string GetUserRole(string userId)
         {
             return ListUserRoles(userId).FirstOrDefault();
@@ -28,6 +29,7 @@ namespace BugTracker.Helpers
 
         public ICollection<string> ListUserRoles(string userId)
         {
+            
             return userManager.GetRoles(userId);
         }
 

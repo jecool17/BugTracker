@@ -25,6 +25,12 @@ namespace BugTracker.Controllers
             return View(ticketAttachments.ToList());
         }
 
+        public ActionResult AttachmentFull(int? id)
+        {
+            Ticket ticket = db.Tickets.Find(id);
+            return View(ticket);
+        }
+
         // GET: TicketAttachments/Details/5
         public ActionResult Details(int? id)
         {

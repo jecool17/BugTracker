@@ -90,6 +90,7 @@ namespace BugTracker.Controllers
         [Authorize(Roles = "Project Manager")]
         public ActionResult UserIndexPM()
         {
+            
             var projects = db.Projects.ToList();
             var roles = db.Roles.ToList();
             var users = db.Users.Select(u => new UserIndexViewModel

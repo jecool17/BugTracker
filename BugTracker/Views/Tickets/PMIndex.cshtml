@@ -1,12 +1,6 @@
-﻿@using BugTracker.Helpers
+﻿@model IEnumerable<BugTracker.Models.Ticket>
 
-@model IEnumerable<BugTracker.Models.Ticket>
 
-@{
-
-    var linkHelper = new LinkHelper();
-
-}
 
 <div class="page-title">
 
@@ -28,17 +22,14 @@
                 <table class="table table-hover table-condensed" id="example">
                     <thead>
                         <tr>
-                            <th style="width:5%">
+                            <th style="width:10%">
                                 Manage Ticket
                             </th>
-                            <th style="width:5%">
-                                Ticket ID
-                            </th>
-                            <th style="width:5%">Project</th>
-                            <th style="width:5%">Ticket Title</th>
+                            <th style="width:10%">Ticket Title</th>
                             <th style="width:22%" data-hide="phone,tablet">Description</th>
                             <th style="width:6%">Submitter</th>
                             <th style="width:6%">Developer</th>
+                            <th style="width:6%">Archived By</th>
                             <th style="width:10%" data-hide="phone,tablet">Progress</th>
                         </tr>
                     </thead>
@@ -68,26 +59,15 @@
 
                             <tr>
                                 <td class="v-align-middle">
-                                    @if (!linkHelper.UserCanEditTicket(ticket))
-                                    {
-                                        
-                                    }
-                                    else
-                                    {
-                                        @Html.ActionLink("Details", "Details", new { id = ticket.Id })
-
-                                    }
-
-
+                                    @Html.ActionLink("Details", "Details", new { id = ticket.Id })
 
 
                                 </td>
-                                <td class="v-align-middle">@ticket.Id</td>
-                                <td class="v-align-middle">@ticket.Project.Name</td>
                                 <td class="v-align-middle">@ticket.Title</td>
                                 <td class="v-align-middle">@ticket.Description</td>
                                 <td>@ticket.OwnerUser.FullName</td>
                                 <td>@AssignedUser</td>
+                                <td>@ticket.ArchivedBy.FullName</td>
                                 <td class="v-align-middle">
                                     <div class="progress ">
                                         <div data-percentage="@ticket.TicketStatus.Value%" class="progress-bar progress-bar-success animate-progress-bar"></div>
@@ -104,21 +84,3 @@
         </div>
     </div>
 </div>
-
-@section scripts{
-    <script>
-        var msg = '@TempData["Message"]'
-        if (msg != "")
-        {
-            Swal.fire({
-                type: 'error',
-                title: 'uh oh Sorry...',
-                text: msg
-            })
-        }
-
-
-    </script>
-
-
-}

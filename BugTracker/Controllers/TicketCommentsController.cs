@@ -22,6 +22,12 @@ namespace BugTracker.Controllers
             return View(ticketComments.ToList());
         }
 
+        public ActionResult CommentFull(int? id)
+        {
+            Ticket ticket = db.Tickets.Find(id);
+            return View(ticket);
+        }
+
         // GET: TicketComments/Details/5
         public ActionResult Details(int? id)
         {

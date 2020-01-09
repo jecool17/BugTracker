@@ -8,8 +8,8 @@
 @model IEnumerable<BugTracker.Models.Ticket>
 
 @{
-    
-    
+
+
     var db = new ApplicationDbContext();
     var userId = User.Identity.GetUserId();
     ApplicationUser user = new ApplicationUser();
@@ -276,17 +276,17 @@
                     <div class="tiles-title text-black">Tickets </div>
                     <div class="widget-stats">
                         <div class="wrapper transparent">
-                            <span class="item-title">Overall Tickets</span> <span class="item-count animate-number semi-bold" data-value="@Model.Count()" data-animation-duration="700">0</span>
+                            <span class="item-title">Overall Tickets</span> <span class="item-count animate-number semi-bold" data-value="@user.Projects.SelectMany(p => p.Tickets).Count()" data-animation-duration="700">0</span>
                         </div>
                     </div>
                     <div class="widget-stats">
                         <div class="wrapper transparent">
-                            <span class="item-title">In Progress</span> <span class="item-count animate-number semi-bold" data-value="@Model.Where(t => t.TicketStatus.Name.Contains("Assigned")).Count()" data-animation-duration="700">0</span>
+                            <span class="item-title">In Progress</span> <span class="item-count animate-number semi-bold" data-value="@user.Projects.SelectMany(p => p.Tickets).Where(t => t.TicketStatus.Name.Contains("Assigned")).Count()" data-animation-duration="700">0</span>
                         </div>
                     </div>
                     <div class="widget-stats ">
                         <div class="wrapper last">
-                            <span class="item-title">Archived</span> <span class="item-count animate-number semi-bold" data-value="@Model.Where(t => t.TicketStatus.Name.Contains("Archived")).Count()" data-animation-duration="700">0</span>
+                            <span class="item-title">Archived</span> <span class="item-count animate-number semi-bold" data-value="@user.Projects.SelectMany(p => p.Tickets).Where(t => t.TicketStatus.Name.Contains("Archived")).Count()" data-animation-duration="700">0</span>
                         </div>
                     </div>
                     @*<div class="progress transparent progress-small no-radius m-t-20" style="width:90%">
@@ -308,17 +308,17 @@
                     <div class="tiles-title text-black">Projects</div>
                     <div class="widget-stats">
                         <div class="wrapper transparent">
-                            <span class="item-title">Overall Projects</span> <span class="item-count animate-number semi-bold" data-value="@projectHelper.GetProjectCount().Count()" data- animation-duration="700">0</span>
+                            <span class="item-title">Overall Projects</span> <span class="item-count animate-number semi-bold" data-value="@user.Projects.Count()" data- animation-duration="700">0</span>
                         </div>
                     </div>
                     <div class="widget-stats">
                         <div class="wrapper transparent">
-                            <span class="item-title">Active Tickets</span> <span class="item-count animate-number semi-bold" data-value="@Model.Where(t => t.Project != null).Count()" data-animation-duration="700">0</span>
+                            <span class="item-title">Active Tickets</span> <span class="item-count animate-number semi-bold" data-value="@user.Projects.SelectMany(t=>t.Tickets).Where(t=>t.TicketStatus.Name != "Archived").Count()" data-animation-duration="700">0</span>
                         </div>
                     </div>
                     <div class="widget-stats ">
                         <div class="wrapper last">
-                            <span class="item-title">Completed Tickets</span> <span class="item-count animate-number semi-bold" data-value="@Model.Where(t => t.TicketStatus.Name.Contains("Resolved")).Count()" data-animation-duration="700">0</span>
+                            <span class="item-title">Completed Tickets</span> <span class="item-count animate-number semi-bold" data-value="@user.Projects.SelectMany(t=>t.Tickets).Where(t => t.TicketStatus.Name.Contains("Resolved")).Count()" data-animation-duration="700">0</span>
                         </div>
                     </div>
                     @*<div class="progress transparent progress-small no-radius m-t-20" style="width:90%">
@@ -340,22 +340,22 @@
                     <div class="tiles-title text-black">Ticket Priorities </div>
                     <div class="widget-stats">
                         <div class="wrapper transparent">
-                            <span class="item-title">Low</span> <span class="item-count animate-number semi-bold" data-value="@Model.Where(t => t.TicketPriority.Name == "Low").Count()" data-animation-duration="700">0</span>
+                            <span class="item-title">Low</span> <span class="item-count animate-number semi-bold" data-value="@user.Projects.SelectMany(t=>t.Tickets).Where(t => t.TicketPriority.Name == "Low").Count()" data-animation-duration="700">0</span>
                         </div>
                     </div>
                     <div class="widget-stats">
                         <div class="wrapper transparent">
-                            <span class="item-title">Medium</span> <span class="item-count animate-number semi-bold" data-value="@Model.Where(t => t.TicketPriority.Name == "Medium").Count()" data-animation-duration="700">0</span>
+                            <span class="item-title">Medium</span> <span class="item-count animate-number semi-bold" data-value="@user.Projects.SelectMany(t=>t.Tickets).Where(t => t.TicketPriority.Name == "Medium").Count()" data-animation-duration="700">0</span>
                         </div>
                     </div>
                     <div class="widget-stats ">
                         <div class="wrapper last">
-                            <span class="item-title">High</span> <span class="item-count animate-number semi-bold" data-value="@Model.Where(t => t.TicketPriority.Name == "High").Count()" data-animation-duration="700">0</span>
+                            <span class="item-title">High</span> <span class="item-count animate-number semi-bold" data-value="@user.Projects.SelectMany(t=>t.Tickets).Where(t => t.TicketPriority.Name == "High").Count()" data-animation-duration="700">0</span>
                         </div>
                     </div>
                     <div class="widget-stats ">
                         <div class="wrapper last">
-                            <span class="item-title">URGENT!!!!!!!!!</span> <span class="item-count animate-number semi-bold" data-value="@Model.Where(t => t.TicketPriority.Name == "URGENT").Count()" data-animation-duration="700">0</span>
+                            <span class="item-title">URGENT!!!!!!!!!</span> <span class="item-count animate-number semi-bold" data-value="@user.Projects.SelectMany(t=>t.Tickets).Where(t => t.TicketPriority.Name == "URGENT").Count()" data-animation-duration="700">0</span>
                         </div>
                     </div>
                     @*<div class="progress transparent progress-small no-radius m-t-20" style="width:90%">
@@ -364,6 +364,8 @@
                         <div class="description">
                             <span class="text-white mini-description ">4% higher <span class="blend">than last month</span></span>
                         </div>*@
+                    <br />
+                    <br />
                 </div>
             </div>
         </div>
@@ -418,7 +420,7 @@
                     </div>
                     <div class="widget-stats">
                         <div class="wrapper transparent">
-                            <span class="item-title">Active Tickets</span> <span class="item-count animate-number semi-bold" data-value="@user.Projects.SelectMany(t=>t.Tickets).Where(t=>t.TicketStatus.Name == "Assigned" && t.TicketStatus.Name == "Assigned / In Progress").Count()" data-animation-duration="700">0</span>
+                            <span class="item-title">Active Tickets</span> <span class="item-count animate-number semi-bold" data-value="@user.Projects.SelectMany(t=>t.Tickets).Where(t=>t.AssignedToUserId == userId).Where(t =>t.TicketStatus.Name != "Archived" && t.TicketStatus.Name != "Resolved").Count()" data-animation-duration="700">0</span>
                         </div>
                     </div>
                     <div class="widget-stats ">
@@ -480,17 +482,17 @@
                     <div class="tiles-title text-black">Tickets </div>
                     <div class="widget-stats">
                         <div class="wrapper transparent">
-                            <span class="item-title">Overall Tickets</span> <span class="item-count animate-number semi-bold" data-value="@Model.Count()" data-animation-duration="700">0</span>
+                            <span class="item-title">Overall Tickets</span> <span class="item-count animate-number semi-bold" data-value="@Model.Where(t=>t.OwnerUserId == userId).Count()" data-animation-duration="700">0</span>
                         </div>
                     </div>
                     <div class="widget-stats">
                         <div class="wrapper transparent">
-                            <span class="item-title">In Progress</span> <span class="item-count animate-number semi-bold" data-value="@Model.Where(t => t.TicketStatus.Name.Contains("Assigned")).Count()" data-animation-duration="700">0</span>
+                            <span class="item-title">In Progress</span> <span class="item-count animate-number semi-bold" data-value="@Model.Where(t=>t.OwnerUserId == userId).Where(t => t.TicketStatus.Name.Contains("Assigned")).Count()" data-animation-duration="700">0</span>
                         </div>
                     </div>
                     <div class="widget-stats ">
                         <div class="wrapper last">
-                            <span class="item-title">Archived</span> <span class="item-count animate-number semi-bold" data-value="@Model.Where(t => t.TicketStatus.Name.Contains("Archived")).Count()" data-animation-duration="700">0</span>
+                            <span class="item-title">Archived</span> <span class="item-count animate-number semi-bold" data-value="@Model.Where(t=>t.OwnerUserId == userId).Where(t => t.TicketStatus.Name.Contains("Archived")).Count()" data-animation-duration="700">0</span>
                         </div>
                     </div>
                     @*<div class="progress transparent progress-small no-radius m-t-20" style="width:90%">
@@ -512,17 +514,13 @@
                     <div class="tiles-title text-black">Projects</div>
                     <div class="widget-stats">
                         <div class="wrapper transparent">
-                            <span class="item-title">Overall Projects</span> <span class="item-count animate-number semi-bold" data-value="@projectHelper.GetProjectCount().Count()" data- animation-duration="700">0</span>
+                            <span class="item-title">Overall Projects</span> <span class="item-count animate-number semi-bold" data-value="@user.Projects.Count()" data- animation-duration="700">0</span>
                         </div>
                     </div>
-                    <div class="widget-stats">
-                        <div class="wrapper transparent">
-                            <span class="item-title">Active Tickets</span> <span class="item-count animate-number semi-bold" data-value="@Model.Where(t => t.Project != null).Count()" data-animation-duration="700">0</span>
-                        </div>
-                    </div>
+
                     <div class="widget-stats ">
                         <div class="wrapper last">
-                            <span class="item-title">Completed Tickets</span> <span class="item-count animate-number semi-bold" data-value="@Model.Where(t => t.TicketStatus.Name.Contains("Resolved")).Count()" data-animation-duration="700">0</span>
+                            <span class="item-title">Completed Tickets</span> <span class="item-count animate-number semi-bold" data-value="@Model.Where(t=>t.OwnerUserId == userId).Where(t => t.TicketStatus.Name.Contains("Resolved")).Count()" data-animation-duration="700">0</span>
                         </div>
                     </div>
                     @*<div class="progress transparent progress-small no-radius m-t-20" style="width:90%">
@@ -544,22 +542,22 @@
                     <div class="tiles-title text-black">Ticket Priorities </div>
                     <div class="widget-stats">
                         <div class="wrapper transparent">
-                            <span class="item-title">Low</span> <span class="item-count animate-number semi-bold" data-value="@Model.Where(t => t.TicketPriority.Name == "Low").Count()" data-animation-duration="700">0</span>
+                            <span class="item-title">Low</span> <span class="item-count animate-number semi-bold" data-value="@Model.Where(t=>t.OwnerUserId == userId).Where(t => t.TicketPriority.Name == "Low").Count()" data-animation-duration="700">0</span>
                         </div>
                     </div>
                     <div class="widget-stats">
                         <div class="wrapper transparent">
-                            <span class="item-title">Medium</span> <span class="item-count animate-number semi-bold" data-value="@Model.Where(t => t.TicketPriority.Name == "Medium").Count()" data-animation-duration="700">0</span>
+                            <span class="item-title">Medium</span> <span class="item-count animate-number semi-bold" data-value="@Model.Where(t=>t.OwnerUserId == userId).Where(t => t.TicketPriority.Name == "Medium").Count()" data-animation-duration="700">0</span>
                         </div>
                     </div>
                     <div class="widget-stats ">
                         <div class="wrapper last">
-                            <span class="item-title">High</span> <span class="item-count animate-number semi-bold" data-value="@Model.Where(t => t.TicketPriority.Name == "High").Count()" data-animation-duration="700">0</span>
+                            <span class="item-title">High</span> <span class="item-count animate-number semi-bold" data-value="@Model.Where(t=>t.OwnerUserId == userId).Where(t => t.TicketPriority.Name == "High").Count()" data-animation-duration="700">0</span>
                         </div>
                     </div>
                     <div class="widget-stats ">
                         <div class="wrapper last">
-                            <span class="item-title">URGENT!!!!!!!!!</span> <span class="item-count animate-number semi-bold" data-value="@Model.Where(t => t.TicketPriority.Name == "URGENT").Count()" data-animation-duration="700">0</span>
+                            <span class="item-title">URGENT!!!!!!!!!</span> <span class="item-count animate-number semi-bold" data-value="@Model.Where(t=>t.OwnerUserId == userId).Where(t => t.TicketPriority.Name == "URGENT").Count()" data-animation-duration="700">0</span>
                         </div>
                     </div>
                     @*<div class="progress transparent progress-small no-radius m-t-20" style="width:90%">
@@ -666,7 +664,7 @@
     <div class="row">
 
         <div class="pull-right actions">
-            <button class="btn btn-primary btn-cons" type="button" id="btn-new-ticket">Active Tickets</button>
+            <button class="btn btn-primary btn-cons" type="button" id="btn-new-ticket">New Tickets</button>
         </div>
 
 
@@ -675,274 +673,39 @@
             <div class="col-md-12">
                 <div class="grid simple no-border" id="new-ticket-wrapper" style="display:none">
                     <div class="grid-title no-border">
-                        <h4 class="semi-bold">View Ticket To Advance / Complete Tickets</h4>
+                        <h4 class="semi-bold">View New Tickets/ Start Ticket Resolution</h4>
                     </div>
                     <div>
                         <div class="clearfix"></div>
-                        <h4>My New <span class="semi-bold">Tickets</span></h4>
-                        <br>
-                        @foreach (var tickets in Model.Where(t => t.AssignedToUserId == userId && t.TicketStatus.Name == "Assigned").OrderByDescending(c => c.Created).ToList())
-                        {
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="grid simple no-border">
-                                        <div class="grid-title no-border descriptive clickable">
-                                            <h4 class="semi-bold">@tickets.Title</h4>
-                                            <p><span class="text-success bold">Ticket #@tickets.Id</span> - Created on @tickets.Created -  By - @tickets.OwnerUser.FullName @*Last reply About 1 Month ago by alex&nbsp;&nbsp;*@<span class="label label-important">@tickets.TicketPriority.Name</span></p>
-                                            <div class="actions"> <a class="view" href="javascript:;"><i class="fa fa-search"></i></a> <a class="remove" href="javascript:;"><i class="fa fa-times"></i></a> </div>
-                                        </div>
-                                        <div class="grid-body  no-border" style="display:none">
-                                            <div class="post">
-                                                <div class="user-profile-pic-wrapper">
-                                                    <div class="user-profile-pic-normal"> <img width="35" height="35" data-src-retina="@tickets.OwnerUser.AvatarURL" data-src="@tickets.OwnerUser.AvatarURL" src="@tickets.OwnerUser.AvatarURL" alt=""> </div>
-                                                </div>
-                                                <div class="info-wrapper">
-                                                    <div class="info">
+                        <div class="row center-text">
+                            <h4>New <span class="semi-bold">Tickets</span></h4>
+                            <br>
+                        </div>
 
-                                                        <a href="@Url.Action("Details", "Tickets", new { id = tickets.Id })"> @tickets.Description</a>
-                                                    </div>
-                                                    <div class="clearfix"></div>
-                                                </div>
-                                                <div class="clearfix"></div>
-                                            </div>
-                                            <br>
-                                            @foreach (var comment in tickets.TicketComments.OrderByDescending(c => c.Created))
-                                            {
-                                                <div class="form-actions">
-                                                    <div class="post col-md-12">
-                                                        <div class="user-profile-pic-wrapper">
-                                                            <div class="user-profile-pic-normal"> <img width="35" height="35" data-src-retina="@comment.User.AvatarURL" data-src="@comment.User.AvatarURL" src="@comment.User.AvatarURL" alt=""> </div>
-                                                        </div>
-                                                        <div class="info-wrapper">
-                                                            <div class="info">
-                                                                @comment.Comment
-                                                                <hr>
-                                                                <p class="small-text">Posted on @comment.Created</p>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                @using (Html.BeginForm("Create", "TicketComments", FormMethod.Post))
-                                                                {
-                                                                    @Html.AntiForgeryToken()
-                                                                    @Html.Hidden("TicketId", tickets.Id);
-                                                                    <label class="form-label"><i class="fa fa-reply"></i>&nbsp;Post a reply</label>
-                                                                    <div class="controls">
-                                                                        <input type="text" class="form-control" name="Comment" id="Comment">
-                                                                        <button class="btn btn-primary btn-cons" type="submit">Submit</button>
-                                                                    </div>
-                                                                }
-
-                                                            </div>
-                                                            <div class="clearfix"></div>
-                                                        </div>
-                                                        <div class="clearfix"></div>
-                                                    </div>
-                                                </div>
-
-
-                                            }
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        }
-                        <h4>My Open <span class="semi-bold">Tickets</span></h4>
-                        <br>
-                        @foreach (var tickets in Model.Where(t => t.AssignedToUserId == userId && t.TicketStatus.Name != "Resolved" && t.TicketStatus.Name != "Archived").OrderByDescending(c => c.Created).ToList())
+                        @foreach (var tickets in Model.Where(t => t.AssignedToUserId == userId).Where(t => t.TicketStatus.Name == "Assigned").OrderByDescending(c => c.Created))
                         {
 
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="grid simple no-border">
-                                        <div class="grid-title no-border descriptive clickable">
-                                            <h4 class="semi-bold">@tickets.Title</h4>
-                                            <p><span class="text-success bold">Ticket #@tickets.Id</span> - Created on @tickets.Created - By - @tickets.OwnerUser.FullName @*Last reply About 1 Month ago by alex&nbsp;&nbsp;*@<span class="label label-important">@tickets.TicketPriority.Name</span></p>
-                                            <div class="actions"> <a class="view" href="javascript:;"><i class="fa fa-search"></i></a> <a class="remove" href="javascript:;"><i class="fa fa-times"></i></a> </div>
-                                        </div>
-                                        <div class="grid-body  no-border" style="display:none">
-                                            <div class="post">
-                                                <div class="user-profile-pic-wrapper">
-                                                    <div class="user-profile-pic-normal"> <img width="35" height="35" data-src-retina="@tickets.OwnerUser.AvatarURL" data-src="@tickets.OwnerUser.AvatarURL" src="@tickets.OwnerUser.AvatarURL" alt=""> </div>
-                                                </div>
-                                                <div class="info-wrapper">
-                                                    <div class="info">
-
-                                                        <a href="@Url.Action("Details", "Tickets", new { id = tickets.Id })"> @tickets.Description</a>
-                                                    </div>
-                                                    <div class="clearfix"></div>
-                                                </div>
-                                                <div class="clearfix"></div>
-                                            </div>
-                                            <br>
-                                            @foreach (var comment in tickets.TicketComments.OrderByDescending(c => c.Created))
-                                            {
-                                                <div class="form-actions">
-                                                    <div class="post col-md-12">
-                                                        <div class="user-profile-pic-wrapper">
-                                                            <div class="user-profile-pic-normal"> <img width="35" height="35" data-src-retina="@comment.User.AvatarURL" data-src="@comment.User.AvatarURL" src="@comment.User.AvatarURL" alt=""> </div>
-                                                        </div>
-                                                        <div class="info-wrapper">
-                                                            <div class="info">
-                                                                @comment.Comment
-                                                                <hr>
-                                                                <p class="small-text">Posted on @comment.Created</p>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                @using (Html.BeginForm("Create", "TicketComments", FormMethod.Post))
-                                                                {
-                                                                    @Html.AntiForgeryToken()
-                                                                    @Html.Hidden("TicketId", tickets.Id);
-                                                                    <label class="form-label"><i class="fa fa-reply"></i>&nbsp;Post a reply</label>
-                                                                    <div class="controls">
-                                                                        <input type="text" class="form-control" name="Comment" id="Comment">
-                                                                        <button class="btn btn-primary btn-cons" type="submit">Submit</button>
-                                                                    </div>
-                                                                }
-
-                                                            </div>
-                                                            <div class="clearfix"></div>
-                                                        </div>
-                                                        <div class="clearfix"></div>
-                                                    </div>
-                                                </div>
-
-
-                                            }
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        }
-
-                        <h4>My Completed <span class="semi-bold">Tickets</span></h4>
-                        <br>
-                        @foreach (var tickets in Model.Where(t => t.AssignedToUserId == userId && t.TicketStatus.Name == "Resolved").OrderByDescending(c => c.Created))
-                        {
-
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="grid simple no-border">
-                                        <div class="grid-title no-border descriptive clickable">
-                                            <h4 class="semi-bold">@tickets.Title</h4>
-                                            <p><span class="text-success bold">Ticket #@tickets.Id</span> - Created on @tickets.Created - By - @tickets.OwnerUser.FullName @*Last reply About 1 Month ago by alex&nbsp;&nbsp;*@<span class="label label-important">@tickets.TicketPriority.Name</span></p>
-                                            <div class="actions"> <a class="view" href="javascript:;"><i class="fa fa-search"></i></a> <a class="remove" href="javascript:;"><i class="fa fa-times"></i></a> </div>
-                                        </div>
-                                        <div class="grid-body  no-border" style="display:none">
-                                            <div class="post">
-                                                <div class="user-profile-pic-wrapper">
-                                                    <div class="user-profile-pic-normal"> <img width="35" height="35" data-src-retina="@tickets.OwnerUser.AvatarURL" data-src="@tickets.OwnerUser.AvatarURL" src="@tickets.OwnerUser.AvatarURL" alt=""> </div>
-                                                </div>
-                                                <div class="info-wrapper">
-                                                    <div class="info">
-                                                        @tickets.Description
-                                                    </div>
-                                                    <div class="clearfix"></div>
-                                                </div>
-                                                <div class="clearfix"></div>
-                                            </div>
-                                            <br>
-                                            @foreach (var comment in tickets.TicketComments.OrderByDescending(c => c.Created))
-                                            {
-                                                <div class="form-actions">
-                                                    <div class="post col-md-12">
-                                                        <div class="user-profile-pic-wrapper">
-                                                            <div class="user-profile-pic-normal"> <img width="35" height="35" data-src-retina="@comment.User.AvatarURL" data-src="@comment.User.AvatarURL" src="@comment.User.AvatarURL" alt=""> </div>
-                                                        </div>
-                                                        <div class="info-wrapper">
-                                                            <div class="info">
-                                                                @comment.Comment
-                                                                <hr>
-                                                                <p class="small-text">Posted on @comment.Created</p>
-                                                            </div>
-
-                                                            <div class="clearfix"></div>
-                                                        </div>
-                                                        <div class="clearfix"></div>
-                                                    </div>
-                                                </div>
-
-
-                                            }
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        }
-
-
-
-                        <h4>Archived <span class="semi-bold">Tickets</span></h4>
-                        <br>
-                        @foreach (var tickets in Model.Where(t => t.AssignedToUserId == userId && t.TicketStatus.Name == "Archived").OrderByDescending(c => c.Created))
-                        {
-
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="grid simple no-border">
-                                        @if (tickets.ArchivedBy != null)
-                                        {
-                                            <div class="grid-title no-border descriptive clickable">
+                                        <div class="grid-title no-border">
+                                            <a href="@Url.Action("Details","Tickets", new { id = tickets.Id })">
                                                 <h4 class="semi-bold">@tickets.Title</h4>
+                                                <p><span class="text-success bold">Ticket #@tickets.Id</span><span class="text-white "> - Created on @tickets.Created - Created By @tickets.OwnerUser.FullName</span> @*Last reply About 1 Month ago by alex&nbsp;&nbsp;*@<span class="label label-important">@tickets.TicketPriority.Name</span></p>
 
-                                                <p><span class="text-success bold">Ticket #@tickets.Id</span> - Created on @tickets.Created - Archived By @tickets.ArchivedBy.FullName@*Last reply About 1 Month ago by alex&nbsp;&nbsp;*@<span class="label label-important">@tickets.TicketPriority.Name</span></p>
-                                                <div class="actions"> <a class="view" href="javascript:;"><i class="fa fa-search"></i></a> <a class="remove" href="javascript:;"><i class="fa fa-times"></i></a> </div>
-                                            </div>
-                                        }
-                                        else
-                                        {
-                                            <div class="grid-title no-border descriptive clickable">
-                                                <h4 class="semi-bold">@tickets.Title</h4>
-
-                                                <p><span class="text-success bold">Ticket #@tickets.Id</span> - Created on @tickets.Created - By @tickets.OwnerUser.FullName@*Last reply About 1 Month ago by alex&nbsp;&nbsp;*@<span class="label label-important">@tickets.TicketPriority.Name</span></p>
-                                                <div class="actions"> <a class="view" href="javascript:;"><i class="fa fa-search"></i></a> <a class="remove" href="javascript:;"><i class="fa fa-times"></i></a> </div>
-                                            </div>
-
-                                        }
-                                       
-                                        <div class="grid-body  no-border" style="display:none">
-                                            <div class="post">
-                                                <div class="user-profile-pic-wrapper">
-                                                    <div class="user-profile-pic-normal"> <img width="35" height="35" data-src-retina="@tickets.OwnerUser.AvatarURL" data-src="@tickets.OwnerUser.AvatarURL" src="@tickets.OwnerUser.AvatarURL" alt=""> </div>
-                                                </div>
-                                                <div class="info-wrapper">
-                                                    <div class="info">
-                                                        @tickets.Description
-                                                    </div>
-                                                    <div class="clearfix"></div>
-                                                </div>
-                                                <div class="clearfix"></div>
-                                            </div>
-                                            <br>
-                                            @foreach (var comment in tickets.TicketComments.OrderByDescending(c => c.Created))
-                                            {
-                                                <div class="form-actions">
-                                                    <div class="post col-md-12">
-                                                        <div class="user-profile-pic-wrapper">
-                                                            <div class="user-profile-pic-normal"> <img width="35" height="35" data-src-retina="@comment.User.AvatarURL" data-src="@comment.User.AvatarURL" src="@comment.User.AvatarURL" alt=""> </div>
-                                                        </div>
-                                                        <div class="info-wrapper">
-                                                            <div class="info">
-                                                                @comment.Comment
-                                                                <hr>
-                                                                <p class="small-text">Posted on @comment.Created</p>
-                                                            </div>
-
-                                                            <div class="clearfix"></div>
-                                                        </div>
-                                                        <div class="clearfix"></div>
-                                                    </div>
-                                                </div>
-
-
-                                            }
+                                            </a>
                                         </div>
+
                                     </div>
                                 </div>
 
                             </div>
                         }
+
+
+
+
+
 
 
                     </div>
@@ -956,228 +719,82 @@
 }
 else if (User.IsInRole("Admin") || User.IsInRole("MasterAdmin"))
 {
+<div class="row">
+
+    <div class="pull-right actions">
+        <button class="btn btn-primary btn-cons" type="button" id="btn-new-ticket">Active Tickets</button>
+    </div>
+
+
+    <div class="clearfix"></div>
     <div class="row">
-
-        <div class="pull-right actions">
-            <button class="btn btn-primary btn-cons" type="button" id="btn-new-ticket">Active Tickets</button>
-        </div>
-
-
-        <div class="clearfix"></div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="grid simple no-border" id="new-ticket-wrapper" style="display:none">
-                    <div class="grid-title no-border">
-                        <h4 class="semi-bold">View Ticket To Assign To Developers /Archive Completed Tickets</h4>
-                    </div>
-                    <div>
-                        <div class="clearfix"></div>
-
+        <div class="col-md-12">
+            <div class="grid simple no-border" id="new-ticket-wrapper" style="display:none">
+                <div class="grid-title no-border">
+                    <h4 class="semi-bold">View Ticket To Assign To Developers / Archive Completed Tickets</h4>
+                </div>
+                <div>
+                    <div class="clearfix"></div>
+                    <div class="row center-text">
                         <h4>New <span class="semi-bold">Tickets</span></h4>
                         <br>
-                        @foreach (var tickets in @Model.Where(t => t.TicketStatus.Name == "New / Unassigned").OrderByDescending(c => c.Created))
-                        {
+                    </div>
 
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="grid simple no-border">
-                                        <div class="grid-title no-border descriptive clickable">
+                    @foreach (var tickets in @Model.Where(t => t.TicketStatus.Name == "New / Unassigned").OrderByDescending(c => c.Created))
+                    {
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="grid simple no-border">
+                                    <div class="grid-title no-border">
+                                        <a href="@Url.Action("Details","Tickets", new { id = tickets.Id })">
                                             <h4 class="semi-bold">@tickets.Title</h4>
-                                            <p><span class="text-success bold">Ticket #@tickets.Id</span> - Created on @tickets.Created - By - @tickets.OwnerUser.FullName @*Last reply About 1 Month ago by alex&nbsp;&nbsp;*@<span class="label label-important">@tickets.TicketPriority.Name</span></p>
-                                            <div class="actions"> <a class="view" href="javascript:;"><i class="fa fa-search"></i></a> <a class="remove" href="javascript:;"><i class="fa fa-times"></i></a> </div>
-                                        </div>
-                                        <div class="grid-body  no-border" style="display:none">
-                                            <div class="post">
-                                                <div class="user-profile-pic-wrapper">
-                                                    <div class="user-profile-pic-normal"> <img width="35" height="35" data-src-retina="@tickets.OwnerUser.AvatarURL" data-src="@tickets.OwnerUser.AvatarURL" src="@tickets.OwnerUser.AvatarURL" alt=""> </div>
-                                                </div>
-                                                <div class="info-wrapper">
-                                                    <div class="info">
+                                            <p><span class="text-success bold">Ticket #@tickets.Id</span><span class="text-white "> - Created on @tickets.Created - Created By @tickets.OwnerUser.FullName</span> @*Last reply About 1 Month ago by alex&nbsp;&nbsp;*@<span class="label label-important">@tickets.TicketPriority.Name</span></p>
 
-                                                        <a href="@Url.Action("Details", "Tickets", new { id = tickets.Id })"> @tickets.Description</a>
-                                                    </div>
-                                                    <div class="clearfix"></div>
-                                                </div>
-                                                <div class="clearfix"></div>
-                                            </div>
-                                            <br>
-                                            @foreach (var comment in tickets.TicketComments.OrderByDescending(c => c.Created))
-                                            {
-                                                <div class="form-actions">
-                                                    <div class="post col-md-12">
-                                                        <div class="user-profile-pic-wrapper">
-                                                            <div class="user-profile-pic-normal"> <img width="35" height="35" data-src-retina="@comment.User.AvatarURL" data-src="@comment.User.AvatarURL" src="@comment.User.AvatarURL" alt=""> </div>
-                                                        </div>
-                                                        <div class="info-wrapper">
-                                                            <div class="info">
-                                                                @comment.Comment
-                                                                <hr>
-                                                                <p class="small-text">Posted on @comment.Created</p>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                @using (Html.BeginForm("Create", "TicketComments", FormMethod.Post))
-                                                                {
-                                                                    @Html.AntiForgeryToken()
-                                                                    @Html.Hidden("TicketId", tickets.Id);
-                                                                    <label class="form-label"><i class="fa fa-reply"></i>&nbsp;Post a reply</label>
-                                                                    <div class="controls">
-                                                                        <input type="text" class="form-control" name="Comment" id="Comment">
-                                                                        <button class="btn btn-primary btn-cons" type="submit">Submit</button>
-                                                                    </div>
-                                                                }
-
-                                                            </div>
-                                                            <div class="clearfix"></div>
-                                                        </div>
-                                                        <div class="clearfix"></div>
-                                                    </div>
-                                                </div>
-
-
-                                            }
-                                        </div>
+                                        </a>
                                     </div>
+
                                 </div>
-
                             </div>
-                        }
 
+                        </div>
+                    }
+
+                    <div class="row center-text">
                         <h4>Completed <span class="semi-bold">Tickets</span></h4>
                         <br>
-                        @foreach (var tickets in @Model.Where(t => t.TicketStatus.Name == "Resolved").OrderByDescending(c => c.Created))
-                        {
-
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="grid simple no-border">
-                                        <div class="grid-title no-border descriptive clickable">
-                                            <h4 class="semi-bold">@tickets.Title</h4>
-                                            <p><span class="text-success bold">Ticket #@tickets.Id</span> - Created on @tickets.Created - Completed By @tickets.AssignedToUser.FullName @*Last reply About 1 Month ago by alex&nbsp;&nbsp;*@<span class="label label-important">@tickets.TicketPriority.Name</span></p>
-                                            <div class="actions"> <a class="view" href="javascript:;"><i class="fa fa-search"></i></a> <a class="remove" href="javascript:;"><i class="fa fa-times"></i></a> </div>
-                                        </div>
-                                        <div class="grid-body  no-border" style="display:none">
-                                            <div class="post">
-                                                <div class="user-profile-pic-wrapper">
-                                                    <div class="user-profile-pic-normal"> <img width="35" height="35" data-src-retina="@tickets.OwnerUser.AvatarURL" data-src="@tickets.OwnerUser.AvatarURL" src="@tickets.OwnerUser.AvatarURL" alt=""> </div>
-                                                </div>
-                                                <div class="info-wrapper">
-                                                    <div class="info">
-                                                        <a href="@Url.Action("Details", "Tickets", new { id = tickets.Id })"> @tickets.Description</a>
-                                                    </div>
-                                                    <div class="clearfix"></div>
-                                                </div>
-                                                <div class="clearfix"></div>
-                                            </div>
-                                            <br>
-                                            @foreach (var comment in tickets.TicketComments.OrderByDescending(c => c.Created))
-                                            {
-                                                <div class="form-actions">
-                                                    <div class="post col-md-12">
-                                                        <div class="user-profile-pic-wrapper">
-                                                            <div class="user-profile-pic-normal"> <img width="35" height="35" data-src-retina="@comment.User.AvatarURL" data-src="@comment.User.AvatarURL" src="@comment.User.AvatarURL" alt=""> </div>
-                                                        </div>
-                                                        <div class="info-wrapper">
-                                                            <div class="info">
-                                                                @comment.Comment
-                                                                <hr>
-                                                                <p class="small-text">Posted on @comment.Created</p>
-                                                            </div>
-
-                                                            <div class="clearfix"></div>
-                                                        </div>
-                                                        <div class="clearfix"></div>
-                                                    </div>
-                                                </div>
-
-
-                                            }
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        }
-
-
-
-                        <h4>Archived <span class="semi-bold">Tickets</span></h4>
-                        <br>
-                        @foreach (var tickets in @Model.Where(t => t.TicketStatus.Name == "Archived").OrderByDescending(c => c.Created))
-                        {
-
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="grid simple no-border">
-                                        @if (tickets.ArchivedBy != null)
-                                        {
-                                            <div class="grid-title no-border descriptive clickable">
-                                                <h4 class="semi-bold">@tickets.Title</h4>
-                                                <p><span class="text-success bold">Ticket #@tickets.Id</span> - Created on @tickets.Created - Archived by @tickets.ArchivedBy.FullName - Archived By @*Last reply About 1 Month ago by alex&nbsp;&nbsp;*@<span class="label label-important">@tickets.TicketPriority.Name</span></p>
-                                                <div class="actions"> <a class="view" href="javascript:;"><i class="fa fa-search"></i></a> <a class="remove" href="javascript:;"><i class="fa fa-times"></i></a> </div>
-                                            </div>
-
-                                        }
-                                        else
-                                        {
-                                            <div class="grid-title no-border descriptive clickable">
-                                                <h4 class="semi-bold">@tickets.Title</h4>
-                                                <p><span class="text-success bold">Ticket #@tickets.Id</span> - Created on @tickets.Created - Completed by @tickets.AssignedToUser.FullName - Archived By @*Last reply About 1 Month ago by alex&nbsp;&nbsp;*@<span class="label label-important">@tickets.TicketPriority.Name</span></p>
-                                                <div class="actions"> <a class="view" href="javascript:;"><i class="fa fa-search"></i></a> <a class="remove" href="javascript:;"><i class="fa fa-times"></i></a> </div>
-                                            </div>
-                                        }
-
-                                        <div class="grid-body  no-border" style="display:none">
-                                            <div class="post">
-                                                <div class="user-profile-pic-wrapper">
-                                                    <div class="user-profile-pic-normal"> <img width="35" height="35" data-src-retina="@tickets.OwnerUser.AvatarURL" data-src="@tickets.OwnerUser.AvatarURL" src="@tickets.OwnerUser.AvatarURL" alt=""> </div>
-                                                </div>
-                                                <div class="info-wrapper">
-                                                    <div class="info">
-                                                        <a href="@Url.Action("Details", "Tickets", new { id = tickets.Id })"> @tickets.Description</a>
-                                                    </div>
-                                                    <div class="clearfix"></div>
-                                                </div>
-                                                <div class="clearfix"></div>
-                                            </div>
-                                            <br>
-                                            @foreach (var comment in tickets.TicketComments.OrderByDescending(c => c.Created))
-                                            {
-                                                <div class="form-actions">
-                                                    <div class="post col-md-12">
-                                                        <div class="user-profile-pic-wrapper">
-                                                            <div class="user-profile-pic-normal"> <img width="35" height="35" data-src-retina="@comment.User.AvatarURL" data-src="@comment.User.AvatarURL" src="@comment.User.AvatarURL" alt=""> </div>
-                                                        </div>
-                                                        <div class="info-wrapper">
-                                                            <div class="info">
-                                                                @comment.Comment
-                                                                <hr>
-                                                                <p class="small-text">Posted on @comment.Created</p>
-                                                            </div>
-
-                                                            <div class="clearfix"></div>
-                                                        </div>
-                                                        <div class="clearfix"></div>
-                                                    </div>
-                                                </div>
-
-
-                                            }
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        }
-
-
                     </div>
+                    @foreach (var tickets in @Model.Where(t => t.TicketStatus.Name == "Resolved").OrderByDescending(c => c.Created))
+                    {
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="grid simple no-border ">
+                                    <div class="grid-title no-border">
+                                        <a href="@Url.Action("Details", "Tickets", new { id = tickets.Id })">
+                                            <h4 class="semi-bold">@tickets.Title</h4>
+                                            <p><span class="text-success bold">Ticket #@tickets.Id</span><span class="text-white "> - Created on @tickets.Created - Completed By @tickets.AssignedToUser.FullName</span> @*Last reply About 1 Month ago by alex&nbsp;&nbsp;*@<span class="label label-important">@tickets.TicketPriority.Name</span></p>
+
+                                        </a>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    }
+
+
+
+
                 </div>
             </div>
         </div>
-
-
-
     </div>
+
+
+
+</div>
 }
 else if (User.IsInRole("Project Manager"))
 {
@@ -1197,126 +814,49 @@ else if (User.IsInRole("Project Manager"))
                     </div>
                     <div>
                         <div class="clearfix"></div>
+                        <div class="row center-text">
+                            <h4>New <span class="semi-bold">Tickets</span></h4>
+                            <br>
+                        </div>
 
-                        <h4>New <span class="semi-bold">Tickets</span></h4>
-                        <br>
                         @foreach (var tickets in user.Projects.SelectMany(p => p.Tickets).Where(t => t.TicketStatus.Name == "New / Unassigned").OrderByDescending(c => c.Created))
                         {
 
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="grid simple no-border">
-                                        <div class="grid-title no-border descriptive clickable">
-                                            <h4 class="semi-bold">@tickets.Title</h4>
-                                            <p><span class="text-success bold">Ticket #@tickets.Id</span> - Created on @tickets.Created - Created By @tickets.OwnerUser.FullName @*Last reply About 1 Month ago by alex&nbsp;&nbsp;*@<span class="label label-important">@tickets.TicketPriority.Name</span></p>
-                                            <div class="actions"> <a class="view" href="javascript:;"><i class="fa fa-search"></i></a> <a class="remove" href="javascript:;"><i class="fa fa-times"></i></a> </div>
+                                        <div class="grid-title no-border">
+                                            <a href="@Url.Action("Details","Tickets", new { id = tickets.Id })">
+                                                <h4 class="semi-bold">@tickets.Title</h4>
+                                                <p><span class="text-success bold">Ticket #@tickets.Id</span><span class="text-white "> - Created on @tickets.Created - Created By @tickets.OwnerUser.FullName</span> @*Last reply About 1 Month ago by alex&nbsp;&nbsp;*@<span class="label label-important">@tickets.TicketPriority.Name</span></p>
+
+                                            </a>
                                         </div>
-                                        <div class="grid-body  no-border" style="display:none">
-                                            <div class="post">
-                                                <div class="user-profile-pic-wrapper">
-                                                    <div class="user-profile-pic-normal"> <img width="35" height="35" data-src-retina="@tickets.OwnerUser.AvatarURL" data-src="@tickets.OwnerUser.AvatarURL" src="@tickets.OwnerUser.AvatarURL" alt=""> </div>
-                                                </div>
-                                                <div class="info-wrapper">
-                                                    <div class="info">
 
-                                                        <a href="@Url.Action("Details", "Tickets", new { id = tickets.Id })"> @tickets.Description</a>
-                                                    </div>
-                                                    <div class="clearfix"></div>
-                                                </div>
-                                                <div class="clearfix"></div>
-                                            </div>
-                                            <br>
-                                            @foreach (var comment in tickets.TicketComments.OrderByDescending(c => c.Created))
-                                            {
-                                                <div class="form-actions">
-                                                    <div class="post col-md-12">
-                                                        <div class="user-profile-pic-wrapper">
-                                                            <div class="user-profile-pic-normal"> <img width="35" height="35" data-src-retina="@comment.User.AvatarURL" data-src="@comment.User.AvatarURL" src="@comment.User.AvatarURL" alt=""> </div>
-                                                        </div>
-                                                        <div class="info-wrapper">
-                                                            <div class="info">
-                                                                @comment.Comment
-                                                                <hr>
-                                                                <p class="small-text">Posted on @comment.Created</p>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                @using (Html.BeginForm("Create", "TicketComments", FormMethod.Post))
-                                                                {
-                                                                    @Html.AntiForgeryToken()
-                                                                    @Html.Hidden("TicketId", tickets.Id);
-                                                                    <label class="form-label"><i class="fa fa-reply"></i>&nbsp;Post a reply</label>
-                                                                    <div class="controls">
-                                                                        <input type="text" class="form-control" name="Comment" id="Comment">
-                                                                        <button class="btn btn-primary btn-cons" type="submit">Submit</button>
-                                                                    </div>
-                                                                }
-
-                                                            </div>
-                                                            <div class="clearfix"></div>
-                                                        </div>
-                                                        <div class="clearfix"></div>
-                                                    </div>
-                                                </div>
-
-
-                                            }
-                                        </div>
                                     </div>
                                 </div>
 
                             </div>
                         }
 
-                        <h4>Completed <span class="semi-bold">Tickets</span></h4>
-                        <br>
+                        <div class="row center-text">
+                            <h4>Completed <span class="semi-bold">Tickets</span></h4>
+                            <br>
+                        </div>
                         @foreach (var tickets in user.Projects.SelectMany(p => p.Tickets).Where(t => t.TicketStatus.Name == "Resolved").OrderByDescending(c => c.Created))
                         {
 
                             <div class="row">
                                 <div class="col-md-12">
-                                    <div class="grid simple no-border">
-                                        <div class="grid-title no-border descriptive clickable">
-                                            <h4 class="semi-bold">@tickets.Title</h4>
-                                            <p><span class="text-success bold">Ticket #@tickets.Id</span> - Created on @tickets.Created - Completed By @tickets.AssignedToUser.FullName @*Last reply About 1 Month ago by alex&nbsp;&nbsp;*@<span class="label label-important">@tickets.TicketPriority.Name</span></p>
-                                            <div class="actions"> <a class="view" href="javascript:;"><i class="fa fa-search"></i></a> <a class="remove" href="javascript:;"><i class="fa fa-times"></i></a> </div>
+                                    <div class="grid simple no-border ">
+                                        <div class="grid-title no-border">
+                                            <a href="@Url.Action("Details", "Tickets", new { id = tickets.Id })">
+                                                <h4 class="semi-bold">@tickets.Title</h4>
+                                                <p><span class="text-success bold">Ticket #@tickets.Id</span><span class="text-white "> - Created on @tickets.Created - Completed By @tickets.AssignedToUser.FullName</span> @*Last reply About 1 Month ago by alex&nbsp;&nbsp;*@<span class="label label-important">@tickets.TicketPriority.Name</span></p>
+
+                                            </a>
                                         </div>
-                                        <div class="grid-body  no-border" style="display:none">
-                                            <div class="post">
-                                                <div class="user-profile-pic-wrapper">
-                                                    <div class="user-profile-pic-normal"> <img width="35" height="35" data-src-retina="@tickets.OwnerUser.AvatarURL" data-src="@tickets.OwnerUser.AvatarURL" src="@tickets.OwnerUser.AvatarURL" alt=""> </div>
-                                                </div>
-                                                <div class="info-wrapper">
-                                                    <div class="info">
-                                                        <a href="@Url.Action("Details", "Tickets", new { id = tickets.Id })"> @tickets.Description</a>
-                                                    </div>
-                                                    <div class="clearfix"></div>
-                                                </div>
-                                                <div class="clearfix"></div>
-                                            </div>
-                                            <br>
-                                            @foreach (var comment in tickets.TicketComments.OrderByDescending(c => c.Created))
-                                            {
-                                                <div class="form-actions">
-                                                    <div class="post col-md-12">
-                                                        <div class="user-profile-pic-wrapper">
-                                                            <div class="user-profile-pic-normal"> <img width="35" height="35" data-src-retina="@comment.User.AvatarURL" data-src="@comment.User.AvatarURL" src="@comment.User.AvatarURL" alt=""> </div>
-                                                        </div>
-                                                        <div class="info-wrapper">
-                                                            <div class="info">
-                                                                @comment.Comment
-                                                                <hr>
-                                                                <p class="small-text">Posted on @comment.Created</p>
-                                                            </div>
 
-                                                            <div class="clearfix"></div>
-                                                        </div>
-                                                        <div class="clearfix"></div>
-                                                    </div>
-                                                </div>
-
-
-                                            }
-                                        </div>
                                     </div>
                                 </div>
 
@@ -1324,77 +864,6 @@ else if (User.IsInRole("Project Manager"))
                         }
 
 
-
-                        <h4>Archived <span class="semi-bold">Tickets</span></h4>
-                        <br>
-                        @foreach (var tickets in user.Projects.SelectMany(p => p.Tickets).Where(t => t.TicketStatus.Name == "Archived").OrderByDescending(c => c.Created))
-                        {
-
-                            <div class="row">
-                                <div class="col-md-12">
-                                    
-                                    <div class="grid simple no-border">
-                                        @if (tickets.ArchivedBy != null)
-                                        {
-                                            <div class="grid-title no-border descriptive clickable">
-                                                <h4 class="semi-bold">@tickets.Title</h4>
-                                                <p><span class="text-success bold">Ticket #@tickets.Id</span> - Created on @tickets.Created - Completed By @tickets.AssignedToUser.FullName - Archived By  @tickets.ArchivedBy.FullName@*Last reply About 1 Month ago by alex&nbsp;&nbsp;*@<span class="label label-important">@tickets.TicketPriority.Name</span></p>
-                                                <div class="actions"> <a class="view" href="javascript:;"><i class="fa fa-search"></i></a> <a class="remove" href="javascript:;"><i class="fa fa-times"></i></a> </div>
-                                            </div>
-
-                                        }
-                                        else
-                                        {
-                                            <div class="grid-title no-border descriptive clickable">
-                                                <h4 class="semi-bold">@tickets.Title</h4>
-                                                <p><span class="text-success bold">Ticket #@tickets.Id</span> - Created on @tickets.Created - Completed By @tickets.AssignedToUser.FullName@*Last reply About 1 Month ago by alex&nbsp;&nbsp;*@<span class="label label-important">@tickets.TicketPriority.Name</span></p>
-                                                <div class="actions"> <a class="view" href="javascript:;"><i class="fa fa-search"></i></a> <a class="remove" href="javascript:;"><i class="fa fa-times"></i></a> </div>
-                                            </div>
-
-                                        }
-
-                                        <div class="grid-body  no-border" style="display:none">
-                                            <div class="post">
-                                                <div class="user-profile-pic-wrapper">
-                                                    <div class="user-profile-pic-normal"> <img width="35" height="35" data-src-retina="@tickets.OwnerUser.AvatarURL" data-src="@tickets.OwnerUser.AvatarURL" src="@tickets.OwnerUser.AvatarURL" alt=""> </div>
-                                                </div>
-                                                <div class="info-wrapper">
-                                                    <div class="info">
-                                                        <a href="@Url.Action("Details", "Tickets", new { id = tickets.Id })"> @tickets.Description</a>
-                                                    </div>
-                                                    <div class="clearfix"></div>
-                                                </div>
-                                                <div class="clearfix"></div>
-                                            </div>
-                                            <br>
-                                            @foreach (var comment in tickets.TicketComments.OrderByDescending(c => c.Created))
-                                            {
-                                                <div class="form-actions">
-                                                    <div class="post col-md-12">
-                                                        <div class="user-profile-pic-wrapper">
-                                                            <div class="user-profile-pic-normal"> <img width="35" height="35" data-src-retina="@comment.User.AvatarURL" data-src="@comment.User.AvatarURL" src="@comment.User.AvatarURL" alt=""> </div>
-                                                        </div>
-                                                        <div class="info-wrapper">
-                                                            <div class="info">
-                                                                @comment.Comment
-                                                                <hr>
-                                                                <p class="small-text">Posted on @comment.Created</p>
-                                                            </div>
-
-                                                            <div class="clearfix"></div>
-                                                        </div>
-                                                        <div class="clearfix"></div>
-                                                    </div>
-                                                </div>
-
-
-                                            }
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        }
 
 
                     </div>
@@ -1408,187 +877,7 @@ else if (User.IsInRole("Project Manager"))
 }
 else if (User.IsInRole("Submitter"))
 {
-    <div class="row">
 
-        <div class="pull-right actions">
-            <button class="btn btn-primary btn-cons" type="button" id="btn-new-ticket">Created Tickets</button>
-        </div>
-
-
-        <div class="clearfix"></div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="grid simple no-border" id="new-ticket-wrapper" style="display:none">
-                    <div class="grid-title no-border">
-                        <h4 class="semi-bold">Click To View Ticket</h4>
-                    </div>
-                    <div>
-                        <div class="clearfix"></div>
-
-                        <h4>My Open <span class="semi-bold">Tickets</span></h4>
-                        <br>
-                        @foreach (var tickets in Model.Where(t => t.OwnerUserId == userId && t.TicketStatus.Name != "Archived").OrderByDescending(c => c.Created))
-                        {
-
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="grid simple no-border">
-                                        @if (tickets.OwnerUser != null)
-                                        {
-                                            <div class="grid-title no-border descriptive clickable">
-                                                <h4 class="semi-bold">@tickets.Title</h4>
-                                                <p><span class="text-success bold">Ticket #@tickets.Id</span> - Created on @tickets.Created - @tickets.OwnerUser.FullName @*Last reply About 1 Month ago by alex&nbsp;&nbsp;*@<span class="label label-important">@tickets.TicketPriority.Name</span></p>
-                                                <div class="actions"> <a class="view" href="javascript:;"><i class="fa fa-search"></i></a> <a class="remove" href="javascript:;"><i class="fa fa-times"></i></a> </div>
-                                            </div>
-                                        }
-                                        else
-
-                                        {
-                                            <div class="grid-title no-border descriptive clickable">
-                                                <h4 class="semi-bold">@tickets.Title</h4>
-                                                <p><span class="text-success bold">Ticket #@tickets.Id</span> - Created on @tickets.Created @*Last reply About 1 Month ago by alex&nbsp;&nbsp;*@<span class="label label-important">@tickets.TicketPriority.Name</span></p>
-                                                <div class="actions"> <a class="view" href="javascript:;"><i class="fa fa-search"></i></a> <a class="remove" href="javascript:;"><i class="fa fa-times"></i></a> </div>
-                                            </div>
-                                        }
-
-                                        <div class="grid-body  no-border" style="display:none">
-                                            <div class="post">
-                                                <div class="user-profile-pic-wrapper">
-                                                    <div class="user-profile-pic-normal"> <img width="35" height="35" data-src-retina="@tickets.OwnerUser.AvatarURL" data-src="@tickets.OwnerUser.AvatarURL" src="@tickets.OwnerUser.AvatarURL" alt=""> </div>
-                                                </div>
-                                                <div class="info-wrapper">
-                                                    <div class="info">
-
-                                                        <a href="@Url.Action("Details", "Tickets", new { id = tickets.Id })"> @tickets.Description</a>
-                                                    </div>
-                                                    <div class="clearfix"></div>
-                                                </div>
-                                                <div class="clearfix"></div>
-                                            </div>
-                                            <br>
-                                            @foreach (var comment in tickets.TicketComments.OrderByDescending(c => c.Created))
-                                            {
-                                                <div class="form-actions">
-                                                    <div class="post col-md-12">
-                                                        <div class="user-profile-pic-wrapper">
-                                                            <div class="user-profile-pic-normal"> <img width="35" height="35" data-src-retina="@comment.User.AvatarURL" data-src="@comment.User.AvatarURL" src="@comment.User.AvatarURL" alt=""> </div>
-                                                        </div>
-                                                        <div class="info-wrapper">
-                                                            <div class="info">
-                                                                @comment.Comment
-                                                                <hr>
-                                                                <p class="small-text">Posted on @comment.Created</p>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                @using (Html.BeginForm("Create", "TicketComments", FormMethod.Post))
-                                                                {
-                                                                    @Html.AntiForgeryToken()
-                                                                    @Html.Hidden("TicketId", tickets.Id);
-                                                                    <label class="form-label"><i class="fa fa-reply"></i>&nbsp;Post a reply</label>
-                                                                    <div class="controls">
-                                                                        <input type="text" class="form-control" name="Comment" id="Comment">
-                                                                        <button class="btn btn-primary btn-cons" type="submit">Submit</button>
-                                                                    </div>
-                                                                }
-
-                                                            </div>
-                                                            <div class="clearfix"></div>
-                                                        </div>
-                                                        <div class="clearfix"></div>
-                                                    </div>
-                                                </div>
-
-
-                                            }
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        }
-
-
-
-
-                        <h4>My Archived <span class="semi-bold">Tickets</span></h4>
-                        <br>
-                        @foreach (var tickets in Model.Where(t => t.OwnerUserId == userId && t.TicketStatus.Name == "Archived").OrderByDescending(c => c.Created))
-                        {
-
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="grid simple no-border">
-                                        @if (tickets.ArchivedBy != null)
-                                        {
-
-                                            <div class="grid-title no-border descriptive clickable">
-                                                <h4 class="semi-bold">@tickets.Title</h4>
-                                                <p><span class="text-success bold">Ticket #@tickets.Id</span> - Created on @tickets.Created - Completed By  @tickets.OwnerUser.FullName  - Archived By - @tickets.ArchivedBy.FullName@*Last reply About 1 Month ago by alex&nbsp;&nbsp;*@<span class="label label-important">@tickets.TicketPriority.Name</span></p>
-                                                <div class="actions"> <a class="view" href="javascript:;"><i class="fa fa-search"></i></a> <a class="remove" href="javascript:;"><i class="fa fa-times"></i></a> </div>
-                                            </div>
-
-                                        }
-                                        else
-                                        {
-                                            <div class="grid-title no-border descriptive clickable">
-                                                <h4 class="semi-bold">@tickets.Title</h4>
-                                                <p><span class="text-success bold">Ticket #@tickets.Id</span> - Created on @tickets.Created - Completed By  @tickets.OwnerUser.FullName@*Last reply About 1 Month ago by alex&nbsp;&nbsp;*@<span class="label label-important">@tickets.TicketPriority.Name</span></p>
-                                                <div class="actions"> <a class="view" href="javascript:;"><i class="fa fa-search"></i></a> <a class="remove" href="javascript:;"><i class="fa fa-times"></i></a> </div>
-                                            </div>
-                                        }
-
-                                        <div class="grid-body  no-border" style="display:none">
-                                            <div class="post">
-                                                <div class="user-profile-pic-wrapper">
-                                                    <div class="user-profile-pic-normal"> <img width="35" height="35" data-src-retina="@tickets.OwnerUser.AvatarURL" data-src="@tickets.OwnerUser.AvatarURL" src="@tickets.OwnerUser.AvatarURL" alt=""> </div>
-                                                </div>
-                                                <div class="info-wrapper">
-                                                    <div class="info">
-                                                        <a href="@Url.Action("Details", "Tickets", new { id = tickets.Id })"> @tickets.Description</a>
-                                                    </div>
-                                                    <div class="clearfix"></div>
-                                                </div>
-                                                <div class="clearfix"></div>
-                                            </div>
-                                            <br>
-                                            @foreach (var comment in tickets.TicketComments.OrderByDescending(c => c.Created))
-                                            {
-                                                <div class="form-actions">
-                                                    <div class="post col-md-12">
-                                                        <div class="user-profile-pic-wrapper">
-                                                            <div class="user-profile-pic-normal"> <img width="35" height="35" data-src-retina="@comment.User.AvatarURL" data-src="@comment.User.AvatarURL" src="@comment.User.AvatarURL" alt=""> </div>
-                                                        </div>
-                                                        <div class="info-wrapper">
-                                                            <div class="info">
-                                                                @comment.Comment
-                                                                <hr>
-                                                                <p class="small-text">Posted on @comment.Created</p>
-                                                            </div>
-
-                                                            <div class="clearfix"></div>
-                                                        </div>
-                                                        <div class="clearfix"></div>
-                                                    </div>
-                                                </div>
-
-
-                                            }
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        }
-
-
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-
-    </div>
 }
 else
 {
@@ -1611,7 +900,7 @@ else
                     </div>
                     <div class="tiles-title text-black">Recent NOTIFICATIONS </div>
                     <br>
-                    @foreach (var notification in NotificationHelper.GetUserNotifications().OrderByDescending(b => b.Created).Take(3))
+                    @foreach (var notification in NotificationHelper.GetUserUnreadNotifications().OrderByDescending(b => b.Created).Take(3))
                     {
                         if (notification.Recipient != null)
                         {
@@ -1655,35 +944,21 @@ else
         </div>
 
         <div class="col-md-6 col-sm-6">
-            <div class="tiles gradient-grey">
-                <div class="tiles-body">
-                    <div class="controller">
+            <div class="grid simple ">
+                <div class="grid-title no-border  ">
+                    <h4>Resolved <span class="semi-bold">Chart</span></h4>
+                    <div class="tools">
+                        <a href="javascript:;" class="collapse"></a>
+                        <a href="#grid-config" data-toggle="modal" class="config"></a>
                         <a href="javascript:;" class="reload"></a>
                         <a href="javascript:;" class="remove"></a>
                     </div>
-                    <div class="tiles-title text-black">Recent Comments </div>
-                    <br>
-                    @foreach (var comment in CommentHelper.GetUserTicketComments().OrderByDescending(b => b.Created).Take(3))
-                    {
-
-                        <div class="notification-messages info">
-                            <div class="user-profile"> <img src="@comment.User.AvatarURL" @*alt="" data-src="~/img/profiles/c.jpg" data-src-retina="~/img/profiles/c2x.jpg"*@ width="35" height="35"> </div>
-                            <div class="message-wrapper">
-                                <div class="heading"> @comment.Comment </div>
-                                <div class="description">Ticket #@comment.Ticket.Id </div>
-                            </div>
-                            <div class="date pull-right"> @comment.Created </div>
-                            <div class="clearfix"></div>
-                        </div>
-
-                    }
-
-
-
-
                 </div>
-
-
+                <div class="grid-body no-border ">
+                    <h4>Ticket <span class="semi-bold">Completion</span></h4>
+                    <p>RESOLVED DATA </p>
+                    <div id="resolvedChartD" style="height:200px;"> </div>
+                </div>
             </div>
         </div>
 
@@ -1699,7 +974,7 @@ else
                     </div>
                     <div class="tiles-title text-black">Recent NOTIFICATIONS </div>
                     <br>
-                    @foreach (var notification in NotificationHelper.GetPMNotifications(userId).OrderByDescending(b => b.Created).Take(3))
+                    @foreach (var notification in NotificationHelper.GetUserUnreadNotifications().OrderByDescending(b => b.Created).Take(3))
                     {
                         if (notification.Recipient != null)
                         {
@@ -1743,128 +1018,30 @@ else
         </div>
 
         <div class="col-md-6 col-sm-6">
-            <div class="tiles gradient-grey">
-                <div class="tiles-body">
-                    <div class="controller">
+            <div class="grid simple ">
+                <div class="grid-title no-border  ">
+                    <h4>Resolved <span class="semi-bold">Chart</span></h4>
+                    <div class="tools">
+                        <a href="javascript:;" class="collapse"></a>
+                        <a href="#grid-config" data-toggle="modal" class="config"></a>
                         <a href="javascript:;" class="reload"></a>
                         <a href="javascript:;" class="remove"></a>
                     </div>
-                    <div class="tiles-title text-black">Recent Comments </div>
-                    <br>
-                    @foreach (var comment in CommentHelper.GetPMTicketComments(userId).OrderByDescending(b => b.Created).Take(3))
-                    {
-
-                        <div class="notification-messages info">
-                            <div class="user-profile"> <img src="@comment.User.AvatarURL" @*alt="" data-src="~/img/profiles/c.jpg" data-src-retina="~/img/profiles/c2x.jpg"*@ width="35" height="35"> </div>
-                            <div class="message-wrapper">
-                                <div class="heading"> @comment.Comment </div>
-                                <div class="description">Ticket #@comment.Ticket.Id </div>
-                            </div>
-                            <div class="date pull-right"> @comment.Created </div>
-                            <div class="clearfix"></div>
-                        </div>
-
-                    }
-
-
-
-
                 </div>
-
-
+                <div class="grid-body no-border ">
+                    <h4>Ticket <span class="semi-bold">Completion</span></h4>
+                    <p>RESOLVED DATA </p>
+                    <div id="resolvedChartPM" style="height:200px;"> </div>
+                </div>
             </div>
         </div>
+
+
 
     }
     else if (User.IsInRole("Submitter"))
     {
-        <div class="col-md-6 col-sm-6">
-            <div class="tiles gradient-grey">
-                <div class="tiles-body">
-                    <div class="controller">
-                        <a href="javascript:;" class="reload"></a>
-                        <a href="javascript:;" class="remove"></a>
-                    </div>
-                    <div class="tiles-title text-black">Recent NOTIFICATIONS </div>
-                    <br>
-                    @foreach (var notification in NotificationHelper.GetSubNotifications(userId).OrderByDescending(c => c.Created).Take(3))
-                    {
-                        if (notification.Recipient != null)
-                        {
-                            <div class="notification-messages info">
-                                <div class="user-profile"> <img src="@notification.Recipient.AvatarURL" @*alt="" data-src="~/img/profiles/c.jpg" data-src-retina="~/img/profiles/c2x.jpg"*@ width="35" height="35"> </div>
-                                <div class="message-wrapper">
-                                    <div class="heading"> @notification.Subject </div>
-                                    <div class="description"> @notification.NotificationBody </div>
-                                </div>
-                                <div class="date pull-right"> @notification.Recipient.FullName</div>
-                                <div class="clearfix"></div>
-                            </div>
 
-
-
-                        }
-                        else
-                        {
-                            <div class="notification-messages info">
-                                <div class="user-profile"> <img src="/Uploads/Master-Joda-icon.png" @*alt="" data-src="~/img/profiles/c.jpg" data-src-retina="~/img/profiles/c2x.jpg"*@ width="35" height="35"> </div>
-                                <div class="message-wrapper">
-                                    <div class="heading"> @notification.Subject </div>
-                                    <div class="description"> @notification.NotificationBody </div>
-                                </div>
-                                <div class="date pull-right"> @notification.Created </div>
-                                <div class="clearfix"></div>
-                            </div>
-
-                        }
-
-
-                    }
-
-
-
-
-                </div>
-
-
-            </div>
-        </div>
-
-        <div class="col-md-6 col-sm-6">
-            <div class="tiles gradient-grey">
-                <div class="tiles-body">
-                    <div class="controller">
-                        <a href="javascript:;" class="reload"></a>
-                        <a href="javascript:;" class="remove"></a>
-                    </div>
-                    <div class="tiles-title text-black">Recent Comments </div>
-                    <br>
-                    @foreach (var comment in CommentHelper.GetSubTicketComments(userId).OrderByDescending(b => b.Created).Take(3))
-                    {
-
-                        <div class="notification-messages info">
-                            <div class="user-profile"> <img src="@comment.User.AvatarURL" @*alt="" data-src="~/img/profiles/c.jpg" data-src-retina="~/img/profiles/c2x.jpg"*@ width="35" height="35"> </div>
-                            <div class="message-wrapper">
-                                <div class="heading"> @comment.Comment </div>
-                                <div class="description">Ticket #@comment.Ticket.Id </div>
-                            </div>
-                            <div class="date pull-right"> @comment.Created </div>
-                            <br />
-                            <div class="date pull-right"> @comment.User.FullName </div>
-                            <div class="clearfix"></div>
-
-                        </div>
-
-                    }
-
-
-
-
-                </div>
-
-
-            </div>
-        </div>
 
     }
     else if (User.IsInRole("Admin") || User.IsInRole("MasterAdmin"))
@@ -1876,46 +1053,50 @@ else
                         <a href="javascript:;" class="reload"></a>
                         <a href="javascript:;" class="remove"></a>
                     </div>
-                    <div class="tiles-title text-black">Recent NOTIFICATIONS </div>
+                    <div class="tiles-title text-black">Recent System Ticket NOTIFICATIONS </div>
                     <br>
-                    @foreach (var notification in NotificationHelper.GetAllNotifications().OrderByDescending(b => b.Created).Take(3))
+                    @foreach (var notification in NotificationHelper.GetAllNotifications().OrderByDescending(b => b.Created).Take(5))
                     {
                         if (notification.Recipient != null)
                         {
-                            <div class="notification-messages info">
-                                <div class="user-profile"> <img src="@notification.Recipient.AvatarURL" @*alt="" data-src="~/img/profiles/c.jpg" data-src-retina="~/img/profiles/c2x.jpg"*@ width="35" height="35"> </div>
-                                <div class="message-wrapper">
-                                    <div class="heading"> @notification.Subject </div>
-                                    <div class="description"> @notification.NotificationBody </div>
+                            <a href="@Url.Action("Details","Tickets", new { id = notification.TicketId})">
+                                <div class="notification-messages info">
+                                    <div class="user-profile"> <img src="@notification.Recipient.AvatarURL" @*alt="" data-src="~/img/profiles/c.jpg" data-src-retina="~/img/profiles/c2x.jpg"*@ width="35" height="35"> </div>
+                                    <div class="message-wrapper">
+                                        <div class="heading"> @notification.Subject </div>
+                                        <div class="description"> @notification.NotificationBody </div>
+                                    </div>
+                                    <div class="date pull-right"> @notification.Created </div>
+                                    <div class="clearfix"></div>
                                 </div>
-                                <div class="date pull-right"> @notification.Created </div>
-                                <div class="clearfix"></div>
-                            </div>
-
-
-
-                        }
-                        else
-                        {
-                            <div class="notification-messages info">
-                                <div class="user-profile"> <img src="/Uploads/Master-Joda-icon.png" @*alt="" data-src="~/img/profiles/c.jpg" data-src-retina="~/img/profiles/c2x.jpg"*@ width="35" height="35"> </div>
-                                <div class="message-wrapper">
-                                    <div class="heading"> @notification.Subject </div>
-                                    <div class="description"> @notification.NotificationBody </div>
-                                </div>
-                                <div class="date pull-right"> @notification.Created </div>
-                                <div class="clearfix"></div>
-                            </div>
-
-                        }
-
-
-                    }
+                                </a>
 
 
 
 
-                </div>
+                                }
+                                else
+                                {
+                                <a href="@Url.Action("Details","Tickets", new { id = notification.TicketId})">
+                                    <div class="notification-messages info">
+                                        <div class="user-profile"> <img src="/Uploads/Master-Joda-icon.png" @*alt="" data-src="~/img/profiles/c.jpg" data-src-retina="~/img/profiles/c2x.jpg"*@ width="35" height="35"> </div>
+                                        <div class="message-wrapper">
+                                            <div class="heading"> @notification.Subject </div>
+                                            <div class="description"> @notification.NotificationBody </div>
+                                        </div>
+                                        <div class="date pull-right"> @notification.Created </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </a>
+                                }
+
+
+                                }
+
+
+
+
+                        </div>
 
 
             </div>
@@ -1928,11 +1109,11 @@ else
                         <a href="javascript:;" class="reload"></a>
                         <a href="javascript:;" class="remove"></a>
                     </div>
-                    <div class="tiles-title text-black">Recent Comments </div>
+                    <div class="tiles-title text-black">Recent System Ticket Comments </div>
                     <br>
-                    @foreach (var comment in CommentHelper.GetAllTicketComments().OrderByDescending(b => b.Created).Take(3))
+                    @foreach (var comment in CommentHelper.GetAllTicketComments().OrderByDescending(b => b.Created).Take(5))
                     {
-
+                        <a href="@Url.Action("Details","Tickets", new { id = comment.TicketId})">
                         <div class="notification-messages info">
                             <div class="user-profile"> <img src="@comment.User.AvatarURL" @*alt="" data-src="~/img/profiles/c.jpg" data-src-retina="~/img/profiles/c2x.jpg"*@ width="35" height="35"> </div>
                             <div class="message-wrapper">
@@ -1942,7 +1123,7 @@ else
                             <div class="date pull-right"> @comment.Created </div>
                             <div class="clearfix"></div>
                         </div>
-
+                        </a>
                     }
 
 
@@ -1972,7 +1153,7 @@ else
 
 </div>
 
-@if (User.IsInRole("Admin") || (User.IsInRole("Developer")) || (User.IsInRole("Submitter")) || (User.IsInRole("MasterAdmin")) || (User.IsInRole("Project Manager")))
+@if (User.IsInRole("Admin") || (User.IsInRole("MasterAdmin")))
 {
 
     @*Charts*@
@@ -2021,7 +1202,27 @@ else
 
     </div>
 
+    <div class="row">
+        <div class="col-md-12 content-center">
+            <div class="grid simple ">
+                <div class="grid-title no-border  ">
+                    <h4>Resolved <span class="semi-bold">Chart</span></h4>
+                    <div class="tools">
+                        <a href="javascript:;" class="collapse"></a>
+                        <a href="#grid-config" data-toggle="modal" class="config"></a>
+                        <a href="javascript:;" class="reload"></a>
+                        <a href="javascript:;" class="remove"></a>
+                    </div>
+                </div>
+                <div class="grid-body no-border ">
+                    <h4>Ticket <span class="semi-bold">Completion</span></h4>
+                    <p>RESOLVED DATA </p>
+                    <div id="resolvedChart" style="height:200px;"> </div>
+                </div>
+            </div>
 
+        </div>
+    </div>
 
     <div class="row">
         <div class="col-md-12">
@@ -2040,6 +1241,247 @@ else
                     <p>NUMBER OF TICKETS AND THIER RESPECTIVE TYPE</p>
                     <br>
                     <div id="MorrisBarChart" style="height:250px"></div>
+                </div>
+            </div>
+
+
+
+
+
+
+        </div>
+
+
+    </div>
+
+
+}
+else if (User.IsInRole("Project Manager"))
+{
+    <div class="row">
+        <div class="col-md-6">
+            <div class="grid simple ">
+                <div class="grid-title no-border  ">
+                    <h4>Status <span class="semi-bold">Chart</span></h4>
+                    <div class="tools">
+                        <a href="javascript:;" class="collapse"></a>
+                        <a href="#grid-config" data-toggle="modal" class="config"></a>
+                        <a href="javascript:;" class="reload"></a>
+                        <a href="javascript:;" class="remove"></a>
+                    </div>
+                </div>
+                <div class="grid-body no-border ">
+                    <h4>Ticket <span class="semi-bold">Statuses</span></h4>
+                    <p>NUMBER OF TICKETS AND THEIR RESPECTIVE STATUS  </p>
+                    <div id="StatusChartPM" style="height:200px;"> </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="grid simple">
+                <div class="grid-title no-border">
+                    <h4>Priority <span class="semi-bold">Chart</span></h4>
+                    <div class="tools">
+                        <a href="javascript:;" class="collapse"></a>
+                        <a href="#grid-config" data-toggle="modal" class="config"></a>
+                        <a href="javascript:;" class="reload"></a>
+                        <a href="javascript:;" class="remove"></a>
+                    </div>
+                </div>
+                <div class="grid-body no-border">
+                    <h4>Ticket <span class="semi-bold">Priorities</span></h4>
+                    <p>NUMBER OF TICKETS AND THEIR RESPECTIVE PRIORITY LEVEL </p>
+                    <div id="PriorityChartPM" style="height:200px;"> </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+    </div>
+
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="grid simple">
+                <div class="grid-title no-border">
+                    <h4>Type<span class="semi-bold">Chart</span></h4>
+                    <div class="tools">
+                        <a href="javascript:;" class="collapse"></a>
+                        <a href="#grid-config" data-toggle="modal" class="config"></a>
+                        <a href="javascript:;" class="reload"></a>
+                        <a href="javascript:;" class="remove"></a>
+                    </div>
+                </div>
+                <div class="grid-body no-border">
+                    <h4>Ticket  <span class="semi-bold"> Types</span></h4>
+                    <p>NUMBER OF TICKETS AND THIER RESPECTIVE TYPE</p>
+                    <br>
+                    <div id="TypeChartPM" style="height:250px"></div>
+                </div>
+            </div>
+
+
+
+
+
+
+        </div>
+
+
+    </div>
+}
+else if (User.IsInRole("Developer"))
+{
+    <div class="row">
+        <div class="col-md-6">
+            <div class="grid simple ">
+                <div class="grid-title no-border  ">
+                    <h4>Status <span class="semi-bold">Chart</span></h4>
+                    <div class="tools">
+                        <a href="javascript:;" class="collapse"></a>
+                        <a href="#grid-config" data-toggle="modal" class="config"></a>
+                        <a href="javascript:;" class="reload"></a>
+                        <a href="javascript:;" class="remove"></a>
+                    </div>
+                </div>
+                <div class="grid-body no-border ">
+                    <h4>Ticket <span class="semi-bold">Statuses</span></h4>
+                    <p>NUMBER OF TICKETS AND THEIR RESPECTIVE STATUS  </p>
+                    <div id="StatusChartD" style="height:200px;"> </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="grid simple">
+                <div class="grid-title no-border">
+                    <h4>Priority <span class="semi-bold">Chart</span></h4>
+                    <div class="tools">
+                        <a href="javascript:;" class="collapse"></a>
+                        <a href="#grid-config" data-toggle="modal" class="config"></a>
+                        <a href="javascript:;" class="reload"></a>
+                        <a href="javascript:;" class="remove"></a>
+                    </div>
+                </div>
+                <div class="grid-body no-border">
+                    <h4>Ticket <span class="semi-bold">Priorities</span></h4>
+                    <p>NUMBER OF TICKETS AND THEIR RESPECTIVE PRIORITY LEVEL </p>
+                    <div id="PriorityChartD" style="height:200px;"> </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+    </div>
+
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="grid simple">
+                <div class="grid-title no-border">
+                    <h4>Type<span class="semi-bold">Chart</span></h4>
+                    <div class="tools">
+                        <a href="javascript:;" class="collapse"></a>
+                        <a href="#grid-config" data-toggle="modal" class="config"></a>
+                        <a href="javascript:;" class="reload"></a>
+                        <a href="javascript:;" class="remove"></a>
+                    </div>
+                </div>
+                <div class="grid-body no-border">
+                    <h4>Ticket  <span class="semi-bold"> Types</span></h4>
+                    <p>NUMBER OF TICKETS AND THIER RESPECTIVE TYPE</p>
+                    <br>
+                    <div id="TypeChartD" style="height:250px"></div>
+                </div>
+            </div>
+
+
+
+
+
+
+        </div>
+
+
+    </div>
+
+}
+else if (User.IsInRole("Submitter"))
+{
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="grid simple ">
+                <div class="grid-title no-border  ">
+                    <h4>Status <span class="semi-bold">Chart</span></h4>
+                    <div class="tools">
+                        <a href="javascript:;" class="collapse"></a>
+                        <a href="#grid-config" data-toggle="modal" class="config"></a>
+                        <a href="javascript:;" class="reload"></a>
+                        <a href="javascript:;" class="remove"></a>
+                    </div>
+                </div>
+                <div class="grid-body no-border ">
+                    <h4>Ticket <span class="semi-bold">Statuses</span></h4>
+                    <p>NUMBER OF TICKETS AND THEIR RESPECTIVE STATUS  </p>
+                    <div id="StatusChartS" style="height:200px;"> </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="grid simple">
+                <div class="grid-title no-border">
+                    <h4>Priority <span class="semi-bold">Chart</span></h4>
+                    <div class="tools">
+                        <a href="javascript:;" class="collapse"></a>
+                        <a href="#grid-config" data-toggle="modal" class="config"></a>
+                        <a href="javascript:;" class="reload"></a>
+                        <a href="javascript:;" class="remove"></a>
+                    </div>
+                </div>
+                <div class="grid-body no-border">
+                    <h4>Ticket <span class="semi-bold">Priorities</span></h4>
+                    <p>NUMBER OF TICKETS AND THEIR RESPECTIVE PRIORITY LEVEL </p>
+                    <div id="PriorityChartS" style="height:200px;"> </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+    </div>
+
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="grid simple">
+                <div class="grid-title no-border">
+                    <h4>Type<span class="semi-bold">Chart</span></h4>
+                    <div class="tools">
+                        <a href="javascript:;" class="collapse"></a>
+                        <a href="#grid-config" data-toggle="modal" class="config"></a>
+                        <a href="javascript:;" class="reload"></a>
+                        <a href="javascript:;" class="remove"></a>
+                    </div>
+                </div>
+                <div class="grid-body no-border">
+                    <h4>Ticket  <span class="semi-bold"> Types</span></h4>
+                    <p>NUMBER OF TICKETS AND THIER RESPECTIVE TYPE</p>
+                    <br>
+                    <div id="TypeChartS" style="height:250px"></div>
                 </div>
             </div>
 
@@ -2324,6 +1766,29 @@ else
 
 
     <script type="text/javascript">
+        //Admin
+
+        $(function () {
+            var url = '@Url.Action("GetMorrisDataResolvedTickets", "Charts")';
+            $.post(url).then(function (response) {
+                new Morris.Bar({
+                    element: 'resolvedChart',
+                    data: response,
+                    gridTextSize: 14,
+                    xkey: 'label',
+                    ykeys: ['value'],
+                    labels: ['Ticket Count'],
+                    resize: true,
+
+
+                });
+
+            });
+
+        });
+
+
+
         $(function () {
             var url = '@Url.Action("GetMorrisData", "Charts")';
             $.post(url).then(function (response) {
@@ -2349,8 +1814,7 @@ else
                 new Morris.Bar({
                     element: 'MorrisBarChart',
                     data: response,
-                    gridTextSize: 8,
-                    xLabelAngle: 65,
+                    gridTextSize: 14,
                     xkey: 'label',
                     ykeys: ['value'],
                     labels: ['Ticket Count'],
@@ -2381,6 +1845,220 @@ else
             });
 
         });
+
+        //Project Manager
+        $(function () {
+            var url = '@Url.Action("GetMorrisDataResolvedTicketsPM", "Charts", new {userId = userId})';
+            $.post(url).then(function (response) {
+                new Morris.Bar({
+                    element: 'resolvedChartPM',
+                    data: response,
+                    gridTextSize: 14,
+                    xkey: 'label',
+                    ykeys: ['value'],
+                    labels: ['Ticket Count'],
+                    resize: true,
+
+
+                });
+
+            });
+
+        });
+        $(function () {
+            var url = '@Url.Action("GetMorrisDataTicketStatusPM", "Charts", new {userId = userId})';
+            $.post(url).then(function (response) {
+                new Morris.Donut({
+                    element: 'StatusChartPM',
+                    data: response,
+                    gridTextSize: 8,
+                    //xkey: 'label',
+                    //ykeys: ['value'],
+                    //labels: ['Ticket Count'],
+                    resize: true
+
+                });
+
+            });
+
+        });
+
+
+                $(function () {
+            var url = '@Url.Action("GetMorrisDataTicketTypesPM", "Charts", new {userId = userId})';
+            $.post(url).then(function (response) {
+                new Morris.Bar({
+                    element: 'TypeChartPM',
+                    data: response,
+                    gridTextSize: 8,
+                    xkey: 'label',
+                    ykeys: ['value'],
+                    labels: ['Ticket Count'],
+                    resize: true
+
+                });
+
+            });
+
+                });
+
+
+                $(function () {
+            var url = '@Url.Action("GetMorrisDataTicketPrioritiesPM", "Charts", new {userId = userId})';
+            $.post(url).then(function (response) {
+                new Morris.Donut({
+                    element: 'PriorityChartPM',
+                    data: response,
+                    gridTextSize: 8,
+                    xLabelAngle: 65,
+                    //xkey: 'label',
+                    //ykeys: ['value'],
+                    //labels: ['Ticket Count'],
+                    resize: true
+
+                });
+
+            });
+
+        });
+
+
+        //Developer
+
+        $(function () {
+            var url = '@Url.Action("GetMorrisDataResolvedTicketsD", "Charts", new {userId = userId})';
+            $.post(url).then(function (response) {
+                new Morris.Bar({
+                    element: 'resolvedChartD',
+                    data: response,
+                    gridTextSize: 14,
+                    xkey: 'label',
+                    ykeys: ['value'],
+                    labels: ['Ticket Count'],
+                    resize: true,
+
+
+                });
+
+            });
+
+        });
+        $(function () {
+            var url = '@Url.Action("GetMorrisDataTicketStatusD", "Charts", new {userId = userId})';
+            $.post(url).then(function (response) {
+                new Morris.Donut({
+                    element: 'StatusChartD',
+                    data: response,
+                    gridTextSize: 8,
+                    //xkey: 'label',
+                    //ykeys: ['value'],
+                    //labels: ['Ticket Count'],
+                    resize: true
+
+                });
+
+            });
+
+        });
+
+
+                $(function () {
+            var url = '@Url.Action("GetMorrisDataTicketTypesD", "Charts", new {userId = userId})';
+            $.post(url).then(function (response) {
+                new Morris.Bar({
+                    element: 'TypeChartD',
+                    data: response,
+                    gridTextSize: 8,
+                    xkey: 'label',
+                    ykeys: ['value'],
+                    labels: ['Ticket Count'],
+                    resize: true
+
+                });
+
+            });
+
+                });
+
+
+                $(function () {
+            var url = '@Url.Action("GetMorrisDataTicketPrioritiesD", "Charts", new {userId = userId})';
+            $.post(url).then(function (response) {
+                new Morris.Donut({
+                    element: 'PriorityChartD',
+                    data: response,
+                    gridTextSize: 8,
+                    xLabelAngle: 65,
+                    //xkey: 'label',
+                    //ykeys: ['value'],
+                    //labels: ['Ticket Count'],
+                    resize: true
+
+                });
+
+            });
+
+                });
+
+
+        //submitter
+         $(function () {
+            var url = '@Url.Action("GetMorrisDataTicketStatusS", "Charts", new {userId = userId})';
+            $.post(url).then(function (response) {
+                new Morris.Donut({
+                    element: 'StatusChartS',
+                    data: response,
+                    gridTextSize: 8,
+                    //xkey: 'label',
+                    //ykeys: ['value'],
+                    //labels: ['Ticket Count'],
+                    resize: true
+
+                });
+
+            });
+
+        });
+
+
+                $(function () {
+            var url = '@Url.Action("GetMorrisDataTicketTypesS", "Charts", new {userId = userId})';
+            $.post(url).then(function (response) {
+                new Morris.Bar({
+                    element: 'TypeChartS',
+                    data: response,
+                    gridTextSize: 8,
+                    xkey: 'label',
+                    ykeys: ['value'],
+                    labels: ['Ticket Count'],
+                    resize: true
+
+                });
+
+            });
+
+                });
+
+
+                $(function () {
+            var url = '@Url.Action("GetMorrisDataTicketPrioritiesS", "Charts", new {userId = userId})';
+            $.post(url).then(function (response) {
+                new Morris.Donut({
+                    element: 'PriorityChartS',
+                    data: response,
+                    gridTextSize: 8,
+                    xLabelAngle: 65,
+                    //xkey: 'label',
+                    //ykeys: ['value'],
+                    //labels: ['Ticket Count'],
+                    resize: true
+
+                });
+
+            });
+
+        });
+
 
 
     </script>

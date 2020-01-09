@@ -18,7 +18,7 @@ namespace BugTracker.Helpers
                 case "TicketTypeId":
                     return Db.TicketTypes.Find(Convert.ToInt32(value)).Name;
                 case "AssignedToUserId":
-                    return value != null ? Db.Users.Find(value).FullName : "--UnAssigned--";
+                    return !String.IsNullOrEmpty(value) ? Db.Users.Find(value).FullName : "--UnAssigned--";
                 default:
                     return value;
             }

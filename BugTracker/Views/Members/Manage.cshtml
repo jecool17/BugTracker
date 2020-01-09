@@ -28,28 +28,32 @@
         <div class="row ">
             <div class="col-md-8 col-md-offset-4 col-sm-6 col-sm-offset-4 col-xs-offset-2">
 
-
-
-                @using (Html.BeginForm("UserIndex", "Admin", FormMethod.Post))
+                @if (User.IsInRole("Admin"))
                 {
-                    @Html.AntiForgeryToken()
-                    @Html.Hidden("userId", (string)ViewBag.userId)
-
-
-                    <div class="profile-wrapper">
-
-
-                        <img width="69" height="69" data-src-retina="@user.AvatarURL" data-src="@user.AvatarURL" src="@user.AvatarURL" alt="">
-
-
-
-
-                    </div>
-                    if (User.IsInRole("Admin") || (User.IsInRole("Project Manager")))
+                    using (Html.BeginForm("UserIndex", "Admin", FormMethod.Post))
                     {
+                        @Html.AntiForgeryToken()
+                        @Html.Hidden("userId", (string)ViewBag.userId)
+
+
+
+                        <div class="profile-wrapper">
+
+
+                            <img width="69" height="69" data-src-retina="@user.AvatarURL" data-src="@user.AvatarURL" src="@user.AvatarURL" alt="">
+
+
+
+
+                        </div>
+
                         <div class="user-form">
                             <h2 class="user">Manage <span class="semi-bold">User</span></h2>
+                            <p>
+                                <h3 class="user"><span class="semi-bold">@Html.Label("Assign Role/Project(s)")</span></h3>
+                            </p>
                             @Html.DropDownList("CurrentRole", null, "Assign Role")
+
                             <p>
 
                                 @Html.ListBox("CurrentProjects")
@@ -58,12 +62,39 @@
                                 <br>
                                 <button type="submit" class="btn btn-primary "><i class="fa fa-check">Save All</i></button>
                         </div>
+                        <div>
+                            @Html.ActionLink("Back to List", "UserIndex", "Admin")
+                        </div>
                     }
-                    else
+                }
+                else
+
+                {
+
+                    using (Html.BeginForm("UserIndexPM", "Admin", FormMethod.Post))
                     {
+                        @Html.AntiForgeryToken()
+                        @Html.Hidden("userId", (string)ViewBag.userId)
+
+
+
+
+                        <div class="profile-wrapper">
+
+
+                            <img width="69" height="69" data-src-retina="@user.AvatarURL" data-src="@user.AvatarURL" src="@user.AvatarURL" alt="">
+
+
+
+
+                        </div>
+
+
                         <div class="user-form">
-                            <h2 class="user">Manage <span class="semi-bold">User</span></h2>
-                            
+                            <h2 class="user">Manage<span class="semi-bold">User</span></h2>
+                            <p>
+                                <h3 class="user"><span class="semi-bold">@Html.Label("Assign Project(s)")</span></h3>
+                            </p>
                             <p>
 
                                 @Html.ListBox("CurrentProjects")
@@ -72,17 +103,34 @@
                                 <br>
                                 <button type="submit" class="btn btn-primary "><i class="fa fa-check">Save</i></button>
                         </div>
+
+
+
                     }
 
                 }
 
-            </div>
 
 
-            <div>
-                @Html.ActionLink("Back to Dashboard", "Dashboard", "Home")
+
+
             </div>
+            @if (User.IsInRole("Admin"))
+            {
+                <div>
+                    @Html.ActionLink("Back to List", "UserIndex", "Admin")
                 </div>
+            }
+            else
+            {
+                <div>
+                    @Html.ActionLink("Back to List", "UserIndexPM", "Admin")
+                </div>
+            }
+
+
+
+        </div>
     </div>
     <div id="push"></div>
 </div>

@@ -20,6 +20,11 @@ namespace BugTracker.Controllers
             var ticketHistories = db.TicketHistories.Include(t => t.Ticket).Include(t => t.User);
             return View(ticketHistories.ToList());
         }
+        public ActionResult HistoryFull(int? id)
+        {
+            Ticket ticket = db.Tickets.Find(id);
+            return View(ticket);
+        }
 
         // GET: TicketHistories/Details/5
         public ActionResult Details(int? id)

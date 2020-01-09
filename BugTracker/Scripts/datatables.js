@@ -123,13 +123,13 @@ $.extend( $.fn.dataTableExt.oPagination, {
 		"container": "DTTT ",
 		"buttons": {
 			"normal": "btn btn-white",
-			"disabled": "disabled"
+			"disabled": "false"
 		},
 		"collection": {
 			"container": "DTTT_dropdown dropdown-menu",
 			"buttons": {
 				"normal": "",
-				"disabled": "disabled"
+				"disabled": "false"
 			}
 		},
 		"print": {
